@@ -16,7 +16,7 @@ import java.util.Enumeration;
 
 public class Main {
     public static void main(String[] args) {
-        String path = "com/duan/summer/io";
+        String path = "com/duan/summer";
         try {
             Enumeration<URL> resources = Thread.currentThread().getContextClassLoader().getResources(path);
             while (resources.hasMoreElements()) {
