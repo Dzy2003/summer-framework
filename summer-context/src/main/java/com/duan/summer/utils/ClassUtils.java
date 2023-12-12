@@ -2,12 +2,15 @@ package com.duan.summer.utils;
 
 import com.duan.summer.annotation.Bean;
 import com.duan.summer.annotation.Component;
+import com.duan.summer.context.BeanDefinition;
+import com.duan.summer.context.BeanDefinitionFactory;
 import com.duan.summer.exception.BeanDefinitionException;
 import jakarta.annotation.Nullable;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -111,5 +114,33 @@ public class  ClassUtils {
         throw new BeanDefinitionException(String.format("Multiple methods with @%s found in class: %s", annoClass.getSimpleName(), clazz.getName()));
     }
 
+    @Nullable
+    public static BeanDefinition findFactoryMethods(Class<?> clazz) {
+        for (Method method : clazz.getDeclaredMethods()) {
+            Bean bean = method.getAnnotation(Bean.class);
+            if (bean != null) {
+                int mod = method.getModifiers();
+                if (Modifier.isAbstract(mod)) {
+                    throw new BeanDefinitionException("@Bean method " + clazz.getName() + "." + method.getName() + " must not be abstract.");
+                }
+                if (Modifier.isFinal(mod)) {
+                    throw new BeanDefinitionException("@Bean method " + clazz.getName() + "." + method.getName() + " must not be final.");
+                }
+                if (Modifier.isPrivate(mod)) {
+                    throw new BeanDefinitionException("@Bean method " + clazz.getName() + "." + method.getName() + " must not be private.");
+                }
+                Class<?> beanClass = method.getReturnType();
+                if (beanClass.isPrimitive()) {
+                    throw new BeanDefinitionException("@Bean method " + clazz.getName() + "." + method.getName() + " must not return primitive type.");
+                }
+                if (beanClass == void.class || beanClass == Void.class) {
+                    throw new BeanDefinitionException("@Bean method " + clazz.getName() + "." + method.getName() + " must not return void.");
+                }
+                String factoryBeanName = ClassUtils.getBeanName(clazz);
+                return BeanDefinitionFactory.createBeanDefinition(method, factoryBeanName);
+            }
+        }
+        return null;
+    }
 }
 

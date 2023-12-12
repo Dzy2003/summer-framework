@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
  * @create 2023/12/10 21:37
  * @description
  */
-
+@Component
 public class testClassUtils {
     @Test
     public void testFindAnnotation(){

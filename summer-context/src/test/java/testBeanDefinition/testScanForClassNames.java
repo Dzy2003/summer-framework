@@ -1,5 +1,6 @@
 package testBeanDefinition;
 
+import com.duan.summer.annotation.Component;
 import com.duan.summer.context.AnnotationConfigApplicationContext;
 import com.duan.summer.io.PropertyResolver;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,7 @@ import java.util.Set;
  * @create 2023/12/10 22:11
  * @description
  */
-
+@Component
 public class testScanForClassNames {
 
     @Test
@@ -40,7 +41,6 @@ public class testScanForClassNames {
     }
     @Test
     public void testReflect() throws ClassNotFoundException {
-        Class<?> aClass = Class.forName("com.duan.summer.exception.BeansException");
-        System.out.println(aClass);
+
     }
 }

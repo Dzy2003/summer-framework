@@ -10,7 +10,7 @@ import com.duan.summer.utils.ClassUtils;
  * @create 2023/12/10 22:12
  * @description
  */
-@ComponentScan({"com.duan.summer.io","com.duan.summer.exception"})
+@ComponentScan({"testBeanDefinition"})
 @Import(ClassUtils.class)
 public class config {
 }
