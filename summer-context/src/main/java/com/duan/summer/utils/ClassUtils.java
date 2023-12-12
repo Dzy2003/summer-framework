@@ -1,8 +1,16 @@
 package com.duan.summer.utils;
 
+import com.duan.summer.annotation.Bean;
+import com.duan.summer.annotation.Component;
 import com.duan.summer.exception.BeanDefinitionException;
+import jakarta.annotation.Nullable;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author 白日
@@ -34,5 +42,74 @@ public class  ClassUtils {
         }
         return a;
     }
+
+    public static String getBeanName(Class<?> clazz) {
+        String name = "";
+        // 查找@Component:
+        Component component = clazz.getAnnotation(Component.class);
+        if (component != null) {
+            // @Component exist:
+            name = component.value();
+        } else {
+            // 未找到@Component，继续在其他注解中查找@Component:
+            for (Annotation anno : clazz.getAnnotations()) {
+                if (findAnnotation(anno.annotationType(), Component.class) != null) {
+                    try {
+                        name = (String) anno.annotationType().getMethod("value").invoke(anno);
+                    } catch (ReflectiveOperationException e) {
+                        throw new BeanDefinitionException("Cannot get annotation value.", e);
+                    }
+                }
+            }
+        }
+        if (name.isEmpty()) {
+            // default name: "HelloWorld" => "helloWorld"
+            name = clazz.getSimpleName();
+            name = Character.toLowerCase(name.charAt(0)) + name.substring(1);
+        }
+        return name;
+    }
+    /**
+     * Get bean name by:
+     *
+     * <code>
+     * @Bean
+     * Hello createHello() {}
+     * </code>
+     */
+    public static String getBeanName(Method method) {
+        Bean bean = method.getAnnotation(Bean.class);
+        String name = bean.value();
+        if (name.isEmpty()) {
+            name = method.getName();
+        }
+        return name;
+    }
+
+    /**
+     * 查找注解方法,
+     * @param clazz 类对象
+     * @param annoClass 注解类型
+     * @return 返回注解方法，如果找不到则返回null
+     */
+    @Nullable
+    public static Method findAnnotationMethod(Class<?> clazz, Class<? extends Annotation> annoClass) {
+        // 首先尝试获取声明在类中的方法：
+        List<Method> ms = Arrays.stream(clazz.getDeclaredMethods()).filter(m -> m.isAnnotationPresent(annoClass)).map(m -> {
+            if (m.getParameterCount() != 0) {
+                throw new BeanDefinitionException(
+                        String.format("Method '%s' with @%s must not have argument: %s", m.getName(), annoClass.getSimpleName(), clazz.getName()));
+            }
+            return m;
+        }).toList();
+        if (ms.isEmpty()) {
+            return null;
+        }
+        if (ms.size() == 1) {
+            return ms.get(0);
+        }
+        throw new BeanDefinitionException(String.format("Multiple methods with @%s found in class: %s", annoClass.getSimpleName(), clazz.getName()));
+    }
+
 }
 

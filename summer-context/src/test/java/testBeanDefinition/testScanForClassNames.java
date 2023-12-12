@@ -28,4 +28,19 @@ public class testScanForClassNames {
         Set<String> set = context.scanForClassNames(config.class);
         System.out.println(set);
     }
+
+    @Test
+    public void testBeanDefinition() throws IOException {
+        Properties properties = new Properties();
+        properties.load(new FileInputStream("src/main/resources/jdbc.properties"));
+        PropertyResolver resolver = new PropertyResolver(properties);
+        AnnotationConfigApplicationContext context =
+                new AnnotationConfigApplicationContext(config.class,resolver);
+        System.out.println(context.beans);
+    }
+    @Test
+    public void testReflect() throws ClassNotFoundException {
+        Class<?> aClass = Class.forName("com.duan.summer.exception.BeansException");
+        System.out.println(aClass);
+    }
 }
