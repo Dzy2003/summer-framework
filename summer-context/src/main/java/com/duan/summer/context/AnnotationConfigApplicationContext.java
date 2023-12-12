@@ -2,17 +2,21 @@ package com.duan.summer.context;
 
 import com.duan.summer.annotation.*;
 import com.duan.summer.exception.BeanDefinitionException;
+import com.duan.summer.exception.BeanNotOfRequiredTypeException;
 import com.duan.summer.exception.BeansException;
+import com.duan.summer.exception.NoUniqueBeanDefinitionException;
 import com.duan.summer.io.PropertyResolver;
 import com.duan.summer.io.Resource;
 import com.duan.summer.io.ResourceResolver;
 import com.duan.summer.utils.ClassUtils;
+import jakarta.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author 白日
@@ -111,7 +115,7 @@ public class AnnotationConfigApplicationContext {
         for (String scanPackage : scanPackages) {
             List<String> scan = new ResourceResolver(scanPackage).scan(resource -> {
                 if (resource.name().endsWith(".class")) {
-                    return resource.name().substring(0, resource.name().length() - 6);
+                    return resource.name().substring(0, resource.name().length() - 6).replace("\\",".");
                 }
                 return null;
             });
@@ -123,6 +127,65 @@ public class AnnotationConfigApplicationContext {
         }
         logger.debug("扫描出的类名：{}", beanClassNames);
         return beanClassNames;
+    }
+
+    /**
+     * 根据Name查找BeanDefinition，如果Name不存在，返回null
+     */
+    @Nullable
+    public BeanDefinition findBeanDefinition(String name) {
+        return this.beans.get(name);
+    }
+
+    /**
+     * 根据Name和Type查找BeanDefinition，如果Name不存在，返回null，如果Name存在，但Type不匹配，抛出异常。
+     */
+    @Nullable
+    public BeanDefinition findBeanDefinition(String name, Class<?> requiredType) {
+        BeanDefinition def = findBeanDefinition(name);
+        if (def == null) {
+            return null;
+        }
+        if (!requiredType.isAssignableFrom(def.getBeanClass())) {
+            throw new BeanNotOfRequiredTypeException(String.format("Autowire required type '%s' but bean '%s' has actual type '%s'.", requiredType.getName(),
+                    name, def.getBeanClass().getName()));
+        }
+        return def;
+    }
+
+    /**
+     * 根据Type查找若干个BeanDefinition，返回0个或多个。
+     */
+    public List<BeanDefinition> findBeanDefinitions(Class<?> type) {
+        return this.beans.values().stream()
+                // 过滤type的类型或者子类
+                .filter(def -> type.isAssignableFrom(def.getBeanClass()))
+                // 排序:
+                .sorted().collect(Collectors.toList());
+    }
+
+    /**
+     * 根据Type查找某个BeanDefinition，如果不存在返回null，如果存在多个返回@Primary标注的一个，如果有多个@Primary标注，或没有@Primary标注但找到多个，均抛出NoUniqueBeanDefinitionException
+     */
+    @Nullable
+    public BeanDefinition findBeanDefinition(Class<?> type) {
+        List<BeanDefinition> defs = findBeanDefinitions(type);
+        if (defs.isEmpty()) {
+            return null;
+        }
+        if (defs.size() == 1) {
+            return defs.get(0);
+        }
+        // more than 1 beans, require @Primary:
+        List<BeanDefinition> primaryDefs = defs.stream().filter(def -> def.isPrimary()).collect(Collectors.toList());
+        if (primaryDefs.size() == 1) {
+            return primaryDefs.get(0);
+        }
+        if (primaryDefs.isEmpty()) {
+            throw new NoUniqueBeanDefinitionException(String.format("Multiple bean with type '%s' found, but no @Primary specified.", type.getName()));
+        } else {
+            throw new NoUniqueBeanDefinitionException(String.format("Multiple bean with type '%s' found, and multiple @Primary specified.", type.getName()));
+        }
     }
 
 }
