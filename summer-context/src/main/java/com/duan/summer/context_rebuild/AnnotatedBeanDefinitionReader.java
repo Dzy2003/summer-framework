@@ -4,6 +4,7 @@ import com.duan.summer.annotation.*;
 import com.duan.summer.context.BeanDefinition;
 import com.duan.summer.context.BeanDefinitionFactory;
 import com.duan.summer.exception.BeansException;
+import com.duan.summer.io.PropertyResolver;
 import com.duan.summer.io.ResourceResolver;
 import com.duan.summer.utils.ClassUtils;
 import org.slf4j.Logger;
@@ -26,8 +27,24 @@ public class AnnotatedBeanDefinitionReader {
     public void registry(Class<?>... clazz){
         for (Class<?> aClass : clazz) {
             registryBeanDefinitions(scanForClassNames(aClass));
+            registryPropertyResolvers(aClass);
         }
     }
+
+    private void registryPropertyResolvers(Class<?> aClass) {
+        PropertySource propertySource = aClass.getAnnotation(PropertySource.class);
+        String[] value = propertySource.value();
+        for (String s : value) {
+            Properties properties = new Properties();
+            try {
+                properties.load(getClass().getClassLoader().getResourceAsStream(s));
+            }catch (Exception e){
+                throw new RuntimeException("资源加载错误");
+            }
+            registry.registryPropertyResolver(properties);
+        }
+    }
+
 
     /**
      * 通过反射将带有@ComponetBean注解等需要加入管理的类创建Definitions记录信息
@@ -52,6 +69,7 @@ public class AnnotatedBeanDefinitionReader {
             Configuration configuration = ClassUtils.findAnnotation(clazz, Configuration.class);
             if(configuration != null){
                 BeanDefinition def = ClassUtils.findFactoryMethods(clazz);
+                if(def == null) return;
                 this.registry.registerBeanDefinition(def.getName(), def);
             }
         });
@@ -76,6 +94,7 @@ public class AnnotatedBeanDefinitionReader {
             beanClassNames.addAll(scan);
         }
         Import anImport = configClass.getAnnotation(Import.class);
+        if(anImport == null) return beanClassNames;
         for (Class<?> aClass : anImport.value()) {
             beanClassNames.add(aClass.getName());
         }

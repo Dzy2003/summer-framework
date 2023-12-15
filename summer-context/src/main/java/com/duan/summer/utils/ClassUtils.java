@@ -142,5 +142,15 @@ public class  ClassUtils {
         }
         return null;
     }
+    @Nullable
+    @SuppressWarnings("unchecked")
+    public static <A extends Annotation> A getAnnotation(Annotation[] annos, Class<A> annoClass) {
+        for (Annotation anno : annos) {
+            if (annoClass.isInstance(anno)) {
+                return (A) anno;
+            }
+        }
+        return null;
+    }
 }
 

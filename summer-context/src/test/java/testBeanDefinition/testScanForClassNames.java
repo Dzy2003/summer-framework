@@ -23,7 +23,7 @@ public class testScanForClassNames {
     public void testScan() throws IOException {
         Properties properties = new Properties();
         properties.load(new FileInputStream("src/main/resources/jdbc.properties"));
-        PropertyResolver resolver = new PropertyResolver(properties);
+        PropertyResolver resolver = new PropertyResolver();
         AnnotationConfigApplicationContext context =
                 new AnnotationConfigApplicationContext(config.class,resolver);
         Set<String> set = context.scanForClassNames(config.class);
@@ -34,7 +34,7 @@ public class testScanForClassNames {
     public void testBeanDefinition() throws IOException {
         Properties properties = new Properties();
         properties.load(new FileInputStream("src/main/resources/jdbc.properties"));
-        PropertyResolver resolver = new PropertyResolver(properties);
+        PropertyResolver resolver = new PropertyResolver();
         AnnotationConfigApplicationContext context =
                 new AnnotationConfigApplicationContext(config.class,resolver);
         System.out.println(context.beans);

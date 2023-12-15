@@ -15,8 +15,9 @@ import java.util.Properties;
 public class test {
     public static void main(String[] args) throws IOException {
         Properties properties = new Properties();
-        properties.load(new FileInputStream("src/main/resources/jdbc.properties"));
-        PropertyResolver resolver = new PropertyResolver(properties);
+        properties.load(test.class.getClassLoader().getResourceAsStream("jdbc.properties"));
+        PropertyResolver resolver = new PropertyResolver();
+        resolver.registryPropertyResolver(properties);
         Object obj = resolver.getProperty("${jdbc.url}", String.class);
         System.out.println(obj);
         assert obj != null;

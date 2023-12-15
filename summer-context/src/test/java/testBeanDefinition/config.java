@@ -3,6 +3,7 @@ package testBeanDefinition;
 import com.duan.summer.annotation.Component;
 import com.duan.summer.annotation.ComponentScan;
 import com.duan.summer.annotation.Import;
+import com.duan.summer.annotation.PropertySource;
 import com.duan.summer.utils.ClassUtils;
 
 /**
@@ -12,5 +13,6 @@ import com.duan.summer.utils.ClassUtils;
  */
 @ComponentScan({"testBeanDefinition"})
 @Import(ClassUtils.class)
+@PropertySource("jdbc.properties")
 public class config {
 }

@@ -24,16 +24,19 @@ public class PropertyResolver {
      * 构造方法读取properties文件中的配置信息到properties中
      * @param props 配置文件
      */
-    public PropertyResolver(Properties props){
+    public PropertyResolver(){
         this.properties.putAll(System.getenv());
+        // register converters:
+        registerConverters();
+    }
+
+    public void registryPropertyResolver(Properties props) {
         Set<String> keys = props.stringPropertyNames();
         for (String key : keys) {
             String value = props.getProperty(key);
             properties.put(key, value);
         }
         logger.debug("PropertyResolver: {} ", properties);
-        // register converters:
-        registerConverters();
     }
 
     /**

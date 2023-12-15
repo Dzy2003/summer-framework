@@ -1,5 +1,6 @@
 package com.duan.summer.context_rebuild;
 
+
 /**
  * @author 白日
  * @create 2023/12/12 20:02
@@ -16,6 +17,11 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
         super();
         this.reader = new AnnotatedBeanDefinitionReader(this);
         register(componentClasses);
+        refresh();
+    }
+
+    private void refresh() {
+        createBean();
     }
 
     @Override
