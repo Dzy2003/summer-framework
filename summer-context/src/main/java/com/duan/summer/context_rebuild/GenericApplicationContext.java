@@ -39,6 +39,15 @@ public class GenericApplicationContext extends ApplicationContextImpl implements
     public BeanDefinition findBeanDefinition(String beanName) {
         return beans.get(beanName);
     }
+    @Override
+    public <T> T getBean(Class<T> requiredType) {
+        try {
+            return (T) findBeanDefinition(requiredType).getInstance();
+        }catch (Exception e){
+            throw new BeanNotOfRequiredTypeException("找不到该类型的Bean");
+        }
+
+    }
 
     @Override
     public BeanDefinition findBeanDefinition(Class<?> type) {
@@ -143,7 +152,7 @@ public class GenericApplicationContext extends ApplicationContextImpl implements
             }
             final Class<?> type = curParameter.getType();
             if(value != null){
-                args[i] = propertyResolver.getProperty(value.value());
+                args[i] = propertyResolver.getProperty(value.value(),type);
             }else{
                 String dependencyName = autowired.name();
                 boolean required = autowired.value();

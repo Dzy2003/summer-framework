@@ -22,7 +22,6 @@ public class PropertyResolver {
 
     /**
      * 构造方法读取properties文件中的配置信息到properties中
-     * @param props 配置文件
      */
     public PropertyResolver(){
         this.properties.putAll(System.getenv());
@@ -61,7 +60,11 @@ public class PropertyResolver {
      */
     @Nullable
     public Object getProperty(String expression, Class<?> targetType) {
-        String value = getProperty(expression);
+        System.out.println(expression);
+        String value = expression;
+        if(expression.startsWith("${") && expression.endsWith("}")){
+            value = getProperty(expression);
+        }
         if (value == null) {
             return null;
         }
@@ -114,9 +117,6 @@ public class PropertyResolver {
      * @return PropertyExpr
      */
     PropertyExpr parsePropertyExpr(String expression) {
-        if(!expression.startsWith("${") && expression.endsWith("}")){
-            return null;
-        }
         //判断是否存在默认值
         int indexOf = expression.indexOf(':');
         if(indexOf == -1){

@@ -1,5 +1,6 @@
 package testCreateBeanInstance;
 
+import com.duan.summer.annotation.Autowired;
 import com.duan.summer.annotation.Bean;
 import com.duan.summer.annotation.Configuration;
 import com.duan.summer.annotation.Value;
@@ -15,7 +16,7 @@ public class JdbcConfig {
     public DataSource createDataSource(@Value("${jdbc.username}") String username,
                            @Value("${jdbc.password}") String password,
                            @Value("${jdbc.url}") String url,
-                           @Value("${jdbc.driver}") String driver){
+                           @Value("${jdbc.driver}") String driver) {
         DataSource dataSource = new DataSource();
         dataSource.setUrl(url);
         dataSource.setDriverClassName(driver);

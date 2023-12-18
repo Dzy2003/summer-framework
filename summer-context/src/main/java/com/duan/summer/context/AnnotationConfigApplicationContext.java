@@ -6,7 +6,6 @@ import com.duan.summer.exception.BeanNotOfRequiredTypeException;
 import com.duan.summer.exception.BeansException;
 import com.duan.summer.exception.NoUniqueBeanDefinitionException;
 import com.duan.summer.io.PropertyResolver;
-import com.duan.summer.io.Resource;
 import com.duan.summer.io.ResourceResolver;
 import com.duan.summer.utils.ClassUtils;
 import jakarta.annotation.Nullable;
@@ -61,14 +60,16 @@ public class AnnotationConfigApplicationContext {
             //是否带有@Configuration注解，将@Bean标注的方法当作工厂方法
             Configuration configuration = ClassUtils.findAnnotation(clazz, Configuration.class);
             if(configuration != null){
-                BeanDefinition def = findFactoryMethods(clazz);
-                defs.put(def.getName(),def);
+                List<BeanDefinition>  factoryMethods = findFactoryMethods(clazz);
+                if(factoryMethods == null || factoryMethods.isEmpty()) return;
+                factoryMethods.forEach(factoryMethod -> defs.put(factoryMethod.getName(), factoryMethod));
             }
         });
         return defs;
     }
 
-    private BeanDefinition findFactoryMethods(Class<?> clazz) {
+    private List<BeanDefinition> findFactoryMethods(Class<?> clazz) {
+        List<BeanDefinition> factoryMethods = new ArrayList<>();
         for (Method method : clazz.getDeclaredMethods()) {
             Bean bean = method.getAnnotation(Bean.class);
             if (bean != null) {
@@ -91,10 +92,10 @@ public class AnnotationConfigApplicationContext {
                 }
                 String factoryBeanName = ClassUtils.getBeanName(clazz);
                 logger.atDebug().log("define bean: {}", BeanDefinitionFactory.createBeanDefinition(method,factoryBeanName));
-                return BeanDefinitionFactory.createBeanDefinition(method, factoryBeanName);
+                factoryMethods.add(BeanDefinitionFactory.createBeanDefinition(method, factoryBeanName));
             }
         }
-        return null;
+        return factoryMethods;
     }
 
 

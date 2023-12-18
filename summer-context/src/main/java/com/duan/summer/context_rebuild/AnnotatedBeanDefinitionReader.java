@@ -37,7 +37,7 @@ public class AnnotatedBeanDefinitionReader {
         for (String s : value) {
             Properties properties = new Properties();
             try {
-                properties.load(getClass().getClassLoader().getResourceAsStream(s));
+                properties.load(aClass.getClassLoader().getResourceAsStream(s));
             }catch (Exception e){
                 throw new RuntimeException("资源加载错误");
             }
@@ -51,7 +51,6 @@ public class AnnotatedBeanDefinitionReader {
      * @param beanClassNames 扫描的全限名
      */
     private void registryBeanDefinitions(Set<String> beanClassNames) {
-        Map<String, BeanDefinition> defs = new HashMap<>();
         beanClassNames.forEach(className -> {
             Class<?> clazz = null;
             try {

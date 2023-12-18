@@ -18,6 +18,10 @@ public class test {
             bean.print();
             DataSource dataSource = ((DataSource) context.getBean("createDataSource"));
             System.out.println(dataSource);
+            ConstructInject constructInject = context.getBean(ConstructInject.class);
+            System.out.println(constructInject);
+            DataSource1 source = context.getBean(DataSource1.class);
+            System.out.println(source);
         }
     }
 }

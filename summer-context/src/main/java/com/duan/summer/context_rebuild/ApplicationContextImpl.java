@@ -25,8 +25,8 @@ public abstract class ApplicationContextImpl implements ApplicationContext{
     }
 
     @Override
-    public <T> T getBean(String name) {
-        return (T) beans.get(name).getInstance();
+    public Object getBean(String name) {
+        return beans.get(name).getInstance();
     }
 
     @Override
@@ -36,7 +36,7 @@ public abstract class ApplicationContextImpl implements ApplicationContext{
 
     @Override
     public <T> T getBean(Class<T> requiredType) {
-        return null;
+        throw new RuntimeException("not support");
     }
 
     @Override
@@ -53,6 +53,10 @@ public abstract class ApplicationContextImpl implements ApplicationContext{
         createConfigurationBean();
         createCommonBean();
     }
+
+    /**
+     * 创建@Configuration注解的工厂
+     */
     private void createConfigurationBean(){
         beans.values()
                 .stream()
@@ -61,6 +65,10 @@ public abstract class ApplicationContextImpl implements ApplicationContext{
                 .forEach(this::createBeanAsEarlySingleton);
 
     }
+
+    /**
+     * 创建其它普通的Bean
+     */
     private void createCommonBean(){
         List<BeanDefinition> beanDefinitions = beans.values()
                 .stream()

@@ -12,7 +12,7 @@ public interface ApplicationContext extends AutoCloseable {
     /**
      * 根据name返回唯一Bean，未找到抛出NoSuchBeanDefinitionException
      */
-    <T> T getBean(String name);
+    Object getBean(String name);
 
     /**
      * 根据name返回唯一Bean，未找到抛出NoSuchBeanDefinitionException，找到但type不符抛出BeanNotOfRequiredTypeException

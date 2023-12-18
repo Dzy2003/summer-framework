@@ -2,7 +2,7 @@ package com.duan.summer.annotation;
 
 import java.lang.annotation.*;
 
-@Target({ ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER })
+@Target({ ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER ,ElementType.CONSTRUCTOR})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Autowired {

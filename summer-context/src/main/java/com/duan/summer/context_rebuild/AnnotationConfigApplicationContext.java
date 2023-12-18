@@ -17,7 +17,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
         super();
         this.reader = new AnnotatedBeanDefinitionReader(this);
         register(componentClasses);
-        refresh();
+        createBean();
     }
 
     private void refresh() {
