@@ -33,6 +33,7 @@ public class AnnotatedBeanDefinitionReader {
 
     private void registryPropertyResolvers(Class<?> aClass) {
         PropertySource propertySource = aClass.getAnnotation(PropertySource.class);
+        if(propertySource == null) return;
         String[] value = propertySource.value();
         for (String s : value) {
             Properties properties = new Properties();

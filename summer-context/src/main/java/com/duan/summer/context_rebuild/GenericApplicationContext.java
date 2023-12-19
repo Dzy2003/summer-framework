@@ -15,6 +15,7 @@ import java.lang.reflect.Executable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
@@ -40,22 +41,31 @@ public class GenericApplicationContext extends ApplicationContextImpl implements
         return beans.get(beanName);
     }
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T getBean(Class<T> requiredType) {
-        try {
-            return (T) findBeanDefinition(requiredType).getInstance();
-        }catch (Exception e){
-            throw new BeanNotOfRequiredTypeException("找不到该类型的Bean");
+        BeanDefinition def = findBeanDefinition(requiredType);
+        if (def == null) {
+            throw new NoSuchBeanDefinitionException(String.format("No bean defined with type '%s'.", requiredType));
         }
-
+        return (T) def.getRequiredInstance();
+    }
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> List<T> getBeans(Class<T> requiredType) {
+        List<BeanDefinition> defs = findBeanDefinitions(requiredType);
+        if (defs.isEmpty()) {
+            return List.of();
+        }
+        List<T> list = new ArrayList<>(defs.size());
+        for (var def : defs) {
+            list.add((T) def.getRequiredInstance());
+        }
+        return list;
     }
 
     @Override
     public BeanDefinition findBeanDefinition(Class<?> type) {
-        List<BeanDefinition> defs = this.beans.values().stream()
-                // 过滤不在type继承体系中的中BeanDefinition
-                .filter(def -> type.isAssignableFrom(def.getBeanClass()))
-                // 排序:
-                .sorted().toList();
+        List<BeanDefinition> defs = findBeanDefinitions(type);
         if (defs.isEmpty()) {
             return null;
         }
@@ -72,6 +82,14 @@ public class GenericApplicationContext extends ApplicationContextImpl implements
         } else {
             throw new NoUniqueBeanDefinitionException(String.format("Multiple bean with type '%s' found, and multiple @Primary specified.", type.getName()));
         }
+    }
+
+    private List<BeanDefinition> findBeanDefinitions(Class<?> type) {
+        return this.beans.values().stream()
+                // 过滤不在type继承体系中的中BeanDefinition
+                .filter(def -> type.isAssignableFrom(def.getBeanClass()))
+                // 排序:
+                .sorted().toList();
     }
 
     @Nullable
