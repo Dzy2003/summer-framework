@@ -3,7 +3,6 @@ package com.duan.summer.context_rebuild;
 import com.duan.summer.annotation.Autowired;
 import com.duan.summer.annotation.Configuration;
 import com.duan.summer.annotation.Value;
-import com.duan.summer.context.BeanDefinition;
 import com.duan.summer.exception.BeanCreationException;
 import com.duan.summer.exception.BeanDefinitionException;
 import com.duan.summer.exception.BeanNotOfRequiredTypeException;

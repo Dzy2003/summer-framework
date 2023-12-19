@@ -1,13 +1,8 @@
 package testBeanDefinition;
 
 import com.duan.summer.annotation.Component;
-import com.duan.summer.context.BeanDefinition;
-import com.duan.summer.context_rebuild.AnnotatedBeanDefinitionReader;
 import com.duan.summer.context_rebuild.AnnotationConfigApplicationContext;
-import com.duan.summer.context_rebuild.GenericApplicationContext;
 import org.junit.jupiter.api.Test;
-
-import java.util.Map;
 
 /**
  * @author 白日

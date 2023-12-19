@@ -1,10 +1,7 @@
 package com.duan.summer.context_rebuild;
 
 import com.duan.summer.annotation.*;
-import com.duan.summer.context.BeanDefinition;
-import com.duan.summer.context.BeanDefinitionFactory;
 import com.duan.summer.exception.BeansException;
-import com.duan.summer.io.PropertyResolver;
 import com.duan.summer.io.ResourceResolver;
 import com.duan.summer.utils.ClassUtils;
 import org.slf4j.Logger;

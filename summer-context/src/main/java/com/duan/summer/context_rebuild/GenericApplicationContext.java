@@ -2,7 +2,6 @@ package com.duan.summer.context_rebuild;
 
 import com.duan.summer.annotation.Autowired;
 import com.duan.summer.annotation.Value;
-import com.duan.summer.context.BeanDefinition;
 import com.duan.summer.exception.*;
 import com.duan.summer.io.PropertyResolver;
 import com.duan.summer.utils.ClassUtils;
@@ -12,8 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Executable;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
