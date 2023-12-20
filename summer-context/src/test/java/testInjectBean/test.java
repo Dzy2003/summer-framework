@@ -15,6 +15,8 @@ public class test {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(config.class)) {
             bean2 bean2 = context.getBean(bean2.class);
             bean2.useBean1();
+            Controller controller = context.getBean(Controller.class);
+            controller.userService();
         }
 
     }

@@ -44,8 +44,8 @@ public class BeanDefinitionFactory {
      * @return BeanDefinition bean的定义信息
      */
     public static BeanDefinition createBeanDefinition(Method method, String factoryBeanName) {
-        String destroyMethod = method.getAnnotation(Bean.class).destroyMethod();
-        String initMethod = method.getAnnotation(Bean.class).initMethod();
+        String destroyMethodName = method.getAnnotation(Bean.class).destroyMethod();
+        String initMethodName = method.getAnnotation(Bean.class).initMethod();
         return new BeanDefinition(
                 ClassUtils.getBeanName(method),
                 method.getReturnType(),
@@ -53,8 +53,8 @@ public class BeanDefinitionFactory {
                 method,
                 getOrder(method),
                 method.isAnnotationPresent(Primary.class),
-                initMethod.isEmpty() ? null : initMethod,
-                destroyMethod.isEmpty() ? null : destroyMethod,
+                destroyMethodName.isEmpty() ? null : destroyMethodName,
+                initMethodName.isEmpty() ? null : initMethodName,
                 null,null
         );
     }

@@ -3,6 +3,7 @@ package testInjectBean;
 import com.duan.summer.annotation.Autowired;
 import com.duan.summer.annotation.Component;
 import com.duan.summer.annotation.Value;
+import jakarta.annotation.PostConstruct;
 
 /**
  * @author 白日
@@ -23,6 +24,10 @@ public class bean2 {
     @Autowired
     public void setBean1(bean1 bean1){
         this.bean1 = bean1;
+    }
+    @PostConstruct
+    public void init(){
+        System.out.println("bean2初始化完成");
     }
 
 }

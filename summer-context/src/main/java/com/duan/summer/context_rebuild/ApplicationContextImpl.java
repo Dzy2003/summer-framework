@@ -1,6 +1,7 @@
 package com.duan.summer.context_rebuild;
 
 import com.duan.summer.annotation.Autowired;
+import com.duan.summer.annotation.Bean;
 import com.duan.summer.annotation.Configuration;
 import com.duan.summer.annotation.Value;
 import com.duan.summer.exception.BeanCreationException;
@@ -12,10 +13,7 @@ import com.duan.summer.utils.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Member;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.util.*;
 
 /**
@@ -113,8 +111,7 @@ public abstract class ApplicationContextImpl implements ApplicationContext{
         }
         if(autowired != null){
             boolean required = autowired.value();
-            Object dependentBean = autowired.name().isEmpty()?
-                    getBean(field.getType()) : getBean(autowired.name(),field.getType());
+            Object dependentBean = getDependentBean(autowired, field.getType());
             if(dependentBean == null && required) {
                 throw new UnsatisfiedDependencyException(String.format("Dependency bean not found when inject %s.%s for bean '%s': %s"
                         , def.getBeanClass().getSimpleName(),
@@ -146,25 +143,30 @@ public abstract class ApplicationContextImpl implements ApplicationContext{
         Class<?> injectType = method.getParameterTypes()[0];
         if(value != null) {
             PropertyResolver pr = new PropertyResolver();
-            logger.atDebug().log("Field injection: {}.{} = {}",
+            logger.atDebug().log(" injection: {}.{} = {}",
                     def.getBeanClass().getName(), method.getName(), pr.getProperty(value.value(),injectType ));
             method.invoke(def.getInstance(), pr.getProperty(value.value(), injectType));
         }
         if(autowired != null){
             boolean required = autowired.value();
-            Object dependentBean = autowired.name().isEmpty() ?
-                    getBean(injectType) : getBean(autowired.name(),injectType);
+            Object dependentBean = getDependentBean(autowired, injectType);
             if(dependentBean == null && required) {
                 throw new UnsatisfiedDependencyException(String.format("Dependency bean not found when inject %s.%s for bean '%s': %s"
                         , def.getBeanClass().getSimpleName(),
                         method.getName(), def.getName(), def.getBeanClass().getName()));
             }
             if(dependentBean != null){
-                logger.atDebug().log("Method injection: {}.{} = {}",
+                logger.atDebug().log("Setter injection: {}.{} = {}",
                         def.getBeanClass().getName(), method.getName(), dependentBean);
                 method.invoke(def.getInstance(), dependentBean);
             }
         }
+    }
+
+    private Object getDependentBean(Autowired autowired,Class<?> injectType){
+        return autowired.name().isEmpty() ?
+                getBean(injectType) : getBean(autowired.name(),injectType);
+
     }
 
     void checkFieldOrMethod(Member m) {
@@ -185,7 +187,25 @@ public abstract class ApplicationContextImpl implements ApplicationContext{
 
 
     private void callInitMethod(BeanDefinition definition){
+        callMethod(definition.getInstance(), definition.getInitMethod(), definition.getInitMethodName());
+    }
 
+    private void callMethod(Object instance, Method initMethod, String initMethodName) {
+        if(initMethod != null){
+            try {
+                initMethod.invoke(instance);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new BeanCreationException(e);
+            }
+        }
+        if(initMethodName != null && !initMethodName.isEmpty()){
+            try {
+                Method initmethod = instance.getClass().getDeclaredMethod(initMethodName);
+                initmethod.invoke(instance);
+            } catch (ReflectiveOperationException e) {
+                throw new BeanCreationException(e);
+            }
+        }
     }
 
     /**
