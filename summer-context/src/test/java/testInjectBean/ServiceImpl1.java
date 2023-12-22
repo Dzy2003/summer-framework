@@ -8,7 +8,8 @@ import com.duan.summer.annotation.Primary;
  * @create 2023/12/20 14:28
  * @description
  */
-@Component("ServiceImpl1")
+@Component()
+@Primary
 public class ServiceImpl1 implements iService{
     @Override
     public void print() {

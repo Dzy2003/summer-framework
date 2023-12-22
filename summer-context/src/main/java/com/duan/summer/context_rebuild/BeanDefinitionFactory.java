@@ -53,8 +53,8 @@ public class BeanDefinitionFactory {
                 method,
                 getOrder(method),
                 method.isAnnotationPresent(Primary.class),
-                destroyMethodName.isEmpty() ? null : destroyMethodName,
                 initMethodName.isEmpty() ? null : initMethodName,
+                destroyMethodName.isEmpty() ? null : destroyMethodName,
                 null,null
         );
     }

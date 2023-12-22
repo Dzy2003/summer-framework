@@ -2,6 +2,7 @@ package testInjectBean;
 
 import com.duan.summer.annotation.ComponentScan;
 import com.duan.summer.annotation.Configuration;
+import com.duan.summer.annotation.PropertySource;
 
 /**
  * @author 白日
@@ -10,5 +11,6 @@ import com.duan.summer.annotation.Configuration;
  */
 @Configuration
 @ComponentScan
+@PropertySource("jdbc.properties")
 public class config {
 }

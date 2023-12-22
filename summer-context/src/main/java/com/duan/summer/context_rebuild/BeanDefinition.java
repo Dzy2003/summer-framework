@@ -150,7 +150,7 @@ public class BeanDefinition implements Comparable<BeanDefinition> {
     public String toString() {
         return "BeanDefinition [name=" + name + ", beanClass=" + beanClass.getName() + ", factory=" + getCreateDetail() + ", init-method="
                 + (initMethod == null ? "null" : initMethod.getName()) + ", destroy-method=" + (destroyMethod == null ? "null" : destroyMethod.getName())
-                + ", primary=" + primary + ", instance=" + instance + "]" + "\n";
+                + ",init-name = " + initMethodName + ", primary=" + primary + ", instance=" + instance + "]" + "\n";
     }
 
     String getCreateDetail() {

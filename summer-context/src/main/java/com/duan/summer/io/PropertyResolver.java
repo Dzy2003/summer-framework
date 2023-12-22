@@ -24,7 +24,7 @@ public class PropertyResolver {
      * 构造方法读取properties文件中的配置信息到properties中
      */
     public PropertyResolver(){
-        this.properties.putAll(System.getenv());
+        //this.properties.putAll(System.getenv());
         // register converters:
         registerConverters();
     }

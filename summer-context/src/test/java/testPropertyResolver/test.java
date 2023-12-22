@@ -26,5 +26,6 @@ public class test {
         Object withoutDefaultValue = resolver.getProperty("${jdbc.url:dwdadwdawd}", String.class);
         System.out.println("withDefaultValue:" + withDefaultValue);
         System.out.print("withoutDefaultValue:" + withoutDefaultValue);
+        System.out.println(resolver.getProperty("${jdbc.username}", String.class));
     }
 }

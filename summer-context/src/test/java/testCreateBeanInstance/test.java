@@ -20,7 +20,7 @@ public class test {
             System.out.println(dataSource);
             ConstructInject constructInject = context.getBean(ConstructInject.class);
             System.out.println(constructInject);
-            DataSource1 source = context.getBean(DataSource1.class);
+            DataSource source = context.getBean(DataSource.class);
             System.out.println(source);
         }
     }

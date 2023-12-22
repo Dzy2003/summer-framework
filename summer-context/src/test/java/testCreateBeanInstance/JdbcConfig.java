@@ -12,7 +12,7 @@ import com.duan.summer.annotation.Value;
  */
 @Configuration
 public class JdbcConfig {
-    @Bean
+    @Bean(initMethod = "init")
     public DataSource createDataSource(@Value("${jdbc.username}") String username,
                            @Value("${jdbc.password}") String password,
                            @Value("${jdbc.url}") String url,
@@ -23,5 +23,8 @@ public class JdbcConfig {
         dataSource.setUsername(username);
         dataSource.setPassword(password);
         return dataSource;
+    }
+    public void init(){
+        System.out.println("DataSource的init方法被调用");
     }
 }

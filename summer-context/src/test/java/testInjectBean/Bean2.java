@@ -2,7 +2,6 @@ package testInjectBean;
 
 import com.duan.summer.annotation.Autowired;
 import com.duan.summer.annotation.Component;
-import com.duan.summer.annotation.Value;
 import jakarta.annotation.PostConstruct;
 
 /**
@@ -11,18 +10,15 @@ import jakarta.annotation.PostConstruct;
  * @description
  */
 @Component
-public class bean2 {
-
-    bean1 bean1;
-    @Value("段志宇")
-    String name;
-
+public class Bean2 {
+    Bean1 bean1;
     public void useBean1(){
         bean1.print();
-        System.out.println(name);
+        System.out.println(bean1.name);
+        System.out.println(bean1.username);
     }
     @Autowired
-    public void setBean1(bean1 bean1){
+    public void setBean1(Bean1 bean1){
         this.bean1 = bean1;
     }
     @PostConstruct

@@ -1,6 +1,7 @@
 package testInjectBean;
 
 import com.duan.summer.annotation.Component;
+import com.duan.summer.annotation.Value;
 import jakarta.annotation.PostConstruct;
 
 /**
@@ -9,7 +10,11 @@ import jakarta.annotation.PostConstruct;
  * @description
  */
 @Component
-public class bean1 {
+public class Bean1 {
+    @Value("段志宇")
+    String name;
+    @Value("${jdbc.username}")
+    String username;
     public void print(){
         System.out.println("我是bean1");
     }

@@ -25,6 +25,7 @@ import java.util.*;
 public abstract class ApplicationContextImpl implements ApplicationContext{
     public final Map<String, BeanDefinition> beans;
     Set<String> creatingBeanNames;
+    PropertyResolver propertyResolver = new PropertyResolver();
     private final Logger logger = LoggerFactory.getLogger(getClass());
     public ApplicationContextImpl(){
         beans = new HashMap<>();
@@ -73,8 +74,8 @@ public abstract class ApplicationContextImpl implements ApplicationContext{
     }
 
     protected void initBean(){
-        this.beans.values().forEach(this::injectBean);
-        this.beans.values().forEach(this::callInitMethod);
+        this.beans.values().forEach(this::injectBean);//注入依赖
+        this.beans.values().forEach(this::callInitMethod);//调用init方法
     }
 
 
@@ -104,10 +105,9 @@ public abstract class ApplicationContextImpl implements ApplicationContext{
         checkFieldOrMethod(field);
         field.setAccessible(true);
         if(value != null) {
-            PropertyResolver pr = new PropertyResolver();
             logger.atDebug().log("Field injection: {}.{} = {}",
-                    def.getBeanClass().getName(), field.getName(), pr.getProperty(value.value(), field.getType()));
-            field.set(def.getInstance(), pr.getProperty(value.value(), field.getType()));
+                    def.getBeanClass().getName(), field.getName(), propertyResolver.getProperty(value.value(), field.getType()));
+            field.set(def.getInstance(), propertyResolver.getProperty(value.value(), field.getType()));
         }
         if(autowired != null){
             boolean required = autowired.value();
@@ -142,10 +142,9 @@ public abstract class ApplicationContextImpl implements ApplicationContext{
         method.setAccessible(true);
         Class<?> injectType = method.getParameterTypes()[0];
         if(value != null) {
-            PropertyResolver pr = new PropertyResolver();
             logger.atDebug().log(" injection: {}.{} = {}",
-                    def.getBeanClass().getName(), method.getName(), pr.getProperty(value.value(),injectType ));
-            method.invoke(def.getInstance(), pr.getProperty(value.value(), injectType));
+                    def.getBeanClass().getName(), method.getName(), propertyResolver.getProperty(value.value(),injectType ));
+            method.invoke(def.getInstance(), propertyResolver.getProperty(value.value(), injectType));
         }
         if(autowired != null){
             boolean required = autowired.value();
@@ -187,21 +186,24 @@ public abstract class ApplicationContextImpl implements ApplicationContext{
 
 
     private void callInitMethod(BeanDefinition definition){
-        callMethod(definition.getInstance(), definition.getInitMethod(), definition.getInitMethodName());
+        String factoryName = definition.getFactoryName();
+        callMethod(definition.getInstance(), definition.getInitMethod(),
+                definition.getInitMethodName(),factoryName);
     }
 
-    private void callMethod(Object instance, Method initMethod, String initMethodName) {
-        if(initMethod != null){
+    private void callMethod(Object instance, Method Method, String MethodName,String factoryName) {
+        if(Method != null){
             try {
-                initMethod.invoke(instance);
+                Method.invoke(instance);
             } catch (IllegalAccessException | InvocationTargetException e) {
                 throw new BeanCreationException(e);
             }
         }
-        if(initMethodName != null && !initMethodName.isEmpty()){
+        if(MethodName != null && !MethodName.isEmpty()){
             try {
-                Method initmethod = instance.getClass().getDeclaredMethod(initMethodName);
-                initmethod.invoke(instance);
+                Object factoryBean = getBean(factoryName);
+                Method initmethod = factoryBean.getClass().getDeclaredMethod(MethodName);
+                initmethod.invoke(factoryBean);
             } catch (ReflectiveOperationException e) {
                 throw new BeanCreationException(e);
             }

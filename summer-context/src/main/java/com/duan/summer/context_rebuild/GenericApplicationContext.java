@@ -25,7 +25,6 @@ import java.util.Set;
 
 public class GenericApplicationContext extends ApplicationContextImpl implements BeanDefinitionRegistry{
     protected final Logger logger = LoggerFactory.getLogger(getClass());
-    PropertyResolver propertyResolver = new PropertyResolver();
     @Override
     public void registerBeanDefinition(String beanName, BeanDefinition beanDefinition) {
         if (beans.put(beanDefinition.getName(), beanDefinition) != null) {
