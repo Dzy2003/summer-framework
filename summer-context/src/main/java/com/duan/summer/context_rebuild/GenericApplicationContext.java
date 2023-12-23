@@ -188,23 +188,37 @@ public class GenericApplicationContext extends ApplicationContextImpl implements
             }
         }
         Object instance = null;
-        if(definition.getFactoryName() == null){
-            try {
+        try {
+            if(definition.getFactoryName() == null){
                 instance = definition.getConstructor().newInstance(args);
-            } catch (Exception e) {
-                throw new BeanCreationException(String.format("Exception when create bean '%s': %s",
-                        definition.getName(), definition.getBeanClass().getName()), e);
-            }
-        }else{
-            Object bean = getBean(definition.getFactoryName());
-            try {
+            }else{
+                Object bean = getBean(definition.getFactoryName());
                 instance = definition.getFactoryMethod().invoke(bean,args);
-            }catch (Exception e){
-                throw new BeanCreationException(String.format("Exception when create bean '%s': %s",
-                        definition.getName(), definition.getBeanClass().getName()), e);
             }
+        }catch (Exception e){
+            throw new BeanCreationException(String.format("Exception when create bean '%s': %s",
+                    definition.getName(), definition.getBeanClass().getName()), e);
         }
         definition.setInstance(instance);
+        instance = callPostProcessor(definition);
+        return instance;
+    }
+
+    private Object callPostProcessor(BeanDefinition def) {
+        Object instance = def.getInstance();
+        for (BeanPostProcessor processor : beanPostProcessors) {
+            Object processed = processor
+                    .postProcessBeforeInitialization(def.getInstance(), def.getName());
+            if (processed == null) {
+                throw new BeanCreationException(String.format("PostBeanProcessor returns null when process bean '%s' by %s", def.getName(), processor));
+            }
+            if(processed != def.getInstance()){
+                logger.atDebug().log("Bean '{}' was replaced by post processor {}.",
+                        def.getName(), processor.getClass().getName());
+                instance = processed;
+                def.setInstance(processed);
+            }
+        }
         return instance;
     }
 }

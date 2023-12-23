@@ -27,6 +27,7 @@ public abstract class ApplicationContextImpl implements ApplicationContext{
     Set<String> creatingBeanNames;
     PropertyResolver propertyResolver = new PropertyResolver();
     private final Logger logger = LoggerFactory.getLogger(getClass());
+    protected final List<BeanPostProcessor> beanPostProcessors = new ArrayList<>();
     public ApplicationContextImpl(){
         beans = new HashMap<>();
         creatingBeanNames = new HashSet<>();
@@ -70,8 +71,10 @@ public abstract class ApplicationContextImpl implements ApplicationContext{
 
     protected void createBean(){
         createConfigurationBean();
+        createBeanProcessorBean();
         createCommonBean();
     }
+
 
     protected void initBean(){
         this.beans.values().forEach(this::injectBean);//注入依赖
@@ -104,10 +107,11 @@ public abstract class ApplicationContextImpl implements ApplicationContext{
         }
         checkFieldOrMethod(field);
         field.setAccessible(true);
+        Object instance = getProxiedInstance(def);
         if(value != null) {
             logger.atDebug().log("Field injection: {}.{} = {}",
                     def.getBeanClass().getName(), field.getName(), propertyResolver.getProperty(value.value(), field.getType()));
-            field.set(def.getInstance(), propertyResolver.getProperty(value.value(), field.getType()));
+            field.set(instance, propertyResolver.getProperty(value.value(), field.getType()));
         }
         if(autowired != null){
             boolean required = autowired.value();
@@ -120,7 +124,7 @@ public abstract class ApplicationContextImpl implements ApplicationContext{
             if(dependentBean != null){
                 logger.atDebug().log("Field injection: {}.{} = {}",
                         def.getBeanClass().getName(), field.getName(), dependentBean);
-                field.set(def.getInstance(), dependentBean);
+                field.set(instance, dependentBean);
             }
         }
     }
@@ -140,6 +144,7 @@ public abstract class ApplicationContextImpl implements ApplicationContext{
                             method.getName(), def.getName(), def.getBeanClass().getName()));
         }
         method.setAccessible(true);
+        Object instance = getProxiedInstance(def);
         Class<?> injectType = method.getParameterTypes()[0];
         if(value != null) {
             logger.atDebug().log(" injection: {}.{} = {}",
@@ -157,9 +162,25 @@ public abstract class ApplicationContextImpl implements ApplicationContext{
             if(dependentBean != null){
                 logger.atDebug().log("Setter injection: {}.{} = {}",
                         def.getBeanClass().getName(), method.getName(), dependentBean);
-                method.invoke(def.getInstance(), dependentBean);
+                method.invoke(instance, dependentBean);
             }
         }
+    }
+
+    private Object getProxiedInstance(BeanDefinition def) {
+        Object beanInstance = def.getInstance();
+        List<BeanPostProcessor> reversedBeanPostProcessors = new ArrayList<>(this.beanPostProcessors);
+        Collections.reverse(reversedBeanPostProcessors);
+        for (BeanPostProcessor processor : reversedBeanPostProcessors) {
+            Object processedInstance = processor.postProcessOnSetProperty(beanInstance, def.getName());
+            if(processedInstance != beanInstance){
+                logger.atDebug().log("BeanPostProcessor {} specified injection from {} to {}.",
+                        processor.getClass().getSimpleName(),
+                        beanInstance.getClass().getSimpleName(), processedInstance.getClass().getSimpleName());
+                beanInstance = processedInstance;
+            }
+        }
+        return beanInstance;
     }
 
     private Object getDependentBean(Autowired autowired,Class<?> injectType){
@@ -223,6 +244,18 @@ public abstract class ApplicationContextImpl implements ApplicationContext{
     }
 
     /**
+     * 创建BeanDefinitionProcessor的Bean
+     */
+    private void createBeanProcessorBean() {
+        beanPostProcessors.addAll(beans.values()
+                .stream()
+                .filter(this::isBeanPostProcessorDefinition)
+               .sorted()
+               .map(def -> (BeanPostProcessor) createBeanAsEarlySingleton(def))
+                .toList());
+    }
+
+    /**
      * 创建其它普通的Bean
      */
     private void createCommonBean(){
@@ -238,5 +271,8 @@ public abstract class ApplicationContextImpl implements ApplicationContext{
 
     protected boolean isConfigurationDefinition(BeanDefinition def) {
         return ClassUtils.findAnnotation(def.getBeanClass(), Configuration.class) != null;
+    }
+    private boolean isBeanPostProcessorDefinition(BeanDefinition def) {
+        return BeanPostProcessor.class.isAssignableFrom(def.getBeanClass());
     }
 }
