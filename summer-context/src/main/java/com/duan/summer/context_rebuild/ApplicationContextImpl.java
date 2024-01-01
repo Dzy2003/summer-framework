@@ -167,6 +167,11 @@ public abstract class ApplicationContextImpl implements ApplicationContext{
         }
     }
 
+    /**
+     * 调用BeanPostProcessors的postProcessOnSetProperty方法在对实例注入实例时进行处理
+     * @param def bean定义
+     * @return 处理后的实例
+     */
     private Object getProxiedInstance(BeanDefinition def) {
         Object beanInstance = def.getInstance();
         List<BeanPostProcessor> reversedBeanPostProcessors = new ArrayList<>(this.beanPostProcessors);
@@ -272,6 +277,12 @@ public abstract class ApplicationContextImpl implements ApplicationContext{
     protected boolean isConfigurationDefinition(BeanDefinition def) {
         return ClassUtils.findAnnotation(def.getBeanClass(), Configuration.class) != null;
     }
+
+    /**
+     * 通过BeanDefinition的getBeanClass属性该类判断是否为BeanPostProcessor的实现类
+     * @param def BeanDefinition
+     * @return true or false
+     */
     private boolean isBeanPostProcessorDefinition(BeanDefinition def) {
         return BeanPostProcessor.class.isAssignableFrom(def.getBeanClass());
     }

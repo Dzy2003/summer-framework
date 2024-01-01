@@ -204,6 +204,11 @@ public class GenericApplicationContext extends ApplicationContextImpl implements
         return instance;
     }
 
+    /**
+     * 在创建Bean实例之前，调用BeanPostProcessor的postProcessBeforeInitialization方法对Bean实例进行处理
+     * @param def BeanDefinition
+     * @return 处理后的Bean实例
+     */
     private Object callPostProcessor(BeanDefinition def) {
         Object instance = def.getInstance();
         for (BeanPostProcessor processor : beanPostProcessors) {
@@ -212,6 +217,7 @@ public class GenericApplicationContext extends ApplicationContextImpl implements
             if (processed == null) {
                 throw new BeanCreationException(String.format("PostBeanProcessor returns null when process bean '%s' by %s", def.getName(), processor));
             }
+            //处理后的Bean实例与原本的实例不同，则替换原来的Bean实例
             if(processed != def.getInstance()){
                 logger.atDebug().log("Bean '{}' was replaced by post processor {}.",
                         def.getName(), processor.getClass().getName());
