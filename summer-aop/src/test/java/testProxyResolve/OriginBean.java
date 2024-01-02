@@ -1,6 +1,6 @@
 package testProxyResolve;
 
-public class OriginBean {
+public class OriginBean{
 
     public String name;
 
