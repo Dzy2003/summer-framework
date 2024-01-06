@@ -1,6 +1,6 @@
 package testProxyResolve;
 
-public class OriginBean{
+public class OriginBean implements ProxyInterface ,ProxyInterface1{
 
     public String name;
 
@@ -11,5 +11,11 @@ public class OriginBean{
 
     public String morning() {
         return "Morning, " + name + ".";
+    }
+
+    @Override
+    @Polite
+    public void hello1() {
+        System.out.println("hello1," + name);
     }
 }

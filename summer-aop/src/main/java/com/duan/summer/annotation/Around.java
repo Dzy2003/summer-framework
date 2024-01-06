@@ -2,7 +2,7 @@ package com.duan.summer.annotation;
 
 import java.lang.annotation.*;
 
-@Target(ElementType.TYPE)
+@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
@@ -11,6 +11,6 @@ public @interface Around {
     /**
      * Invocation handler bean name.
      */
-    String value();
+    Class<? extends Annotation> targetAnno();
 
 }

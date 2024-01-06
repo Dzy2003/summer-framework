@@ -14,6 +14,6 @@ public class JDKStrategy implements GeneratorProxyStrategy{
     public Object createProxy(Object bean, InvocationHandler handler) {
         return  Proxy.newProxyInstance(bean.getClass().getClassLoader(),
                 bean.getClass().getInterfaces(),
-                (o, method, args) -> handler.invoke(bean, method, args));
+                handler);
     }
 }

@@ -13,8 +13,8 @@ public class ProxyResolverTest {
         origin.name = "Bob";
 
         // create proxy:
-        OriginBean proxy = (OriginBean)
-                new ProxyResolver().createProxy(origin, new PoliteInvocationHandler());
+        ProxyInterface1 proxy = (ProxyInterface1)
+                new ProxyResolver().createProxy(origin, new PoliteInvocationHandler(origin));
 
         // Proxy类名,类似OriginBean$ByteBuddy$9hQwRy3T:
         System.out.println(proxy.getClass().getName());
@@ -23,6 +23,6 @@ public class ProxyResolverTest {
         assertNotSame(OriginBean.class, proxy.getClass());
         // proxy.name is null:
        // assertNull(proxy.name);
-        proxy.hello();
+        proxy.hello1();
     }
 }

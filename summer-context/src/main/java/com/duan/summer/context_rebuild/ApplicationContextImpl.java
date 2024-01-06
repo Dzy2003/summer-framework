@@ -1,9 +1,6 @@
 package com.duan.summer.context_rebuild;
 
-import com.duan.summer.annotation.Autowired;
-import com.duan.summer.annotation.Bean;
-import com.duan.summer.annotation.Configuration;
-import com.duan.summer.annotation.Value;
+import com.duan.summer.annotation.*;
 import com.duan.summer.exception.BeanCreationException;
 import com.duan.summer.exception.BeanDefinitionException;
 import com.duan.summer.exception.BeanNotOfRequiredTypeException;
@@ -71,8 +68,17 @@ public abstract class ApplicationContextImpl implements ApplicationContext{
 
     protected void createBean(){
         createConfigurationBean();
+        createAspectBean();
         createBeanProcessorBean();
         createCommonBean();
+    }
+
+    private void createAspectBean() {
+        beans.values()
+                .stream()
+                .filter(definition -> definition.getBeanClass().isAnnotationPresent(Aspect.class))
+                .sorted()
+                .forEach(this::createBeanAsEarlySingleton);
     }
 
 
@@ -272,7 +278,7 @@ public abstract class ApplicationContextImpl implements ApplicationContext{
             if(beanDefinition.getInstance() == null) createBeanAsEarlySingleton(beanDefinition);
         });
     }
-    protected abstract Object createBeanAsEarlySingleton(BeanDefinition definition);
+    public abstract Object createBeanAsEarlySingleton(BeanDefinition definition);
 
     protected boolean isConfigurationDefinition(BeanDefinition def) {
         return ClassUtils.findAnnotation(def.getBeanClass(), Configuration.class) != null;

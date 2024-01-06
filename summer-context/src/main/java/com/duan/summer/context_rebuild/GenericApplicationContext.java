@@ -126,7 +126,7 @@ public class GenericApplicationContext extends ApplicationContextImpl implements
      * @param definition Bean定义信息
      */
     @Override
-    protected Object createBeanAsEarlySingleton(BeanDefinition definition) {
+    public Object createBeanAsEarlySingleton(BeanDefinition definition) {
         logger.atDebug().log("Try create bean '{}' as early singleton: {}",
                 definition.getName(), definition.getBeanClass().getName());
         //循环依赖报错
@@ -211,6 +211,9 @@ public class GenericApplicationContext extends ApplicationContextImpl implements
      */
     private Object callPostProcessor(BeanDefinition def) {
         Object instance = def.getInstance();
+        if(instance instanceof ApplicationContextAware){
+            ((ApplicationContextAware) instance).setApplicationContext(beans);
+        }
         for (BeanPostProcessor processor : beanPostProcessors) {
             Object processed = processor
                     .postProcessBeforeInitialization(def.getInstance(), def.getName());

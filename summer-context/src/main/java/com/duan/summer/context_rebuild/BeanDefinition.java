@@ -135,10 +135,7 @@ public class BeanDefinition implements Comparable<BeanDefinition> {
 
     public void setInstance(Object instance) {
         Objects.requireNonNull(instance, "Bean instance is null.");
-        if (!this.beanClass.isAssignableFrom(instance.getClass())) {
-            throw new BeanCreationException(String.format("Instance '%s' of Bean '%s' is not the expected type: %s", instance, instance.getClass().getName(),
-                    this.beanClass.getName()));
-        }
+
         this.instance = instance;
     }
 

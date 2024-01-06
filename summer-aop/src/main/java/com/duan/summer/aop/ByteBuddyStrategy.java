@@ -22,7 +22,7 @@ public class ByteBuddyStrategy implements GeneratorProxyStrategy{
                 .subclass(targetClass, ConstructorStrategy.Default.DEFAULT_CONSTRUCTOR)
                 .method(ElementMatchers.isPublic())
                 .intercept(InvocationHandlerAdapter.of(
-                        (o, method, args) -> handler.invoke(bean, method, args)))
+                        handler))
                 .make()
                 .load(targetClass.getClassLoader())
                 .getLoaded();
