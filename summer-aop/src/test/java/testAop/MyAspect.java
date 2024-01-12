@@ -50,4 +50,13 @@ public class MyAspect {
         System.out.println("总共用时："+(endTime - startTime));
         return proceed;
     }
+
+    @Around(targetAnno = DAO.class)
+    public Object DAOAdvice(ProceedingJoinPoint joinPoint) throws InvocationTargetException, IllegalAccessException {
+        System.out.println("DAO层调用开始");
+        Object proceed = joinPoint.proceed();
+        System.out.println("DAO层调用开始");
+        return proceed;
+    }
+
 }

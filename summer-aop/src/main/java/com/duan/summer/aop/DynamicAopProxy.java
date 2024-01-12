@@ -37,6 +37,7 @@ public class DynamicAopProxy implements InvocationHandler {
             }
         });
         if(proxyChains.size() == chainsIndex){
+            chainsIndex = 0;
             return method.invoke(target, args);
         }
         //构建参数

@@ -22,6 +22,7 @@ public class ApplicationContextTest {
         try (AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(ScanApplication.class)){
             // test proxy:
             OriginBean proxy = ctx.getBean(OriginBean.class);
+            System.out.println(proxy);
             assertSame(SecondProxyBean.class, proxy.getClass());
             assertEquals("Scan App", proxy.getName());
             assertEquals("v1.0", proxy.getVersion());

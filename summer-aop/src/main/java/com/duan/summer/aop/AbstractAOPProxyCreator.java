@@ -26,18 +26,21 @@ public class AbstractAOPProxyCreator implements BeanPostProcessor, ApplicationCo
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) {
         Class<?> beanClass = bean.getClass();
-        if(false){
-            return bean;
+        if(checkJoinPoint(beanClass)){
+            originBeans.put(beanName, bean);
+            Object proxy = proxyResolver.createProxy(bean, new DynamicAopProxy(proxyRule, bean));
+            System.out.println(proxy.getClass().equals(beanClass));
+            return proxy;
         }
-        originBeans.put(beanName, bean);
-        return proxyResolver.createProxy(bean, new DynamicAopProxy(proxyRule,bean));
+        return bean;
+
     }
 
 
     private boolean checkJoinPoint(Class<?> beanClass) {
         for (Method method : beanClass.getMethods()) {
             for (Annotation annotation : method.getAnnotations()) {
-                if(proxyRule.containsKey(annotation.getClass().getSimpleName())){
+                if(proxyRule.containsKey(annotation.annotationType().getSimpleName())){
                     return true;
                 }
             }
