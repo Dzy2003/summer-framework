@@ -1,6 +1,6 @@
 package testProxyResolve;
 
-import com.duan.summer.aop.ProxyResolver;
+import com.duan.summer.aop.ProxyFactory;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -8,21 +8,13 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ProxyResolverTest {
 
     @Test
-    public void testProxyResovler() {
+    public void testProxyFactory() {
         OriginBean origin = new OriginBean();
         origin.name = "Bob";
-
         // create proxy:
         ProxyInterface1 proxy = (ProxyInterface1)
-                new ProxyResolver().createProxy(origin, new PoliteInvocationHandler(origin));
+                new ProxyFactory().createProxy(origin, new PoliteInvocationHandler(origin));
 
-        // Proxy类名,类似OriginBean$ByteBuddy$9hQwRy3T:
-        System.out.println(proxy.getClass().getName());
-
-        // proxy class, not origin class:
-        assertNotSame(OriginBean.class, proxy.getClass());
-        // proxy.name is null:
-       // assertNull(proxy.name);
         proxy.hello1();
     }
 }

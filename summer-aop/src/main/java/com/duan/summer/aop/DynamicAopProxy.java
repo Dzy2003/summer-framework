@@ -15,27 +15,25 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DynamicAopProxy implements InvocationHandler {
     Object target;
 
-    public Map<String, List<Advice>> proxyRule = new ConcurrentHashMap<>();
+    public Map<Class<? extends Annotation>, List<Advice>> proxyRule = new ConcurrentHashMap<>();
+    List<Advice> proxyChains = new ArrayList<>(8);
     int chainsIndex = 0;
-    public DynamicAopProxy(Map<String, List<Advice>> proxyRule, Object target){
+    public DynamicAopProxy(Map<Class<? extends Annotation>, List<Advice>> proxyRule, Object target){
         this.proxyRule = proxyRule;
         this.target = target;
     }
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        Method targetMethod = target.getClass()
-                .getMethod(method.getName(), method.getParameterTypes());
-        Annotation[] targetAnnotations = targetMethod.getDeclaredAnnotations();
-        //没注解  不代理
-        if (targetAnnotations.length == 0) {
-            return method.invoke(target, args);
+        if(chainsIndex == 0){
+            List<Advice> curProxyChains = new ArrayList<>(8);
+            proxyRule.forEach((key, value) -> {
+                if (target.getClass().isAnnotationPresent(key) ||
+                        method.isAnnotationPresent(key)) {
+                    curProxyChains.addAll(value);
+                }
+            });
+            this.proxyChains = curProxyChains;
         }
-        List<Advice> proxyChains = new ArrayList<>(8);
-        Arrays.stream(targetAnnotations).forEach(annotation -> {
-            if (proxyRule.containsKey(annotation.annotationType().getSimpleName())) {
-                proxyChains.addAll(proxyRule.get(annotation.annotationType().getSimpleName()));
-            }
-        });
         if(proxyChains.size() == chainsIndex){
             chainsIndex = 0;
             return method.invoke(target, args);

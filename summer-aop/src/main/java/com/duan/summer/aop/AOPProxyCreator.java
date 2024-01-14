@@ -4,6 +4,8 @@ import com.duan.summer.annotation.Around;
 import com.duan.summer.annotation.Aspect;
 import com.duan.summer.annotation.Component;
 import com.duan.summer.context_rebuild.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -16,21 +18,20 @@ import java.util.concurrent.ConcurrentHashMap;
  * @description
  */
 @Component
-public class AbstractAOPProxyCreator implements BeanPostProcessor, ApplicationContextAware {
+public class AOPProxyCreator implements BeanPostProcessor, ApplicationContextAware {
     Map<String, Object> originBeans = new HashMap<>();
     public Map<String, BeanDefinition> beans;
-    public final Map<String, List<Advice>> proxyRule = new ConcurrentHashMap<>();
+    public final Map<Class<? extends Annotation>, List<Advice>> proxyRule = new ConcurrentHashMap<>();
     public List<Object> aspectInstance = new ArrayList<>(8);
-    ProxyResolver proxyResolver = new ProxyResolver();
+    ProxyFactory proxyResolver = new ProxyFactory();
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) {
         Class<?> beanClass = bean.getClass();
         if(checkJoinPoint(beanClass)){
             originBeans.put(beanName, bean);
-            Object proxy = proxyResolver.createProxy(bean, new DynamicAopProxy(proxyRule, bean));
-            System.out.println(proxy.getClass().equals(beanClass));
-            return proxy;
+            return proxyResolver.createProxy(bean, new DynamicAopProxy(proxyRule, bean));
         }
         return bean;
 
@@ -38,9 +39,14 @@ public class AbstractAOPProxyCreator implements BeanPostProcessor, ApplicationCo
 
 
     private boolean checkJoinPoint(Class<?> beanClass) {
+        for (Annotation annotation : beanClass.getAnnotations()) {
+            if(proxyRule.containsKey(annotation.annotationType())){
+                return true;
+            }
+        }
         for (Method method : beanClass.getMethods()) {
             for (Annotation annotation : method.getAnnotations()) {
-                if(proxyRule.containsKey(annotation.annotationType().getSimpleName())){
+                if(proxyRule.containsKey(annotation.annotationType())){
                     return true;
                 }
             }
@@ -59,6 +65,7 @@ public class AbstractAOPProxyCreator implements BeanPostProcessor, ApplicationCo
         this.beans = beans;
         aspectInstance = getAspectInstance();
         parseAspectjClass();
+        logger.debug("解析后的拦截规则为:{}", proxyRule);
     }
 
     private void parseAspectjClass(){
@@ -67,13 +74,13 @@ public class AbstractAOPProxyCreator implements BeanPostProcessor, ApplicationCo
                 Around around = method.getAnnotation(Around.class);
                 if(around != null){
                     Advice advice = new Advice(method, aspect);
-                    String targetAnnoName = around.targetAnno().getSimpleName();
-                    if(proxyRule.containsKey(targetAnnoName)){
-                        proxyRule.get(targetAnnoName).add(advice);
+                    Class<? extends Annotation> targetAnno = around.targetAnno();
+                    if(proxyRule.containsKey(targetAnno)){
+                        proxyRule.get(targetAnno).add(advice);
                     }else {
                         List<Advice> proxyChains = new ArrayList<>();
                         proxyChains.add(advice);
-                        proxyRule.put(targetAnnoName, proxyChains);
+                        proxyRule.put(targetAnno, proxyChains);
                     }
                 }
             }

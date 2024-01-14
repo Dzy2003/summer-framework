@@ -2,7 +2,7 @@ package testAop;
 
 import com.duan.summer.annotation.Bean;
 import com.duan.summer.annotation.Configuration;
-import com.duan.summer.aop.AbstractAOPProxyCreator;
+import com.duan.summer.aop.AOPProxyCreator;
 
 /**
  * @author 白日
@@ -12,8 +12,8 @@ import com.duan.summer.aop.AbstractAOPProxyCreator;
 @Configuration
 public class AppScan {
     @Bean
-    AbstractAOPProxyCreator createAroundProxyBeanPostProcessor() {
-        return new AbstractAOPProxyCreator();
+    AOPProxyCreator createAroundProxyBeanPostProcessor() {
+        return new AOPProxyCreator();
     }
 
 }

@@ -178,6 +178,7 @@ public class GenericApplicationContext extends ApplicationContextImpl implements
                 }
                 if(dependencyDefinition != null){
                     Object dependencyInstance = dependencyDefinition.getInstance();
+                    // 若依赖的Bean未被创建则递归创建
                     if(dependencyInstance == null){
                         dependencyInstance = createBeanAsEarlySingleton(dependencyDefinition);
                     }

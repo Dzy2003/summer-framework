@@ -1,11 +1,8 @@
 package testAop;
 
-import com.duan.summer.annotation.Around;
 import com.duan.summer.annotation.Autowired;
 import com.duan.summer.annotation.Component;
-import com.duan.summer.annotation.Order;
-
-import java.util.Map;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author 白日
@@ -13,15 +10,14 @@ import java.util.Map;
  * @description
  */
 @Component
+@target
 public class TestServiceImpl {
     @Autowired
     Mapper mapper;
 
-    @target
-    public String print(String msg) {
+    public void print(String msg) {
         mapper.select();
         System.out.println("我执行了，参数是："+msg);
-        return msg;
     }
 
 

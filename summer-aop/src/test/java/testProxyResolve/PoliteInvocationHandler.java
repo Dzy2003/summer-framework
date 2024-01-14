@@ -20,7 +20,7 @@ public class PoliteInvocationHandler implements InvocationHandler {
         if(index == 3) return method.invoke(target);
         index++;
         System.out.println("执行被代理方法前" + index);
-        Object res = method.invoke(proxy,args);
+        Object res = invoke(proxy, method, args);
         System.out.println("执行被代理方法后" + index);
         index--;
         return res;

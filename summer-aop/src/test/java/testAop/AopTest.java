@@ -1,8 +1,6 @@
 package testAop;
 
-import com.duan.summer.aop.AbstractAOPProxyCreator;
 import com.duan.summer.context_rebuild.AnnotationConfigApplicationContext;
-import com.duan.summer.context_rebuild.ApplicationContext;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -20,5 +18,9 @@ public class AopTest {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+    @Test
+    public void test(){
+        System.out.println(TestServiceImpl.class.isAnnotationPresent(target.class));
     }
 }
