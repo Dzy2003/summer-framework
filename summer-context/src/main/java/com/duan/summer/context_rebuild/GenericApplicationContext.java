@@ -3,7 +3,6 @@ package com.duan.summer.context_rebuild;
 import com.duan.summer.annotation.Autowired;
 import com.duan.summer.annotation.Value;
 import com.duan.summer.exception.*;
-import com.duan.summer.io.PropertyResolver;
 import com.duan.summer.utils.ClassUtils;
 import jakarta.annotation.Nullable;
 import org.slf4j.Logger;
@@ -212,8 +211,8 @@ public class GenericApplicationContext extends ApplicationContextImpl implements
      */
     private Object callPostProcessor(BeanDefinition def) {
         Object instance = def.getInstance();
-        if(instance instanceof ApplicationContextAware){
-            ((ApplicationContextAware) instance).setApplicationContext(beans);
+        if(instance instanceof BeansAware){
+            ((BeansAware) instance).setApplicationContext(beans);
         }
         for (BeanPostProcessor processor : beanPostProcessors) {
             Object processed = processor

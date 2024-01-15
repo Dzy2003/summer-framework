@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * @author 白日
  * @create 2024/1/4 18:45
- * @description
+ * @description 代表了正在执行的方法的连接点（join point）
  */
 
 public class ProceedingJoinPoint {

@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @description
  */
 @Component
-public class AOPProxyCreator implements BeanPostProcessor, ApplicationContextAware {
+public class AOPProxyCreator implements BeanPostProcessor, BeansAware {
     Map<String, Object> originBeans = new HashMap<>();
     public Map<String, BeanDefinition> beans;
     public final Map<Class<? extends Annotation>, List<Advice>> proxyRule = new ConcurrentHashMap<>();

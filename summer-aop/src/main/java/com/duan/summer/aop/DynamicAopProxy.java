@@ -13,11 +13,11 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 
 public class DynamicAopProxy implements InvocationHandler {
-    Object target;
+    Object target;//原始对象
 
-    public Map<Class<? extends Annotation>, List<Advice>> proxyRule = new ConcurrentHashMap<>();
-    List<Advice> proxyChains = new ArrayList<>(8);
-    int chainsIndex = 0;
+    public Map<Class<? extends Annotation>, List<Advice>> proxyRule = new ConcurrentHashMap<>();//拦截规则
+    List<Advice> proxyChains = new ArrayList<>(8); //当前Advice调用链
+    int chainsIndex = 0; //调用链指针
     public DynamicAopProxy(Map<Class<? extends Annotation>, List<Advice>> proxyRule, Object target){
         this.proxyRule = proxyRule;
         this.target = target;
@@ -25,28 +25,40 @@ public class DynamicAopProxy implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         if(chainsIndex == 0){
-            List<Advice> curProxyChains = new ArrayList<>(8);
-            proxyRule.forEach((key, value) -> {
-                if (target.getClass().isAnnotationPresent(key) ||
-                        method.isAnnotationPresent(key)) {
-                    curProxyChains.addAll(value);
-                }
-            });
-            this.proxyChains = curProxyChains;
+            getCurProxyChains(method);
         }
+        //递归中止条件
         if(proxyChains.size() == chainsIndex){
-            chainsIndex = 0;
+            chainsIndex = 0; //清空调用链
+            proxyChains = new ArrayList<>(8); //清空调用链
             return method.invoke(target, args);
         }
+        //构造当前的Advice并调用
+        Advice advice = getAdvice(proxy, method, args);
+        return advice.invoker();//递归入口，在advice中调用method.invoke(proxy,args)仍然会转发到到invoke方法InvocationHandler的invoke方法
+    }
+
+    private Advice getAdvice(Object proxy, Method method, Object[] args) {
         //构建参数
         ProceedingJoinPoint proceedingJoinPoint = new ProceedingJoinPoint();
         proceedingJoinPoint.setArgs(args);
         proceedingJoinPoint.setMethod(method);
         proceedingJoinPoint.setProxyChains(proxyChains);
-        proceedingJoinPoint.setTarget(proxy);//递归，proxy再次调用该方法会再次转发到invoke方法
-        Advice advice = proxyChains.get(chainsIndex++);
+        proceedingJoinPoint.setTarget(proxy);//我们传入proxy代理对象
+        Advice advice = proxyChains.get(chainsIndex++);//指针指向下一个Advice
         proceedingJoinPoint.setChainsIndex(chainsIndex);
         advice.setArgs(new Object[]{proceedingJoinPoint});
-        return advice.invoker();
+        return advice;
+    }
+
+    private void getCurProxyChains(Method method) {
+        List<Advice> curProxyChains = new ArrayList<>(8);
+        proxyRule.forEach((key, value) -> {
+            if (target.getClass().isAnnotationPresent(key) ||
+                    method.isAnnotationPresent(key)) {
+                curProxyChains.addAll(value);
+            }
+        });
+        this.proxyChains = curProxyChains;
     }
 }

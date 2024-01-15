@@ -1,8 +1,7 @@
 package testApplicationContextAware;
 
 import com.duan.summer.annotation.Component;
-import com.duan.summer.context_rebuild.ApplicationContext;
-import com.duan.summer.context_rebuild.ApplicationContextAware;
+import com.duan.summer.context_rebuild.BeansAware;
 import com.duan.summer.context_rebuild.BeanDefinition;
 
 import java.util.Map;
@@ -13,7 +12,7 @@ import java.util.Map;
  * @description
  */
 @Component
-public class ApplicationContextAwareImpl implements ApplicationContextAware {
+public class ApplicationContextAwareImpl implements BeansAware {
     Map<String, BeanDefinition> beans;
     @Override
     public void setApplicationContext(Map<String, BeanDefinition> beans) {
