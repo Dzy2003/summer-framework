@@ -1,6 +1,6 @@
 package testAop;
 
-import com.duan.summer.context_rebuild.AnnotationConfigApplicationContext;
+import com.duan.summer.context.AnnotationConfigApplicationContext;
 import org.junit.jupiter.api.Test;
 
 /**

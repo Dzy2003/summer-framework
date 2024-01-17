@@ -1,8 +1,8 @@
 package com.duan.testContext.testApplicationContextAware;
 
 import com.duan.summer.annotation.Component;
-import com.duan.summer.context_rebuild.BeansAware;
-import com.duan.summer.context_rebuild.BeanDefinition;
+import com.duan.summer.context.BeansAware;
+import com.duan.summer.context.BeanDefinition;
 
 import java.util.Map;
 

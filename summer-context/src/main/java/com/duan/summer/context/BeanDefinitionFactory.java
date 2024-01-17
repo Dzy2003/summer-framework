@@ -1,4 +1,4 @@
-package com.duan.summer.context_rebuild;
+package com.duan.summer.context;
 
 import com.duan.summer.annotation.Bean;
 import com.duan.summer.annotation.Order;

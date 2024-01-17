@@ -2,8 +2,8 @@ package com.duan.summer.utils;
 
 import com.duan.summer.annotation.Bean;
 import com.duan.summer.annotation.Component;
-import com.duan.summer.context_rebuild.BeanDefinition;
-import com.duan.summer.context_rebuild.BeanDefinitionFactory;
+import com.duan.summer.context.BeanDefinition;
+import com.duan.summer.context.BeanDefinitionFactory;
 import com.duan.summer.exception.BeanDefinitionException;
 import jakarta.annotation.Nullable;
 

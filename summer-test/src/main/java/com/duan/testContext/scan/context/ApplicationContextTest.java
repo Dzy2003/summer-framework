@@ -1,7 +1,6 @@
 package com.duan.testContext.scan.context;
 
-import com.duan.summer.context_rebuild.AnnotationConfigApplicationContext;
-import com.duan.summer.context_rebuild.ApplicationContext;
+import com.duan.summer.context.AnnotationConfigApplicationContext;
 import com.duan.testContext.scan.ScanApplication;
 import com.duan.testContext.scan.proxy.InjectProxyOnConstructorBean;
 import com.duan.testContext.scan.proxy.InjectProxyOnPropertyBean;

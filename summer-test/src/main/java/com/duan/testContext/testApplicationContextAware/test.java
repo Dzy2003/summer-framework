@@ -1,9 +1,7 @@
 package com.duan.testContext.testApplicationContextAware;
 
-import com.duan.summer.context_rebuild.AnnotationConfigApplicationContext;
+import com.duan.summer.context.AnnotationConfigApplicationContext;
 import org.junit.jupiter.api.Test;
-
-import java.io.InputStream;
 
 
 /**

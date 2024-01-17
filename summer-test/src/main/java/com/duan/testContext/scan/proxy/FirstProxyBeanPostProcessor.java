@@ -2,7 +2,7 @@ package com.duan.testContext.scan.proxy;
 
 import com.duan.summer.annotation.Component;
 import com.duan.summer.annotation.Order;
-import com.duan.summer.context_rebuild.BeanPostProcessor;
+import com.duan.summer.context.BeanPostProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

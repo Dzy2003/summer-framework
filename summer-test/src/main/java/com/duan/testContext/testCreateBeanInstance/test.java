@@ -1,7 +1,6 @@
 package com.duan.testContext.testCreateBeanInstance;
 
-import com.duan.summer.annotation.Bean;
-import com.duan.summer.context_rebuild.AnnotationConfigApplicationContext;
+import com.duan.summer.context.AnnotationConfigApplicationContext;
 import org.junit.jupiter.api.Test;
 
 /**
