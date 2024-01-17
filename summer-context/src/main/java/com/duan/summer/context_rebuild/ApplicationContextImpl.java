@@ -5,7 +5,7 @@ import com.duan.summer.exception.BeanCreationException;
 import com.duan.summer.exception.BeanDefinitionException;
 import com.duan.summer.exception.BeanNotOfRequiredTypeException;
 import com.duan.summer.exception.UnsatisfiedDependencyException;
-import com.duan.summer.io.PropertyResolver;
+import com.duan.summer.io.ConfigResolver;
 import com.duan.summer.utils.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,10 +19,10 @@ import java.util.*;
  * @description
  */
 
-public abstract class ApplicationContextImpl implements ApplicationContext{
+public abstract class ApplicationContextImpl implements ApplicationContext,FileConfigRegistry{
     public final Map<String, BeanDefinition> beans;
     Set<String> creatingBeanNames;
-    PropertyResolver propertyResolver = new PropertyResolver();
+    ConfigResolver configResolver = new ConfigResolver();
     private final Logger logger = LoggerFactory.getLogger(getClass());
     protected final List<BeanPostProcessor> beanPostProcessors = new ArrayList<>();
     public ApplicationContextImpl(){
@@ -116,8 +116,8 @@ public abstract class ApplicationContextImpl implements ApplicationContext{
         Object instance = getProxiedInstance(def);
         if(value != null) {
             logger.atDebug().log("Field injection: {}.{} = {}",
-                    def.getBeanClass().getName(), field.getName(), propertyResolver.getProperty(value.value(), field.getType()));
-            field.set(instance, propertyResolver.getProperty(value.value(), field.getType()));
+                    def.getBeanClass().getName(), field.getName(), configResolver.getConfig(value.value(), field.getType()));
+            field.set(instance, configResolver.getConfig(value.value(), field.getType()));
         }
         if(autowired != null){
             boolean required = autowired.value();
@@ -154,8 +154,8 @@ public abstract class ApplicationContextImpl implements ApplicationContext{
         Class<?> injectType = method.getParameterTypes()[0];
         if(value != null) {
             logger.atDebug().log(" injection: {}.{} = {}",
-                    def.getBeanClass().getName(), method.getName(), propertyResolver.getProperty(value.value(),injectType ));
-            method.invoke(def.getInstance(), propertyResolver.getProperty(value.value(), injectType));
+                    def.getBeanClass().getName(), method.getName(), configResolver.getConfig(value.value(),injectType ));
+            method.invoke(def.getInstance(), configResolver.getConfig(value.value(), injectType));
         }
         if(autowired != null){
             boolean required = autowired.value();

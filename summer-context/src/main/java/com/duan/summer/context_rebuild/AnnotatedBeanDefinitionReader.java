@@ -4,6 +4,7 @@ import com.duan.summer.annotation.*;
 import com.duan.summer.exception.BeansException;
 import com.duan.summer.io.ResourceResolver;
 import com.duan.summer.utils.ClassUtils;
+import com.duan.summer.utils.YamlUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.*;
@@ -24,22 +25,6 @@ public class AnnotatedBeanDefinitionReader {
     public void registry(Class<?>... clazz){
         for (Class<?> aClass : clazz) {
             registryBeanDefinitions(scanForClassNames(aClass));
-            registryPropertyResolvers(aClass);
-        }
-    }
-
-    private void registryPropertyResolvers(Class<?> aClass) {
-        PropertySource propertySource = aClass.getAnnotation(PropertySource.class);
-        if(propertySource == null) return;
-        String[] value = propertySource.value();
-        for (String s : value) {
-            Properties properties = new Properties();
-            try {
-                properties.load(aClass.getClassLoader().getResourceAsStream(s));
-            }catch (Exception e){
-                throw new RuntimeException("资源加载错误");
-            }
-            registry.registryPropertyResolver(properties);
         }
     }
 

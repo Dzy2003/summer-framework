@@ -1,5 +1,6 @@
 package com.duan.summer.context_rebuild;
 
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -17,7 +18,5 @@ public interface BeanDefinitionRegistry {
     void removeBeanDefinition(String beanName);
     boolean containsBeanDefinition(String beanName);
     Set<String> getBeanDefinitionNames();
-
-    void registryPropertyResolver(Properties properties);
 
 }

@@ -11,6 +11,7 @@
     <modules>
         <module>summer-context</module>
         <module>summer-aop</module>
+        <module>summer-test</module>
     </modules>
 
 

@@ -11,10 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Parameter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author 白日
@@ -116,9 +113,10 @@ public class GenericApplicationContext extends ApplicationContextImpl implements
     }
 
     @Override
-    public void registryPropertyResolver(Properties properties) {
-        propertyResolver.registryPropertyResolver(properties);
+    public void registryFileConfig(Map<String, Object> map) {
+        configResolver.registryConfigResolver(map);
     }
+
 
     /**
      * 向BeanDefinition中插入实例化后的对象
@@ -165,7 +163,7 @@ public class GenericApplicationContext extends ApplicationContextImpl implements
             }
             final Class<?> type = curParameter.getType();
             if(value != null){
-                args[i] = propertyResolver.getProperty(value.value(),type);
+                args[i] = configResolver.getConfig(value.value(),type);
             }else{
                 String dependencyName = autowired.name();
                 boolean required = autowired.value();
