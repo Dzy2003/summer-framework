@@ -23,6 +23,7 @@ public class test {
             controller.userService();
             DataSource bean = context.getBean(DataSource.class);
             System.out.println(bean);
+            System.out.println(context.findBeanDefinition(iService.class));
         }
     }
     @Test

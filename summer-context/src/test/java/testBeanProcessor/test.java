@@ -17,4 +17,5 @@ public class test {
         Map<String, Object> stringObjectMap = YamlUtils.loadYamlAsPlainMap("application.yml");
 
     }
+
 }

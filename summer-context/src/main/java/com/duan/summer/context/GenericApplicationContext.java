@@ -228,4 +228,20 @@ public class GenericApplicationContext extends ApplicationContextImpl implements
         }
         return instance;
     }
+    protected void createFactoryBeanProcessorBean() {
+        beanFactoryPostProcessors.addAll(beans.values()
+                .stream()
+                .filter(this::isBeanFactoryPostProcessorDefinition)
+                .sorted()
+                .map(def -> (BeanFactoryPostProcessor) createBeanAsEarlySingleton(def))
+                .toList());
+    }
+
+    protected void invokeFactoryBeanPostProcessors(){
+        beanFactoryPostProcessors.forEach(beanFactoryPostProcessor
+                -> beanFactoryPostProcessor.postProcessBeanFactory(this));
+    }
+    private boolean isBeanFactoryPostProcessorDefinition(BeanDefinition definition) {
+        return BeanFactoryPostProcessor.class.isAssignableFrom(definition.getBeanClass());
+    }
 }

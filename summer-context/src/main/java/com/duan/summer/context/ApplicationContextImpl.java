@@ -25,6 +25,7 @@ public abstract class ApplicationContextImpl implements ApplicationContext,FileC
     ConfigResolver configResolver = new ConfigResolver();
     private final Logger logger = LoggerFactory.getLogger(getClass());
     protected final List<BeanPostProcessor> beanPostProcessors = new ArrayList<>();
+    protected final List<BeanFactoryPostProcessor> beanFactoryPostProcessors = new ArrayList<>();
     public ApplicationContextImpl(){
         beans = new HashMap<>();
         creatingBeanNames = new HashSet<>();
@@ -266,6 +267,7 @@ public abstract class ApplicationContextImpl implements ApplicationContext,FileC
                 .toList());
     }
 
+
     /**
      * 创建其它普通的Bean
      */
@@ -292,4 +294,5 @@ public abstract class ApplicationContextImpl implements ApplicationContext,FileC
     private boolean isBeanPostProcessorDefinition(BeanDefinition def) {
         return BeanPostProcessor.class.isAssignableFrom(def.getBeanClass());
     }
+
 }

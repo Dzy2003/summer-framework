@@ -12,6 +12,7 @@
         <module>summer-context</module>
         <module>summer-aop</module>
         <module>summer-test</module>
+        <module>summer-mybatis</module>
     </modules>
 
 

@@ -63,11 +63,12 @@ public class BeanDefinitionFactory {
         Constructor<?>[] cons = clazz.getConstructors();
         if (cons.length == 0) {
             cons = clazz.getDeclaredConstructors();
-            if (cons.length != 1) {
+            if (cons.length > 1) {
                 throw new BeanDefinitionException("More than one constructor found in class " + clazz.getName() + ".");
             }
+            return null;
         }
-        if (cons.length != 1) {
+        if (cons.length > 1) {
             throw new BeanDefinitionException("More than one public constructor found in class " + clazz.getName() + ".");
         }
         return cons[0];

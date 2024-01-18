@@ -14,28 +14,28 @@ import java.util.Objects;
 public class BeanDefinition implements Comparable<BeanDefinition> {
 
     // 全局唯一的Bean Name:
-    private final String name;
+    private String name;
     // Bean的声明类型:
-    private final Class<?> beanClass;
+    private Class<?> beanClass;
     // Bean的实例:
     private Object instance = null;
     // 构造方法/null:
-    private final Constructor<?> constructor;
+    private Constructor<?> constructor;
     // 工厂方法名称/null:
-    private final String factoryName;
+    private String factoryName;
     // 工厂方法/null:
-    private final Method factoryMethod;
+    private Method factoryMethod;
     // Bean的顺序:
-    private final int order;
+    private int order;
     // 是否标识@Primary:
-    private final boolean primary;
+    private boolean primary;
 
     private String initMethodName;
     private String destroyMethodName;
 
     private Method initMethod;
     private Method destroyMethod;
-
+    public BeanDefinition(){}
 
     public BeanDefinition(String name, Class<?> beanClass, Constructor<?> constructor, int order, boolean primary, String initMethodName,
                           String destroyMethodName, Method initMethod, Method destroyMethod) {
@@ -46,7 +46,7 @@ public class BeanDefinition implements Comparable<BeanDefinition> {
         this.factoryMethod = null;
         this.order = order;
         this.primary = primary;
-        constructor.setAccessible(true);
+        //constructor.setAccessible(true);
         setInitAndDestroyMethod(initMethodName, destroyMethodName, initMethod, destroyMethod);
     }
 
@@ -74,6 +74,50 @@ public class BeanDefinition implements Comparable<BeanDefinition> {
             destroyMethod.setAccessible(true);
         }
         this.initMethod = initMethod;
+        this.destroyMethod = destroyMethod;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setBeanClass(Class<?> beanClass) {
+        this.beanClass = beanClass;
+    }
+
+    public void setConstructor(Constructor<?> constructor) {
+        this.constructor = constructor;
+    }
+
+    public void setFactoryName(String factoryName) {
+        this.factoryName = factoryName;
+    }
+
+    public void setFactoryMethod(Method factoryMethod) {
+        this.factoryMethod = factoryMethod;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
+    }
+
+    public void setPrimary(boolean primary) {
+        this.primary = primary;
+    }
+
+    public void setInitMethodName(String initMethodName) {
+        this.initMethodName = initMethodName;
+    }
+
+    public void setDestroyMethodName(String destroyMethodName) {
+        this.destroyMethodName = destroyMethodName;
+    }
+
+    public void setInitMethod(Method initMethod) {
+        this.initMethod = initMethod;
+    }
+
+    public void setDestroyMethod(Method destroyMethod) {
         this.destroyMethod = destroyMethod;
     }
 
@@ -138,6 +182,7 @@ public class BeanDefinition implements Comparable<BeanDefinition> {
 
         this.instance = instance;
     }
+
 
     public boolean isPrimary() {
         return this.primary;
