@@ -1,16 +1,13 @@
 package dao;
 
-import com.duan.summer.annotation.Component;
 import com.duan.summer.annotation.Mapper;
 
 /**
  * @author 白日
- * @create 2024/1/18 14:02
+ * @create 2024/1/19 23:49
  * @description
  */
 @Mapper
-public interface IUserDao {
+public interface IBookDao {
     String queryUserName(String uid);
-
-    Integer queryUserAge(String uid);
 }

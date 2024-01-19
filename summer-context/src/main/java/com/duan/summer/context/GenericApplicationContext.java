@@ -124,6 +124,7 @@ public class GenericApplicationContext extends ApplicationContextImpl implements
      */
     @Override
     public Object createBeanAsEarlySingleton(BeanDefinition definition) {
+        if(definition.getInstance() != null) return null;
         logger.atDebug().log("Try create bean '{}' as early singleton: {}",
                 definition.getName(), definition.getBeanClass().getName());
         //循环依赖报错
