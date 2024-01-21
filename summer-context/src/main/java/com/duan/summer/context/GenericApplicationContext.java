@@ -134,7 +134,10 @@ public class GenericApplicationContext extends ApplicationContextImpl implements
         }
         Executable createFun = definition.getFactoryName() == null ?
                 definition.getConstructor() : definition.getFactoryMethod();
-        assert createFun != null;
+        if(createFun == null){
+            throw new BeanCreationException(
+                    String.format("Cannot find constructor or factory method when create bean '%s'", definition.getName()));
+        }
         Parameter[] parameters = createFun.getParameters();//拿到参数
         Annotation[][] annotations = createFun.getParameterAnnotations();//拿到参数的注解
         Object[] args = new Object[parameters.length];//为参数注入值
