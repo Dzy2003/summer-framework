@@ -1,6 +1,7 @@
 package com.duan.summer.session.defaults;
 
-import com.duan.summer.binding.MapperRegistry;
+import com.duan.summer.mapping.MappedStatement;
+import com.duan.summer.session.Configuration;
 import com.duan.summer.session.SqlSession;
 
 /**
@@ -10,9 +11,9 @@ import com.duan.summer.session.SqlSession;
  */
 
 public class DefaultsSqlSession implements SqlSession {
-    MapperRegistry mapperRegistry;
-    public DefaultsSqlSession(MapperRegistry mapperRegistry){
-        this.mapperRegistry = mapperRegistry;
+    Configuration configuration;
+    public DefaultsSqlSession(Configuration configuration){
+        this.configuration = configuration;
     }
     @Override
     public <T> T selectOne(String statement) {
@@ -21,11 +22,17 @@ public class DefaultsSqlSession implements SqlSession {
 
     @Override
     public <T> T selectOne(String statement, Object parameter) {
-        return (T) ("你的操作被代理了！" + "方法：" + statement + " 入参：" + parameter);
+        MappedStatement mappedStatement = configuration.getMappedStatement(statement);
+        return (T) ("你的操作被代理了！" + "\n方法：" + statement + "\n入参：" + parameter + "\n待执行SQL：" + mappedStatement.getSql());
     }
 
     @Override
     public <T> T getMapper(Class<T> type) {
-        return mapperRegistry.getMapper(type, this);
+        return configuration.getMapper(type, this);
+    }
+
+    @Override
+    public Configuration getConfiguration() {
+        return configuration;
     }
 }

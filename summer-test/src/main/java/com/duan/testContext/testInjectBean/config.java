@@ -10,7 +10,7 @@ import com.duan.summer.annotation.PropertySource;
  * @description
  */
 @Configuration
-@ComponentScan
+
 @PropertySource("jdbc.properties")
 public class config {
 }

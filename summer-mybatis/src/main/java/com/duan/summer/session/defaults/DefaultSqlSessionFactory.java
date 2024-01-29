@@ -1,6 +1,7 @@
 package com.duan.summer.session.defaults;
 
 import com.duan.summer.binding.MapperRegistry;
+import com.duan.summer.session.Configuration;
 import com.duan.summer.session.SqlSession;
 import com.duan.summer.session.SqlSessionFactory;
 
@@ -11,12 +12,12 @@ import com.duan.summer.session.SqlSessionFactory;
  */
 
 public class DefaultSqlSessionFactory implements SqlSessionFactory {
-    private MapperRegistry mapperRegistry;
-    public DefaultSqlSessionFactory(MapperRegistry mapperRegistry) {
-        this.mapperRegistry = mapperRegistry;
+    private final Configuration configuration;
+    public DefaultSqlSessionFactory(Configuration configuration) {
+        this.configuration = configuration;
     }
     @Override
     public SqlSession openSession() {
-        return new DefaultsSqlSession(mapperRegistry);
+        return new DefaultsSqlSession(configuration);
     }
 }

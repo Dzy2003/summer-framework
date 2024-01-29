@@ -1,7 +1,5 @@
 package test_01.dao;
 
-import com.duan.summer.annotation.Component;
-import com.duan.summer.annotation.ComponentScan;
 import com.duan.summer.annotation.Mapper;
 
 /**

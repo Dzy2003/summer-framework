@@ -1,6 +1,7 @@
 package com.duan.summer.binding;
 
 import cn.hutool.core.lang.ClassScanner;
+import com.duan.summer.session.Configuration;
 import com.duan.summer.session.SqlSession;
 
 import java.util.HashMap;
@@ -15,6 +16,10 @@ import java.util.Set;
 
 public class MapperRegistry {
     Map<Class<?>, MapperProxyFactory<?>> mappers = new HashMap<>();
+    Configuration configuration;
+    public MapperRegistry(Configuration configuration){
+        this.configuration = configuration;
+    }
 
     public <T> T getMapper(Class<T> type, SqlSession session) {
         MapperProxyFactory<T> mapperProxyFactory =(MapperProxyFactory<T>) mappers.get(type);

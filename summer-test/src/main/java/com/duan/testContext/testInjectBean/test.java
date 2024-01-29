@@ -24,6 +24,7 @@ public class test {
             DataSource bean = context.getBean(DataSource.class);
             System.out.println(bean);
             System.out.println(context.findBeanDefinition(iService.class));
+            System.out.println(context.beans.size());
         }
     }
     @Test

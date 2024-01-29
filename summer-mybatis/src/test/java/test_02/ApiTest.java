@@ -2,6 +2,7 @@ package test_02;
 
 
 import com.duan.summer.binding.MapperRegistry;
+import com.duan.summer.session.Configuration;
 import com.duan.summer.session.SqlSession;
 import com.duan.summer.session.SqlSessionFactory;
 import com.duan.summer.session.defaults.DefaultSqlSessionFactory;
@@ -21,12 +22,13 @@ public class ApiTest {
 
     @Test
     public void test_MapperProxyFactory() {
+        Configuration configuration = new Configuration();
         // 1. 注册 Mapper
-        MapperRegistry registry = new MapperRegistry();
+        MapperRegistry registry = new MapperRegistry(configuration);
         registry.addMappers("test_02");
 
         // 2. 从 SqlSession 工厂获取 Session
-        SqlSessionFactory sqlSessionFactory = new DefaultSqlSessionFactory(registry);
+        SqlSessionFactory sqlSessionFactory = new DefaultSqlSessionFactory(configuration);
         SqlSession sqlSession = sqlSessionFactory.openSession();
 
         // 3. 获取映射器对象
