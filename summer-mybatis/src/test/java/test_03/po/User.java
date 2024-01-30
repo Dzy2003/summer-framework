@@ -46,6 +46,17 @@ public class User {
         return updateTime;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", userId='" + userId + '\'' +
+                ", userHead='" + userHead + '\'' +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                '}';
+    }
+
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }

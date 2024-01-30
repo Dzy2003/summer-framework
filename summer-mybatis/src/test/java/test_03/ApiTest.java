@@ -1,6 +1,7 @@
 package test_03;
 
 import com.duan.summer.io.Resources;
+import com.duan.summer.mapping.BoundSql;
 import com.duan.summer.session.SqlSession;
 import com.duan.summer.session.SqlSessionFactory;
 import com.duan.summer.session.SqlSessionFactoryBuilder;
@@ -8,9 +9,11 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import test_03.dao.IUserDao;
+import test_03.po.User;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.HashMap;
 
 /**
  * @author 小傅哥，微信：fustack
@@ -33,7 +36,7 @@ public class ApiTest {
         IUserDao userDao = sqlSession.getMapper(IUserDao.class);
 
         // 3. 测试验证
-        String res = userDao.queryUserInfoById("10001");
+        User res = userDao.queryUserInfoById(1L);
         logger.info("测试结果：{}", res);
     }
 

@@ -29,7 +29,7 @@ public interface SqlSession {
      * @param parameter A parameter object to pass to the statement.
      * @return Mapped object
      */
-    <T> T selectOne(String statement, Object parameter);
+    <T> T selectOne(String statement, Object[] parameter);
 
     /**
      * Retrieves a mapper.

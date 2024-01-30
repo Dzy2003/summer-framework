@@ -2,6 +2,7 @@ package com.duan.summer.builder;
 
 
 import com.duan.summer.session.Configuration;
+import com.duan.summer.type.TypeAliasRegistry;
 
 /**
  * @author 小傅哥，微信：fustack
@@ -11,10 +12,13 @@ import com.duan.summer.session.Configuration;
  */
 public abstract class ConfigBuilder {
 
-    protected final Configuration configuration;
+    protected Configuration configuration;
+    protected TypeAliasRegistry typeAliasRegistry;
+    public abstract Configuration parse();
 
     public ConfigBuilder(Configuration configuration) {
         this.configuration = configuration;
+        this.typeAliasRegistry = configuration.getTypeAliasRegistry();
     }
 
     public Configuration getConfiguration() {
