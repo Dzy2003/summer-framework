@@ -1,5 +1,7 @@
 package com.duan.summer.session;
 
+import java.util.List;
+
 /**
  * @author 小傅哥，微信：fustack
  * @description SqlSession 用来执行SQL，获取映射器，管理事务。
@@ -30,6 +32,10 @@ public interface SqlSession {
      * @return Mapped object
      */
     <T> T selectOne(String statement, Object[] parameter);
+
+    <T> List<T> selectList(String statement);
+
+    <T> List<T> selectList(String statement, Object[] parameter);
 
     /**
      * Retrieves a mapper.

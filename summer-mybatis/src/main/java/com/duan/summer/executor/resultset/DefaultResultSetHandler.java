@@ -22,24 +22,25 @@ public class DefaultResultSetHandler implements ResultSetHandler{
         this.boundSql = boundSql;
     }
     @Override
-    public <E> List<E> handleResultSets(Statement stmt) throws SQLException {
+    public <T> List<T> handleResultSets(Statement stmt) throws SQLException {
         ResultSet resultSet = stmt.getResultSet();
         try {
-            return resultSet2Obj(resultSet, Class.forName(boundSql.getResultType()));
+            return (List<T>) resultSet2Obj(resultSet, Class.forName(boundSql.getResultType()));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    private <T> List<T> resultSet2Obj(ResultSet resultSet, Class<?> clazz) {
+    private <T> List<T> resultSet2Obj(ResultSet resultSet, Class<T> clazz) {
         List<T> list = new ArrayList<>();
         try {
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
+            System.out.println(columnCount);
             // 每次遍历行值
             while (resultSet.next()) {
-                T obj = (T) clazz.getConstructor().newInstance();
+                T obj = clazz.getConstructor().newInstance();
                 for (int i = 1; i <= columnCount; i++) {
                     Object value = resultSet.getObject(i);
                     String columnName = metaData.getColumnName(i);

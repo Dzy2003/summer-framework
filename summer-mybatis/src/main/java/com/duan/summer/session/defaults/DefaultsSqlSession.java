@@ -34,8 +34,23 @@ public class DefaultsSqlSession implements SqlSession {
     @Override
     public <T> T selectOne(String statement, Object[] parameter) {
         MappedStatement mappedStatement = configuration.getMappedStatement(statement);
-        List<Object> query = executor.query(mappedStatement, parameter, null, mappedStatement.getBoundSql());
+        List<Object> query = executor.query(mappedStatement, parameter, null);
+        if(query.isEmpty()){
+            return null;
+        }
         return(T) query.get(0);
+    }
+
+    @Override
+    public <T> List<T> selectList(String statement) {
+        return this.selectList(statement,null);
+    }
+
+    @Override
+    public <T> List<T> selectList(String statement, Object[] parameter) {
+        MappedStatement mappedStatement = configuration.getMappedStatement(statement);
+        List<Object> query = executor.query(mappedStatement, parameter, null);
+        return (List<T>) query;
     }
 
     @Override

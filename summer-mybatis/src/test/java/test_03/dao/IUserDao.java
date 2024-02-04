@@ -1,9 +1,14 @@
 package test_03.dao;
 
+import com.duan.summer.annotation.Param;
 import com.duan.summer.annotation.Select;
 import test_03.po.User;
+import test_03.po.User1;
+
+import java.util.List;
 
 public interface IUserDao {
-    User queryUserInfoById(Long uId);
+    User1 queryUserInfoById(User1 user);
+    List<User1> queryUsersInfoById(@Param("age") Long uid);
 
 }

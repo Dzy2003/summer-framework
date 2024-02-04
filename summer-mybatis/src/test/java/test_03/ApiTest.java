@@ -10,10 +10,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import test_03.dao.IUserDao;
 import test_03.po.User;
+import test_03.po.User1;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author 小傅哥，微信：fustack
@@ -34,10 +41,30 @@ public class ApiTest {
 
         // 2. 获取映射器对象
         IUserDao userDao = sqlSession.getMapper(IUserDao.class);
-
+        User1 user1 = new User1();
+        user1.setUid(1);
         // 3. 测试验证
-        User res = userDao.queryUserInfoById(1L);
+        User1 res = userDao.queryUserInfoById(user1);
+
         logger.info("测试结果：{}", res);
+    }
+
+    public List<User> selectUserList() {
+        return null;
+    }
+
+    @Test
+    public void test() throws NoSuchMethodException, ClassNotFoundException {
+        Method method = this.getClass().getMethod("selectUserList");
+        Type genericReturnType = method.getGenericReturnType();
+        if(genericReturnType instanceof ParameterizedType){
+            System.out.println(((ParameterizedType) genericReturnType).getRawType());
+            System.out.println(((ParameterizedType) genericReturnType).getOwnerType());
+            System.out.println();
+            System.out.println(genericReturnType.getTypeName());
+            System.out.println(Class.forName(((ParameterizedType) genericReturnType).getActualTypeArguments()[0].getTypeName()));
+        }
+
     }
 
 }

@@ -19,7 +19,7 @@ public interface Executor {
 
     ResultHandler NO_RESULT_HANDLER = null;
 
-    <E> List<E> query(MappedStatement ms, Object[] parameters, ResultHandler resultHandler, BoundSql boundSql);
+    <E> List<E> query(MappedStatement ms, Object[] parameters, ResultHandler resultHandler);
 
     Transaction getTransaction();
 

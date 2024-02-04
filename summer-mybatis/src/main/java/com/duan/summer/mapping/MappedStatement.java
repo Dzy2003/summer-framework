@@ -17,6 +17,16 @@ public class MappedStatement {
     private String id;
     private SqlCommandType sqlCommandType;
 
+    private String[] ParameterName;
+
+    public String[] getParameterName() {
+        return ParameterName;
+    }
+
+    public void setParameterName(String[] parameterName) {
+        ParameterName = parameterName;
+    }
+
     BoundSql boundSql;
 
     /**

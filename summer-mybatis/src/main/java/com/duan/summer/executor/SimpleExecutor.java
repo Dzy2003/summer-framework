@@ -24,14 +24,14 @@ public class SimpleExecutor extends BaseExecutor{
     }
 
     @Override
-    protected <E> List<E> doQuery(MappedStatement ms, Object[] parameters, ResultHandler resultHandler, BoundSql boundSql) {
+    protected <E> List<E> doQuery(MappedStatement ms, Object[] parameters, ResultHandler resultHandler) {
         try {
-            StatementHandler handler = configuration.newStatementHandler(this, ms, parameters, resultHandler, boundSql);
+            StatementHandler handler = configuration.newStatementHandler(this, ms, parameters, resultHandler);
             Connection connection = transaction.getConnection();
             Statement stmt = handler.prepare(connection);
             handler.parameterize(stmt);
             return handler.query(stmt, resultHandler);
-        } catch (SQLException e) {
+        } catch (SQLException | IllegalAccessException e) {
             e.printStackTrace();
             return null;
         }

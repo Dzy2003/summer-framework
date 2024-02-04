@@ -1,11 +1,14 @@
 package com.duan.summer.executor.statement;
 
+import cn.hutool.log.LogFactory;
 import com.duan.summer.executor.Executor;
 import com.duan.summer.executor.resultset.ResultSetHandler;
 import com.duan.summer.mapping.BoundSql;
 import com.duan.summer.mapping.MappedStatement;
 import com.duan.summer.session.Configuration;
 import com.duan.summer.session.ResultHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -19,22 +22,23 @@ import java.util.List;
  */
 
 public abstract class BaseStatementHandler implements StatementHandler{
+    public final Logger logger = LoggerFactory.getLogger(getClass());
+
     protected final Configuration configuration;
+
     protected final Executor executor;
     protected final MappedStatement mappedStatement;
-
-    protected final Object parameterObject;
+    protected final Object[] parameters;
     protected final ResultSetHandler resultSetHandler;
 
     protected BoundSql boundSql;
 
-    public BaseStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameterObject, ResultHandler resultHandler, BoundSql boundSql) {
+    public BaseStatementHandler(Executor executor, MappedStatement mappedStatement, Object[] parameters, ResultHandler resultHandler) {
         this.configuration = mappedStatement.getConfiguration();
         this.executor = executor;
         this.mappedStatement = mappedStatement;
-        this.boundSql = boundSql;
-
-        this.parameterObject = parameterObject;
+        this.boundSql = mappedStatement.getBoundSql();
+        this.parameters = parameters;
         this.resultSetHandler = configuration.newResultSetHandler(executor, mappedStatement, boundSql);
     }
     @Override

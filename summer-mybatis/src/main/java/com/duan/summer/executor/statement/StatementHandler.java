@@ -22,7 +22,7 @@ public interface StatementHandler {
     /**
      * 参数化
      */
-    void parameterize(Statement statement) throws SQLException;
+    void parameterize(Statement statement) throws SQLException, IllegalAccessException;
 
     /**
      * 执行查询

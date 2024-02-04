@@ -15,6 +15,7 @@ import com.duan.summer.mapping.MappedStatement;
 import com.duan.summer.transaction.Transaction;
 import com.duan.summer.transaction.jdbc.JdbcTransactionFactory;
 import com.duan.summer.type.TypeAliasRegistry;
+import com.duan.summer.type.TypeHandlerRegistry;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,6 +39,8 @@ public class Configuration {
     protected final Map<String, MappedStatement> mappedStatements = new HashMap<>();
 
     protected TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
+
+    protected TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry();
 
     protected Environment environment;
 
@@ -70,6 +73,10 @@ public class Configuration {
         return mappedStatements.get(id);
     }
 
+    public TypeHandlerRegistry getTypeHandlerRegistry() {
+        return typeHandlerRegistry;
+    }
+
     public TypeAliasRegistry getTypeAliasRegistry() {
         return typeAliasRegistry;
     }
@@ -98,7 +105,7 @@ public class Configuration {
     /**
      * 创建语句处理器
      */
-    public StatementHandler newStatementHandler(Executor executor, MappedStatement mappedStatement, Object[] parameters, ResultHandler resultHandler, BoundSql boundSql) {
-        return new PreparedStatementHandler(executor, mappedStatement, parameters, resultHandler, boundSql);
+    public StatementHandler newStatementHandler(Executor executor, MappedStatement mappedStatement, Object[] parameters, ResultHandler resultHandler) {
+        return new PreparedStatementHandler(executor, mappedStatement, parameters, resultHandler);
     }
 }

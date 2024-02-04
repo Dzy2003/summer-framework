@@ -28,15 +28,19 @@ public abstract class BaseExecutor implements Executor{
     }
 
     @Override
-    public <E> List<E> query(MappedStatement ms, Object[] parameters, ResultHandler resultHandler, BoundSql boundSql) {
+    public <E> List<E> query(MappedStatement ms, Object[] parameters, ResultHandler resultHandler) {
+        logger.debug("sql:{}", ms.getBoundSql().getSql());
+        for (int i = 0; i < parameters.length; i++){
+            logger.debug("parameter"+ i + ":{},type:{}", parameters[i],parameters[i].getClass() );
+        }
         if (closed) {
             throw new RuntimeException("Executor was closed.");
         }
-        return doQuery(ms, parameters, resultHandler, boundSql);
+        return doQuery(ms, parameters, resultHandler);
     }
 
     protected abstract <E> List<E> doQuery(MappedStatement ms, Object[] parameters,
-                                           ResultHandler resultHandler, BoundSql boundSql);
+                                           ResultHandler resultHandler);
 
     @Override
     public Transaction getTransaction() {

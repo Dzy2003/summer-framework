@@ -2,10 +2,7 @@ package com.duan.summer.builder;
 
 import com.duan.summer.datasource.DataSourceFactory;
 import com.duan.summer.io.Resources;
-import com.duan.summer.mapping.BoundSql;
-import com.duan.summer.mapping.Environment;
-import com.duan.summer.mapping.MappedStatement;
-import com.duan.summer.mapping.SqlCommandType;
+import com.duan.summer.mapping.*;
 import com.duan.summer.session.Configuration;
 import com.duan.summer.transaction.TransactionFactory;
 import org.dom4j.Document;
@@ -100,39 +97,67 @@ public class XMLConfigBuilder extends ConfigBuilder {
             Element root = document.getRootElement();
             //命名空间
             String namespace = root.attributeValue("namespace");
-
-            // SELECT
-            List<Element> selectNodes = root.elements("select");
-            for (Element node : selectNodes) {
-                String id = node.attributeValue("id");
-                String parameterType = node.attributeValue("parameterType");
-                String resultType = node.attributeValue("resultType");
-                String sql = node.getText();
-
-                // ? 匹配
-                Map<Integer, String> parameter = new HashMap<>();
-                Pattern pattern = Pattern.compile("(#\\{(.*?)})");
-                Matcher matcher = pattern.matcher(sql);
-                for (int i = 1; matcher.find(); i++) {
-                    String g1 = matcher.group(1);
-                    String g2 = matcher.group(2);
-                    parameter.put(i, g2);
-                    sql = sql.replace(g1, "?");
-                }
-
-                String msId = namespace + "." + id;
-                String nodeName = node.getName();
-                SqlCommandType sqlCommandType = SqlCommandType.valueOf(nodeName.toUpperCase(Locale.ENGLISH));
-
-                BoundSql boundSql = new BoundSql(sql, parameter, parameterType, resultType);
-
-                MappedStatement mappedStatement = new MappedStatement.Builder(configuration, msId, sqlCommandType, boundSql).build();
-                // 添加解析 SQL
-                configuration.addMappedStatement(mappedStatement);
-            }
-
+            buildStatement((root.elements("select")), namespace);
+            buildStatement((root.elements("update")), namespace);
+            buildStatement((root.elements("delete")), namespace);
+            buildStatement((root.elements("insert")), namespace);
             // 注册Mapper映射器
             configuration.addMapper(Resources.classForName(namespace));
+        }
+    }
+
+    private void buildStatement(List<Element> nodes, String namespace) {
+        for (Element node : nodes) {
+            String id = node.attributeValue("id");
+            String parameterType = node.attributeValue("parameterType");
+            String resultType = node.attributeValue("resultType");
+            String sql = node.getText();
+
+            // ? 匹配
+            List<ParameterMapping> parameterMappings = new ArrayList<>();
+            Pattern pattern = Pattern.compile("(#\\{(.*?)})");
+            Matcher matcher = pattern.matcher(sql);
+            Class<?> parameterJavaType = null;
+            if(parameterType != null){
+                try {
+                    parameterJavaType = Class.forName(parameterType);
+                }catch (ClassNotFoundException e){
+                    throw new RuntimeException(e + "the parameterType" + parameterType +"is not find");
+                }
+            }
+            for (int i = 1; matcher.find(); i++) {
+                ParameterMapping parameterMapping = null;
+                String g1 = matcher.group(1); //#{name}
+                String property = matcher.group(2);
+                sql = sql.replace(g1, "?");
+                //第一种情况：只有一个基本类型参数
+                if(configuration.getTypeHandlerRegistry().hasTypeHandler(parameterJavaType)){
+                    parameterMapping = new ParameterMapping.Builder
+                            (configuration,property, parameterJavaType,i).build();
+                //第二种情况：没有参数类型，说明有多个非pojo类型参数
+                } else if (parameterJavaType == null) {
+                    parameterMapping = new ParameterMapping.Builder(configuration, property, null,i).build();
+                    //第三种情况，用户定义pojo类型
+                } else{
+                    try {
+                        parameterMapping = new ParameterMapping.Builder(configuration, property, parameterJavaType
+                                .getDeclaredField(property).getType(),i).build();
+                    } catch (NoSuchFieldException e) {
+                        throw new RuntimeException("the #{" + property + "}" + " is not find in " + parameterJavaType);
+                    }
+                }
+                System.out.println("构建parameterMapping：" + parameterMapping);
+                parameterMappings.add(parameterMapping);
+            }
+            String msId = namespace + "." + id;
+            String nodeName = node.getName();
+            SqlCommandType sqlCommandType = SqlCommandType.valueOf(nodeName.toUpperCase(Locale.ENGLISH));
+
+            BoundSql boundSql = new BoundSql(sql, parameterMappings, resultType);
+
+            MappedStatement mappedStatement = new MappedStatement.Builder(configuration, msId, sqlCommandType, boundSql).build();
+            // 添加解析 SQL
+            configuration.addMappedStatement(mappedStatement);
         }
     }
 }

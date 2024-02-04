@@ -1,5 +1,6 @@
 package com.duan.summer.mapping;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -11,14 +12,12 @@ import java.util.Map;
 public class BoundSql {
 
     private final String sql;
-    private final Map<Integer, String> parameterMappings;
-    private final String parameterType;
+    private final List<ParameterMapping> parameterMappings;
     private final String resultType;
 
-    public BoundSql(String sql, Map<Integer, String> parameterMappings, String parameterType, String resultType) {
+    public BoundSql(String sql, List<ParameterMapping> parameterMappings, String resultType) {
         this.sql = sql;
         this.parameterMappings = parameterMappings;
-        this.parameterType = parameterType;
         this.resultType = resultType;
     }
 
@@ -26,13 +25,10 @@ public class BoundSql {
         return sql;
     }
 
-    public Map<Integer, String> getParameterMappings() {
+    public List<ParameterMapping> getParameterMappings() {
         return parameterMappings;
     }
 
-    public String getParameterType() {
-        return parameterType;
-    }
 
     public String getResultType() {
         return resultType;
