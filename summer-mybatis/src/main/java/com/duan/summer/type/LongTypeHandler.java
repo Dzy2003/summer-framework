@@ -20,11 +20,11 @@ public class LongTypeHandler implements TypeHandler<Long>{
 
     @Override
     public Long getResult(ResultSet rs, String columnName) throws SQLException {
-        return null;
+        return rs.getLong(columnName);
     }
 
     @Override
     public Long getResult(ResultSet rs, int columnIndex) throws SQLException {
-        return null;
+        return rs.getLong(columnIndex);
     }
 }

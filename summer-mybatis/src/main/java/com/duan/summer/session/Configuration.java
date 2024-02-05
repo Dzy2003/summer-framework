@@ -10,6 +10,7 @@ import com.duan.summer.executor.resultset.ResultSetHandler;
 import com.duan.summer.executor.statement.PreparedStatementHandler;
 import com.duan.summer.executor.statement.StatementHandler;
 import com.duan.summer.mapping.BoundSql;
+import com.duan.summer.mapping.ColumnMapping;
 import com.duan.summer.mapping.Environment;
 import com.duan.summer.mapping.MappedStatement;
 import com.duan.summer.transaction.Transaction;
@@ -44,10 +45,21 @@ public class Configuration {
 
     protected Environment environment;
 
+    protected ColumnMapping columnMapping = new ColumnMapping();
+
+
     public Configuration() {
         typeAliasRegistry.registerAlias("JDBC", JdbcTransactionFactory.class);
         typeAliasRegistry.registerAlias("DRUID", DruidDataSourceFactory.class);
     }
+    public ColumnMapping getColumnMapping() {
+        return columnMapping;
+    }
+
+    public void setColumnMapping(ColumnMapping columnMapping) {
+        this.columnMapping = columnMapping;
+    }
+
 
     public void addMappers(String packageName) {
         mapperRegistry.addMappers(packageName);
@@ -105,7 +117,7 @@ public class Configuration {
     /**
      * 创建语句处理器
      */
-    public StatementHandler newStatementHandler(Executor executor, MappedStatement mappedStatement, Object[] parameters, ResultHandler resultHandler) {
-        return new PreparedStatementHandler(executor, mappedStatement, parameters, resultHandler);
+    public StatementHandler newStatementHandler(Executor executor, MappedStatement mappedStatement, Object[] parameters) {
+        return new PreparedStatementHandler(executor, mappedStatement, parameters);
     }
 }

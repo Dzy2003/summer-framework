@@ -45,8 +45,11 @@ public class ApiTest {
         user1.setUid(1);
         // 3. 测试验证
         User1 res = userDao.queryUserInfoById(user1);
+        User1 user2 = new User1();
+        user2.setUage(20);
+        List<User1> user1List = userDao.queryUsersInfoById(user2);
 
-        logger.info("测试结果：{}", res);
+        logger.info("测试结果：{}{}", res, user1List);
     }
 
     public List<User> selectUserList() {

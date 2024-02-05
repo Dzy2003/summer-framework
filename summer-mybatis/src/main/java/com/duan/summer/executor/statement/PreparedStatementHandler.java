@@ -1,7 +1,6 @@
 package com.duan.summer.executor.statement;
 
 import com.duan.summer.executor.Executor;
-import com.duan.summer.mapping.BoundSql;
 import com.duan.summer.mapping.MappedStatement;
 import com.duan.summer.mapping.ParameterMapping;
 import com.duan.summer.session.ResultHandler;
@@ -9,10 +8,7 @@ import com.duan.summer.type.TypeHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,8 +20,8 @@ import java.util.Map;
  */
 
 public class PreparedStatementHandler extends BaseStatementHandler{
-    public PreparedStatementHandler(Executor executor, MappedStatement mappedStatement, Object[] parameters, ResultHandler resultHandler) {
-        super(executor, mappedStatement, parameters, resultHandler);
+    public PreparedStatementHandler(Executor executor, MappedStatement mappedStatement, Object[] parameters) {
+        super(executor, mappedStatement, parameters);
     }
 
     @Override
@@ -37,30 +33,45 @@ public class PreparedStatementHandler extends BaseStatementHandler{
     @Override
     public void parameterize(Statement statement) throws SQLException, IllegalAccessException {
         Map<String, Object> parameterMap = parseParameters(parameters);
-        logger.debug("解析参数列表结果：" + parameterMap);
         PreparedStatement ps = (PreparedStatement) statement;
-        if(boundSql.getParameterMappings().size() == 1 &&
-                configuration.getTypeHandlerRegistry().hasTypeHandler(parameters[0].getClass())){
-            logger.debug("解析参数：" + boundSql.getParameterMappings().get(0).getProperty() + " " + 0 + " "
-                    + parameters[0]);
-            TypeHandler handler = configuration.getTypeHandlerRegistry().getHandler(parameters[0].getClass());
-            handler.setParameter(ps, 1, parameters[0]);
+        if(isSingleParam()){
+            logger.debug("解析参数：" + boundSql.getParameterMappings().get(0).getProperty() + " : " + parameters[0]);
+            setParam(ps);
         }else {
             for (ParameterMapping parameterMapping : boundSql.getParameterMappings()) {
-                Object parameterSet = parameterMap.get(parameterMapping.getProperty());
-                if(parameterSet == null){
-                    throw new RuntimeException("找不到叫做" + parameterMapping.getProperty() + "的参数");
-                }
-                System.out.println(parameterSet.getClass());
+                Object setValue = getValue(parameterMapping.getProperty(), parameterMap);
                 if(parameterMapping.getTypeHandler() == null){
                     parameterMapping.setTypeHandler(
-                            configuration.getTypeHandlerRegistry().getHandler(parameterSet.getClass()));
+                            configuration.getTypeHandlerRegistry().getHandler(setValue.getClass()));
                 }
-                TypeHandler typeHandler = parameterMapping.getTypeHandler();
-                typeHandler.setParameter(ps, parameterMapping.getIndex(), parameterSet);
-                logger.debug("解析参数：" + parameterMapping.getProperty() + " " + parameterMapping.getIndex() + " " + parameterSet);
+                setParam(parameterMapping, ps, setValue);
+                logger.debug("解析参数：" + parameterMapping.getProperty()+ " : " + setValue);
             }
         }
+    }
+
+    @NotNull
+    private static Object getValue(String property, Map<String, Object> parameterMap) {
+        Object setValue = parameterMap.get(property);
+        if(setValue == null){
+            throw new RuntimeException("找不到叫做" + property + "的参数");
+        }
+        return setValue;
+    }
+
+    private static void setParam(ParameterMapping parameterMapping, PreparedStatement ps, Object value) throws SQLException {
+        TypeHandler typeHandler = parameterMapping.getTypeHandler();
+        typeHandler.setParameter(ps, parameterMapping.getIndex(), value);
+    }
+
+    private void setParam(PreparedStatement ps) throws SQLException {
+        TypeHandler handler = configuration.getTypeHandlerRegistry().getHandler(parameters[0].getClass());
+        handler.setParameter(ps, 1, parameters[0]);
+    }
+
+    private boolean isSingleParam() {
+        return boundSql.getParameterMappings().size() == 1 &&
+                configuration.getTypeHandlerRegistry().hasTypeHandler(parameters[0].getClass());
     }
 
     private Map<String, Object> parseParameters(Object[] parameters) throws IllegalAccessException {
@@ -80,7 +91,7 @@ public class PreparedStatementHandler extends BaseStatementHandler{
     }
 
     @Override
-    public <E> List<E> query(Statement statement, ResultHandler resultHandler) throws SQLException {
+    public <E> List<E> query(Statement statement) throws SQLException {
         PreparedStatement ps = (PreparedStatement) statement;
         ps.execute();
         return resultSetHandler.handleResultSets(ps);

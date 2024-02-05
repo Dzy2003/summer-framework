@@ -14,7 +14,7 @@ public abstract class ConfigBuilder {
 
     protected Configuration configuration;
     protected TypeAliasRegistry typeAliasRegistry;
-    public abstract Configuration parse();
+    public abstract Configuration parse() throws ClassNotFoundException;
 
     public ConfigBuilder(Configuration configuration) {
         this.configuration = configuration;

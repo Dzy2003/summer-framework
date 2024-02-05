@@ -7,10 +7,15 @@
         FROM users
         where uid = #{uid}
     </select>
-    <select id="queryUsersInfoById" resultType="test_03.po.User1">
+    <select id="queryUsersInfoById" parameterType="test_03.po.User1" resultType="test_03.po.User1">
         SELECT *
         FROM users
-        where uage = #{age}
+        where uage = #{uage}
     </select>
+    <resultMap id="activityMap" type="test_03.po.User1">
+        <id column="id" property="uid"/>
+        <result column="name" property="uname"/>
+        <result column="age" property="uage"/>
+    </resultMap>
 
 </mapper>

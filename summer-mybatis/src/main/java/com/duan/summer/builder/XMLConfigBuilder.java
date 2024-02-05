@@ -12,6 +12,7 @@ import org.dom4j.io.SAXReader;
 import org.xml.sax.InputSource;
 
 import javax.sql.DataSource;
+import java.io.InputStream;
 import java.io.Reader;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -91,73 +92,9 @@ public class XMLConfigBuilder extends ConfigBuilder {
         List<Element> mapperList = mappers.elements("mapper");
         for (Element e : mapperList) {
             String resource = e.attributeValue("resource");
-            Reader reader = Resources.getResourceAsReader(resource);
-            SAXReader saxReader = new SAXReader();
-            Document document = saxReader.read(new InputSource(reader));
-            Element root = document.getRootElement();
-            //命名空间
-            String namespace = root.attributeValue("namespace");
-            buildStatement((root.elements("select")), namespace);
-            buildStatement((root.elements("update")), namespace);
-            buildStatement((root.elements("delete")), namespace);
-            buildStatement((root.elements("insert")), namespace);
-            // 注册Mapper映射器
-            configuration.addMapper(Resources.classForName(namespace));
-        }
-    }
-
-    private void buildStatement(List<Element> nodes, String namespace) {
-        for (Element node : nodes) {
-            String id = node.attributeValue("id");
-            String parameterType = node.attributeValue("parameterType");
-            String resultType = node.attributeValue("resultType");
-            String sql = node.getText();
-
-            // ? 匹配
-            List<ParameterMapping> parameterMappings = new ArrayList<>();
-            Pattern pattern = Pattern.compile("(#\\{(.*?)})");
-            Matcher matcher = pattern.matcher(sql);
-            Class<?> parameterJavaType = null;
-            if(parameterType != null){
-                try {
-                    parameterJavaType = Class.forName(parameterType);
-                }catch (ClassNotFoundException e){
-                    throw new RuntimeException(e + "the parameterType" + parameterType +"is not find");
-                }
-            }
-            for (int i = 1; matcher.find(); i++) {
-                ParameterMapping parameterMapping = null;
-                String g1 = matcher.group(1); //#{name}
-                String property = matcher.group(2);
-                sql = sql.replace(g1, "?");
-                //第一种情况：只有一个基本类型参数
-                if(configuration.getTypeHandlerRegistry().hasTypeHandler(parameterJavaType)){
-                    parameterMapping = new ParameterMapping.Builder
-                            (configuration,property, parameterJavaType,i).build();
-                //第二种情况：没有参数类型，说明有多个非pojo类型参数
-                } else if (parameterJavaType == null) {
-                    parameterMapping = new ParameterMapping.Builder(configuration, property, null,i).build();
-                    //第三种情况，用户定义pojo类型
-                } else{
-                    try {
-                        parameterMapping = new ParameterMapping.Builder(configuration, property, parameterJavaType
-                                .getDeclaredField(property).getType(),i).build();
-                    } catch (NoSuchFieldException e) {
-                        throw new RuntimeException("the #{" + property + "}" + " is not find in " + parameterJavaType);
-                    }
-                }
-                System.out.println("构建parameterMapping：" + parameterMapping);
-                parameterMappings.add(parameterMapping);
-            }
-            String msId = namespace + "." + id;
-            String nodeName = node.getName();
-            SqlCommandType sqlCommandType = SqlCommandType.valueOf(nodeName.toUpperCase(Locale.ENGLISH));
-
-            BoundSql boundSql = new BoundSql(sql, parameterMappings, resultType);
-
-            MappedStatement mappedStatement = new MappedStatement.Builder(configuration, msId, sqlCommandType, boundSql).build();
-            // 添加解析 SQL
-            configuration.addMappedStatement(mappedStatement);
+            InputStream inputStream = Resources.getResourceAsStream(resource);
+            XMLMapperBuilder xmlMapperBuilder = new XMLMapperBuilder(inputStream, configuration, resource);
+            xmlMapperBuilder.parse();
         }
     }
 }

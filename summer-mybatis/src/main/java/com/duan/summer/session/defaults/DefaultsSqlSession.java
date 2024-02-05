@@ -34,7 +34,7 @@ public class DefaultsSqlSession implements SqlSession {
     @Override
     public <T> T selectOne(String statement, Object[] parameter) {
         MappedStatement mappedStatement = configuration.getMappedStatement(statement);
-        List<Object> query = executor.query(mappedStatement, parameter, null);
+        List<Object> query = executor.query(mappedStatement, parameter);
         if(query.isEmpty()){
             return null;
         }
@@ -49,7 +49,7 @@ public class DefaultsSqlSession implements SqlSession {
     @Override
     public <T> List<T> selectList(String statement, Object[] parameter) {
         MappedStatement mappedStatement = configuration.getMappedStatement(statement);
-        List<Object> query = executor.query(mappedStatement, parameter, null);
+        List<Object> query = executor.query(mappedStatement, parameter);
         return (List<T>) query;
     }
 

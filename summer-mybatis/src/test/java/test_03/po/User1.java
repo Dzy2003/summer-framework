@@ -9,6 +9,7 @@ package test_03.po;
 public class User1 {
     private Integer uid;
     private String uname;
+    private Integer uage;
 
     public void setUid(Integer uid) {
         this.uid = Integer.valueOf(uid);
@@ -31,5 +32,5 @@ public class User1 {
         this.uage = uage;
     }
 
-    private Integer uage;
+
 }

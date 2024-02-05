@@ -18,11 +18,11 @@ public class IntegerTypeHandler implements TypeHandler<Integer>{
 
     @Override
     public Integer getResult(ResultSet rs, String columnName) throws SQLException {
-        return null;
+        return rs.getInt(columnName);
     }
 
     @Override
     public Integer getResult(ResultSet rs, int columnIndex) throws SQLException {
-        return null;
+        return rs.getInt(columnIndex);
     }
 }

@@ -18,6 +18,8 @@ public class MappedStatement {
     private SqlCommandType sqlCommandType;
 
     private String[] ParameterName;
+    private BoundSql boundSql;
+    private ResultMap resultMap;
 
     public String[] getParameterName() {
         return ParameterName;
@@ -27,7 +29,7 @@ public class MappedStatement {
         ParameterName = parameterName;
     }
 
-    BoundSql boundSql;
+
 
     /**
      * 建造者
@@ -36,11 +38,13 @@ public class MappedStatement {
 
         private MappedStatement mappedStatement = new MappedStatement();
 
-        public Builder(Configuration configuration, String id, SqlCommandType sqlCommandType, BoundSql boundSql) {
+        public Builder(Configuration configuration, String id, SqlCommandType sqlCommandType,
+                       BoundSql boundSql,String resultMapID) {
             mappedStatement.configuration = configuration;
             mappedStatement.id = id;
             mappedStatement.sqlCommandType = sqlCommandType;
             mappedStatement.boundSql = boundSql;
+            mappedStatement.resultMap = configuration.getColumnMapping().getResultMap(resultMapID);
         }
 
         public MappedStatement build() {
@@ -65,5 +69,13 @@ public class MappedStatement {
 
     public BoundSql getBoundSql() {
         return boundSql;
+    }
+
+    public ResultMap getResultMap() {
+        return resultMap;
+    }
+
+    public void setResultMap(ResultMap resultMap) {
+        this.resultMap = resultMap;
     }
 }
