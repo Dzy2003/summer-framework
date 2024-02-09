@@ -7,30 +7,40 @@ package test_03.po;
  */
 
 public class User1 {
-    private Integer uid;
-    private String uname;
-    private Integer uage;
-
-    public void setUid(Integer uid) {
-        this.uid = Integer.valueOf(uid);
-    }
-
-    public void setUname(String uname) {
-        this.uname = uname;
-    }
+    private Integer userId;
+    private String userName;
+    private Integer userAge;
 
     @Override
     public String toString() {
         return "User1{" +
-                "uid=" + uid +
-                ", uname='" + uname + '\'' +
-                ", uage=" + uage +
+                "userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", userAge=" + userAge +
                 '}';
     }
 
-    public void setUage(Integer uage) {
-        this.uage = uage;
+    public Integer getUserId() {
+        return userId;
     }
 
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public Integer getUserAge() {
+        return userAge;
+    }
+
+    public void setUserAge(Integer userAge) {
+        this.userAge = userAge;
+    }
 }

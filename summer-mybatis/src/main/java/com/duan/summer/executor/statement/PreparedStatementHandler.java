@@ -32,21 +32,23 @@ public class PreparedStatementHandler extends BaseStatementHandler{
 
     @Override
     public void parameterize(Statement statement) throws SQLException, IllegalAccessException {
+        System.out.println("==>  Preparing:" + mappedStatement.getBoundSql().getSql().replace("\n","").replace("       ",""));
         Map<String, Object> parameterMap = parseParameters(parameters);
         PreparedStatement ps = (PreparedStatement) statement;
         if(isSingleParam()){
-            logger.debug("解析参数：" + boundSql.getParameterMappings().get(0).getProperty() + " : " + parameters[0]);
             setParam(ps);
         }else {
+            StringBuilder sb = new StringBuilder();
             for (ParameterMapping parameterMapping : boundSql.getParameterMappings()) {
                 Object setValue = getValue(parameterMapping.getProperty(), parameterMap);
                 if(parameterMapping.getTypeHandler() == null){
                     parameterMapping.setTypeHandler(
                             configuration.getTypeHandlerRegistry().getHandler(setValue.getClass()));
                 }
+                sb.append(setValue).append("(").append(setValue.getClass().getSimpleName()).append("), ");
                 setParam(parameterMapping, ps, setValue);
-                logger.debug("解析参数：" + parameterMapping.getProperty()+ " : " + setValue);
             }
+            System.out.println("==> Parameters: " + sb);
         }
     }
 
@@ -59,14 +61,17 @@ public class PreparedStatementHandler extends BaseStatementHandler{
         return setValue;
     }
 
-    private static void setParam(ParameterMapping parameterMapping, PreparedStatement ps, Object value) throws SQLException {
+    private void setParam(ParameterMapping parameterMapping, PreparedStatement ps, Object value) throws SQLException {
         TypeHandler typeHandler = parameterMapping.getTypeHandler();
         typeHandler.setParameter(ps, parameterMapping.getIndex(), value);
+
     }
 
     private void setParam(PreparedStatement ps) throws SQLException {
         TypeHandler handler = configuration.getTypeHandlerRegistry().getHandler(parameters[0].getClass());
         handler.setParameter(ps, 1, parameters[0]);
+        System.out.println("==> Parameters:"+parameters[0]  + "("
+                +parameters[0].getClass().getSimpleName()+")");
     }
 
     private boolean isSingleParam() {

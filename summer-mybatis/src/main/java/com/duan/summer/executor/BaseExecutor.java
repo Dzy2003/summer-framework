@@ -29,10 +29,6 @@ public abstract class BaseExecutor implements Executor{
 
     @Override
     public <E> List<E> query(MappedStatement ms, Object[] parameters) {
-        logger.debug("sql:{}", ms.getBoundSql().getSql());
-        for (int i = 0; i < parameters.length; i++){
-            logger.debug("parameter"+ i + ":{},type:{}", parameters[i],parameters[i].getClass() );
-        }
         if (closed) {
             throw new RuntimeException("Executor was closed.");
         }

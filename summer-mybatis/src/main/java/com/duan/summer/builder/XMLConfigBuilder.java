@@ -51,10 +51,24 @@ public class XMLConfigBuilder extends ConfigBuilder {
             // 解析映射器
             mapperElement(root.element("mappers"));
             environmentsElement(root.element("environments"));
+            settingsElement(root.element("settings"));
         } catch (Exception e) {
             throw new RuntimeException("Error parsing SQL Mapper Configuration. Cause: " + e, e);
         }
         return configuration;
+    }
+
+    private void settingsElement(Element settings) {
+        for (Element element : settings.elements("setting")) {
+            String settingName = element.attributeValue("name");
+            String settingValue = element.attributeValue("value");
+            switch (settingName){
+                case "ignoreSuffix" -> configuration.getColumnMapping().setIgnoreSuffix(settingValue);
+                case "ignorePrefix" -> configuration.getColumnMapping().setIgnorePrefix(settingValue);
+                case "mapUnderscoreToCamelCase" -> configuration.getColumnMapping()
+                        .setHumpMapping(Boolean.valueOf(settingValue));
+            }
+        }
     }
 
     private void environmentsElement(Element context) throws Exception {

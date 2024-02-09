@@ -103,8 +103,8 @@ public class Configuration {
     /**
      * 创建结果集处理器
      */
-    public ResultSetHandler newResultSetHandler(Executor executor, MappedStatement mappedStatement, BoundSql boundSql) {
-        return new DefaultResultSetHandler(executor, mappedStatement, boundSql);
+    public ResultSetHandler newResultSetHandler(MappedStatement mappedStatement) {
+        return new DefaultResultSetHandler(mappedStatement);
     }
 
     /**

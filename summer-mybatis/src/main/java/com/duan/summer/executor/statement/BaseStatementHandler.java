@@ -39,7 +39,7 @@ public abstract class BaseStatementHandler implements StatementHandler{
         this.mappedStatement = mappedStatement;
         this.boundSql = mappedStatement.getBoundSql();
         this.parameters = parameters;
-        this.resultSetHandler = configuration.newResultSetHandler(executor, mappedStatement, boundSql);
+        this.resultSetHandler = configuration.newResultSetHandler(mappedStatement);
     }
     @Override
     public Statement prepare(Connection connection) throws SQLException {

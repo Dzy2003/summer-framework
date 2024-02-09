@@ -57,10 +57,6 @@ public class ResultMap {
         return resultMappings;
     }
 
-    public List<ResultMapping> getPropertyResultMappings() {
-        return resultMappings;
-    }
-
     @Override
     public String toString() {
         return "ResultMap{" +

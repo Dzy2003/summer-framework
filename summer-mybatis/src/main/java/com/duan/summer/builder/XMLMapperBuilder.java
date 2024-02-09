@@ -75,7 +75,6 @@ public class XMLMapperBuilder extends ConfigBuilder{
         }
         ResultMap resultMap = new ResultMap.Builder(configuration, id, ResultType, resultMappings).build();
         configuration.getColumnMapping().registerResultMap(resultMap);
-        System.out.println("构建resultMap:"+ resultMap);
     }
 
     private ResultMapping buildResultMapping(Element resultChild, Class<?> ResultType) throws NoSuchFieldException {
@@ -96,6 +95,9 @@ public class XMLMapperBuilder extends ConfigBuilder{
             String parameterType = node.attributeValue("parameterType");
             String resultType = node.attributeValue("resultType");
             String resultMapId = node.attributeValue("resultMap");
+            if(resultType == null){
+                resultType = configuration.getColumnMapping().getResultMap(resultMapId).getType().getName();
+            }
             String sql = node.getText();
 
             // ? 匹配
@@ -131,7 +133,6 @@ public class XMLMapperBuilder extends ConfigBuilder{
                         throw new RuntimeException("the #{" + property + "}" + " is not find in " + parameterJavaType);
                     }
                 }
-                System.out.println("构建parameterMapping：" + parameterMapping);
                 parameterMappings.add(parameterMapping);
             }
             String msId = namespace + "." + id;

@@ -1,5 +1,7 @@
 package com.duan.summer.type;
 
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +19,11 @@ public class TypeHandlerRegistry {
         //TODO 把各种TypeHandler注册到map中
         register(Long.class, new LongTypeHandler());
         register(Integer.class,new IntegerTypeHandler());
+        register(String.class, new StringTypeHandler());
+        register(Float.class, new FloatTypeHandler());
+        register(Double.class, new DoubleTypeHandler());
+        register(Timestamp.class, new TimestampTypeHandler());
+        register(Date.class, new DateTypeHandler());
     }
 
     private <T> void register(Class<T> type, TypeHandler<T> typeHandler){

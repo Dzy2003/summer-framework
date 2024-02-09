@@ -10,8 +10,8 @@ import java.util.Map;
  */
 
 public class ColumnMapping {
-    private String prefix = "";
-    private String suffix = "";
+    private String ignorePrefix = "";
+    private String ignoreSuffix = "";
     private Map<String, ResultMap> resultMaps = new HashMap<>();
     private Boolean isHumpMapping = false;
 
@@ -22,14 +22,14 @@ public class ColumnMapping {
         private final ColumnMapping columnMapping = new ColumnMapping();
 
         public Builder(String prefix, String suffix, Map<String, ResultMap> resultMaps,Boolean isHumpMapping){
-            columnMapping.prefix = prefix;
-            columnMapping.suffix = suffix;
+            columnMapping.ignorePrefix = prefix;
+            columnMapping.ignoreSuffix = suffix;
             columnMapping.resultMaps = resultMaps;
             columnMapping.isHumpMapping = isHumpMapping;
         }
         public Builder(String prefix, String suffix, Map<String, ResultMap> resultMaps){
-            columnMapping.prefix = prefix;
-            columnMapping.suffix = suffix;
+            columnMapping.ignorePrefix = prefix;
+            columnMapping.ignoreSuffix = suffix;
             columnMapping.resultMaps = resultMaps;
         }
         public ColumnMapping build(){
@@ -43,20 +43,20 @@ public class ColumnMapping {
         return this.resultMaps.get(id);
     }
 
-    public String getPrefix() {
-        return prefix;
+    public String getIgnorePrefix() {
+        return ignorePrefix;
     }
 
-    public void setPrefix(String prefix) {
-        this.prefix = prefix;
+    public void setIgnorePrefix(String prefix) {
+        this.ignorePrefix = prefix;
     }
 
-    public String getSuffix() {
-        return suffix;
+    public String getIgnoreSuffix() {
+        return ignoreSuffix;
     }
 
-    public void setSuffix(String suffix) {
-        this.suffix = suffix;
+    public void setIgnoreSuffix(String suffix) {
+        this.ignoreSuffix = suffix;
     }
 
     public Map<String, ResultMap> getResultMaps() {

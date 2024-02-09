@@ -56,7 +56,7 @@ public class MapperMethod {
                     String value = parameters[i].getAnnotation(Param.class).value();
                     parameterNames[i] = value;
                 }else {
-                    parameterNames[i] = "param" + i;
+                    parameterNames[i] = "param" + (i+1);
                 }
             }
             ms.setParameterName(parameterNames);

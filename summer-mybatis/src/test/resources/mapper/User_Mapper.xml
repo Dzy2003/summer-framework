@@ -5,17 +5,22 @@
     <select id="queryUserInfoById" parameterType="test_03.po.User1" resultType="test_03.po.User1">
         SELECT *
         FROM users
-        where uid = #{uid}
+        where tb_user_id = #{userId}
     </select>
-    <select id="queryUsersInfoById" parameterType="test_03.po.User1" resultType="test_03.po.User1">
+    <select id="queryUsersInfoById" parameterType="test_03.po.User1" resultMap="activityMap">
         SELECT *
         FROM users
-        where uage = #{uage}
+        where tb_user_age = #{userAge}
+    </select>
+    <select id="countAge"  resultType="java.lang.Long">
+        SELECT count(*)
+        FROM users
+        where tb_user_age between #{param1} and #{param2}
     </select>
     <resultMap id="activityMap" type="test_03.po.User1">
-        <id column="id" property="uid"/>
-        <result column="name" property="uname"/>
-        <result column="age" property="uage"/>
+        <id column="tb_user_id" property="userId"/>
+        <result column="tb_user_name" property="userName"/>
+        <result column="tb_user_age" property="userAge"/>
     </resultMap>
 
 </mapper>

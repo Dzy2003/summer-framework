@@ -10,5 +10,6 @@ import java.util.List;
 public interface IUserDao {
     User1 queryUserInfoById(User1 user);
     List<User1> queryUsersInfoById(User1 user);
+    Long countAge(Long minAge,Long maxAge);
 
 }

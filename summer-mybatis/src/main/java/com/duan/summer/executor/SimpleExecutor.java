@@ -26,6 +26,7 @@ public class SimpleExecutor extends BaseExecutor{
     @Override
     protected <E> List<E> doQuery(MappedStatement ms, Object[] parameters) {
         try {
+
             StatementHandler handler = configuration.newStatementHandler(this, ms, parameters);
             Connection connection = transaction.getConnection();
             Statement stmt = handler.prepare(connection);

@@ -19,4 +19,8 @@
     <mappers>
         <mapper resource="mapper/User_Mapper.xml"/>
     </mappers>
+    <settings>
+        <setting name="ignorePrefix" value="tb_"/>
+        <setting name="mapUnderscoreToCamelCase" value="false"/>
+    </settings>
 </configuration>
