@@ -35,21 +35,18 @@ public class PreparedStatementHandler extends BaseStatementHandler{
         System.out.println("==>  Preparing:" + mappedStatement.getBoundSql().getSql().replace("\n","").replace("       ",""));
         Map<String, Object> parameterMap = parseParameters(parameters);
         PreparedStatement ps = (PreparedStatement) statement;
-        if(isSingleParam()){
-            setParam(ps);
-        }else {
-            StringBuilder sb = new StringBuilder();
-            for (ParameterMapping parameterMapping : boundSql.getParameterMappings()) {
-                Object setValue = getValue(parameterMapping.getProperty(), parameterMap);
-                if(parameterMapping.getTypeHandler() == null){
-                    parameterMapping.setTypeHandler(
-                            configuration.getTypeHandlerRegistry().getHandler(setValue.getClass()));
-                }
-                sb.append(setValue).append("(").append(setValue.getClass().getSimpleName()).append("), ");
-                setParam(parameterMapping, ps, setValue);
+        StringBuilder sb = new StringBuilder();
+        for (ParameterMapping parameterMapping : boundSql.getParameterMappings()) {
+            Object setValue = getValue(parameterMapping.getProperty(), parameterMap);
+            if(parameterMapping.getTypeHandler() == null){
+                parameterMapping.setTypeHandler(
+                        configuration.getTypeHandlerRegistry().getHandler(setValue.getClass()));
             }
-            System.out.println("==> Parameters: " + sb);
+            sb.append(setValue).append("(").append(setValue.getClass().getSimpleName()).append("), ");
+            setParam(parameterMapping, ps, setValue);
         }
+        System.out.println("==> Parameters: " + sb);
+
     }
 
     @NotNull

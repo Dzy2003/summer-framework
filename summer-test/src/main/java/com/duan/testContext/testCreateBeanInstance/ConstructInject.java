@@ -1,8 +1,8 @@
 package com.duan.testContext.testCreateBeanInstance;
 
-import com.duan.summer.annotation.Autowired;
-import com.duan.summer.annotation.Component;
-import com.duan.summer.annotation.Value;
+import com.duan.summer.annotations.Autowired;
+import com.duan.summer.annotations.Component;
+import com.duan.summer.annotations.Value;
 
 /**
  * @author 白日

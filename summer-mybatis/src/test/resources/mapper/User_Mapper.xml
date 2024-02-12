@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="test_03.dao.IUserDao">
 
-    <select id="queryUserInfoById" parameterType="test_03.po.User1" resultType="test_03.po.User1">
+    <select id="queryUserInfoById" parameterType="long" resultMap="activityMap">
         SELECT *
         FROM users
         where tb_user_id = #{userId}
@@ -12,7 +12,7 @@
         FROM users
         where tb_user_age = #{userAge}
     </select>
-    <select id="countAge"  resultType="java.lang.Long">
+    <select id="countAge"  resultType="long">
         SELECT count(*)
         FROM users
         where tb_user_age between #{param1} and #{param2}

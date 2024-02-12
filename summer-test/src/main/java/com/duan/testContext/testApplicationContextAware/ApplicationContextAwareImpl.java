@@ -1,6 +1,6 @@
 package com.duan.testContext.testApplicationContextAware;
 
-import com.duan.summer.annotation.Component;
+import com.duan.summer.annotations.Component;
 import com.duan.summer.context.BeansAware;
 import com.duan.summer.context.BeanDefinition;
 

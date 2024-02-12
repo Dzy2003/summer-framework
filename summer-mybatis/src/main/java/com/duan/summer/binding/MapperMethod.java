@@ -1,6 +1,6 @@
 package com.duan.summer.binding;
 
-import com.duan.summer.annotation.Param;
+import com.duan.summer.annotations.Param;
 import com.duan.summer.mapping.MappedStatement;
 import com.duan.summer.mapping.SqlCommandType;
 import com.duan.summer.session.Configuration;

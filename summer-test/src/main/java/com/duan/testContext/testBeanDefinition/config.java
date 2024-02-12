@@ -1,9 +1,8 @@
 package com.duan.testContext.testBeanDefinition;
 
-import com.duan.summer.annotation.Component;
-import com.duan.summer.annotation.ComponentScan;
-import com.duan.summer.annotation.Import;
-import com.duan.summer.annotation.PropertySource;
+import com.duan.summer.annotations.ComponentScan;
+import com.duan.summer.annotations.Import;
+import com.duan.summer.annotations.PropertySource;
 import com.duan.summer.utils.ClassUtils;
 
 /**

@@ -17,7 +17,8 @@
     </environments>
 
     <mappers>
-        <mapper resource="mapper/User_Mapper.xml"/>
+<!--        <mapper resource="mapper/User_Mapper.xml"/>-->
+        <mapper class="test_04.duan.mapper.EmployeeMapper"/>
     </mappers>
     <settings>
         <setting name="ignorePrefix" value="tb_"/>

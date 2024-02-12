@@ -35,12 +35,7 @@ public class DefaultResultSetHandler implements ResultSetHandler{
     @Override
     public <T> List<T> handleResultSets(Statement stmt) throws SQLException {
         ResultSet resultSet = stmt.getResultSet();
-        try {
-            return (List<T>) resultSet2Obj(resultSet, Class.forName(boundSql.getResultType()));
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return (List<T>) resultSet2Obj(resultSet, boundSql.getResultType());
     }
 
     private <T> List<T> resultSet2Obj(ResultSet resultSet, Class<T> clazz) {

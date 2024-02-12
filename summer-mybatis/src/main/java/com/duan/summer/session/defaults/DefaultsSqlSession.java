@@ -62,4 +62,23 @@ public class DefaultsSqlSession implements SqlSession {
     public Configuration getConfiguration() {
         return configuration;
     }
+
+    @Override
+    public void commit() {
+        try {
+            executor.commit(true);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void close() {
+        try {
+            executor.close(true);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 }

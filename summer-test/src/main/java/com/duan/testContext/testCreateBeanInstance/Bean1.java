@@ -1,6 +1,6 @@
 package com.duan.testContext.testCreateBeanInstance;
 
-import com.duan.summer.annotation.Component;
+import com.duan.summer.annotations.Component;
 
 /**
  * @author 白日

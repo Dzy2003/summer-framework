@@ -1,6 +1,6 @@
 package com.duan.summer.context;
 
-import com.duan.summer.annotation.*;
+import com.duan.summer.annotations.*;
 import com.duan.summer.exception.BeanCreationException;
 import com.duan.summer.exception.BeanDefinitionException;
 import com.duan.summer.exception.BeanNotOfRequiredTypeException;

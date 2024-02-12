@@ -1,7 +1,7 @@
 package com.duan.testContext.testInjectBean;
 
-import com.duan.summer.annotation.Autowired;
-import com.duan.summer.annotation.Controller;
+import com.duan.summer.annotations.Autowired;
+import com.duan.summer.annotations.Controller;
 
 /**
  * @author 白日

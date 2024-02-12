@@ -19,7 +19,9 @@ import com.duan.summer.type.TypeAliasRegistry;
 import com.duan.summer.type.TypeHandlerRegistry;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author 小傅哥，微信：fustack
@@ -46,6 +48,7 @@ public class Configuration {
     protected Environment environment;
 
     protected ColumnMapping columnMapping = new ColumnMapping();
+    protected final Set<String> loadedResources = new HashSet<>();
 
 
     public Configuration() {
@@ -99,6 +102,13 @@ public class Configuration {
 
     public void setEnvironment(Environment environment) {
         this.environment = environment;
+    }
+    public boolean isResourceLoaded(String resource) {
+        return loadedResources.contains(resource);
+    }
+
+    public void addLoadedResource(String resource) {
+        loadedResources.add(resource);
     }
     /**
      * 创建结果集处理器

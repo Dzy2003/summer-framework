@@ -1,6 +1,6 @@
 package com.duan.summer.context;
 
-import com.duan.summer.annotation.PropertySource;
+import com.duan.summer.annotations.PropertySource;
 import com.duan.summer.utils.ClassPathUtils;
 import com.duan.summer.utils.YamlUtils;
 

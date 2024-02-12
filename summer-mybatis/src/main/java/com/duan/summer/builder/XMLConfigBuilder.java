@@ -1,5 +1,6 @@
 package com.duan.summer.builder;
 
+import cn.hutool.core.lang.ClassScanner;
 import com.duan.summer.datasource.DataSourceFactory;
 import com.duan.summer.io.Resources;
 import com.duan.summer.mapping.*;
@@ -106,9 +107,22 @@ public class XMLConfigBuilder extends ConfigBuilder {
         List<Element> mapperList = mappers.elements("mapper");
         for (Element e : mapperList) {
             String resource = e.attributeValue("resource");
-            InputStream inputStream = Resources.getResourceAsStream(resource);
-            XMLMapperBuilder xmlMapperBuilder = new XMLMapperBuilder(inputStream, configuration, resource);
-            xmlMapperBuilder.parse();
+            String mapperClass = e.attributeValue("class");
+            if(resource != null && mapperClass == null){
+                InputStream inputStream = Resources.getResourceAsStream(resource);
+                XMLMapperBuilder xmlMapperBuilder = new XMLMapperBuilder(inputStream, configuration, resource);
+                xmlMapperBuilder.parse();
+            }else if (resource == null && mapperClass != null) {
+                Class<?> mapperInterface = Resources.classForName(mapperClass);
+                configuration.addMapper(mapperInterface);
+            }
+        }
+        List<Element> scanPackageElement = mappers.elements("package");
+        for (Element element : scanPackageElement) {
+            String scanPackage = element.attributeValue("name");
+            for (Class<?> mapperInterface : ClassScanner.scanPackage(scanPackage)) {
+                configuration.addMapper(mapperInterface);
+            }
         }
     }
 }

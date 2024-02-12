@@ -49,4 +49,7 @@ public interface SqlSession {
 
     Configuration getConfiguration();
 
+    void commit();
+
+    void close();
 }

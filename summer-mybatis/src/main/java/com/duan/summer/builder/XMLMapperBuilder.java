@@ -42,13 +42,17 @@ public class XMLMapperBuilder extends ConfigBuilder{
         if(namespace == null || namespace.isEmpty()){
             throw new RuntimeException("Mapper's namespace cannot be empty");
         }
-        resultMapElements(element.elements("resultMap"));
-        buildStatement((element.elements("select")), namespace);
-        buildStatement((element.elements("update")), namespace);
-        buildStatement((element.elements("delete")), namespace);
-        buildStatement((element.elements("insert")), namespace);
-        configuration.addMapper(Class.forName(namespace));
-        return configuration;
+        if(!configuration.isResourceLoaded(resource)){
+            resultMapElements(element.elements("resultMap"));
+            buildStatement((element.elements("select")), namespace);
+            buildStatement((element.elements("update")), namespace);
+            buildStatement((element.elements("delete")), namespace);
+            buildStatement((element.elements("insert")), namespace);
+            configuration.addLoadedResource(namespace);
+            configuration.addMapper(Class.forName(namespace));
+            return configuration;
+        }
+        return null;
     }
 
     private void resultMapElements(List<Element> resultMap) {
@@ -99,47 +103,11 @@ public class XMLMapperBuilder extends ConfigBuilder{
                 resultType = configuration.getColumnMapping().getResultMap(resultMapId).getType().getName();
             }
             String sql = node.getText();
-
-            // ? 匹配
-            List<ParameterMapping> parameterMappings = new ArrayList<>();
-            Pattern pattern = Pattern.compile("(#\\{(.*?)})");
-            Matcher matcher = pattern.matcher(sql);
-            Class<?> parameterJavaType = null;
-            if(parameterType != null){
-                try {
-                    parameterJavaType = Class.forName(parameterType);
-                }catch (ClassNotFoundException e){
-                    throw new RuntimeException(e + "the parameterType" + parameterType +"is not find");
-                }
-            }
-            for (int i = 1; matcher.find(); i++) {
-                ParameterMapping parameterMapping = null;
-                String g1 = matcher.group(1); //#{name}
-                String property = matcher.group(2);
-                sql = sql.replace(g1, "?");
-                //第一种情况：只有一个基本类型参数
-                if(configuration.getTypeHandlerRegistry().hasTypeHandler(parameterJavaType)){
-                    parameterMapping = new ParameterMapping.Builder
-                            (configuration,property, parameterJavaType,i).build();
-                    //第二种情况：没有参数类型，说明有多个非pojo类型参数
-                } else if (parameterJavaType == null) {
-                    parameterMapping = new ParameterMapping.Builder(configuration, property, null,i).build();
-                    //第三种情况，用户定义pojo类型
-                } else{
-                    try {
-                        parameterMapping = new ParameterMapping.Builder(configuration, property, parameterJavaType
-                                .getDeclaredField(property).getType(),i).build();
-                    } catch (NoSuchFieldException e) {
-                        throw new RuntimeException("the #{" + property + "}" + " is not find in " + parameterJavaType);
-                    }
-                }
-                parameterMappings.add(parameterMapping);
-            }
             String msId = namespace + "." + id;
             String nodeName = node.getName();
             SqlCommandType sqlCommandType = SqlCommandType.valueOf(nodeName.toUpperCase(Locale.ENGLISH));
 
-            BoundSql boundSql = new BoundSql(sql, parameterMappings, resultType);
+            BoundSql boundSql = new BoundSql(sql,typeAliasRegistry.resolveAlias(parameterType), typeAliasRegistry.resolveAlias(resultType),configuration);
 
             MappedStatement mappedStatement = new MappedStatement.Builder(configuration, msId, sqlCommandType, boundSql,resultMapId).build();
             // 添加解析 SQL

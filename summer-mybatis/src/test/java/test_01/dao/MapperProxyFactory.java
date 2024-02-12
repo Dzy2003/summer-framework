@@ -1,6 +1,6 @@
 package test_01.dao;
 
-import com.duan.summer.annotation.Bean;
+import com.duan.summer.annotations.Bean;
 
 import java.lang.reflect.Proxy;
 

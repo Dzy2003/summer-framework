@@ -1,6 +1,6 @@
 package test_01.dao;
 
-import com.duan.summer.annotation.ComponentScan;
+import com.duan.summer.annotations.ComponentScan;
 
 /**
  * @author 白日

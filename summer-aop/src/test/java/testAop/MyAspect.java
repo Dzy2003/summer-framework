@@ -1,8 +1,8 @@
 package testAop;
 
-import com.duan.summer.annotation.Around;
-import com.duan.summer.annotation.Aspect;
-import com.duan.summer.annotation.Component;
+import com.duan.summer.annotations.Around;
+import com.duan.summer.annotations.Aspect;
+import com.duan.summer.annotations.Component;
 import com.duan.summer.aop.ProceedingJoinPoint;
 
 import java.lang.reflect.InvocationTargetException;

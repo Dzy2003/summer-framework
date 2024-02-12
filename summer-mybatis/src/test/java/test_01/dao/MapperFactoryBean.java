@@ -1,7 +1,7 @@
 package test_01.dao;
 
-import com.duan.summer.annotation.Component;
-import com.duan.summer.annotation.Mapper;
+import com.duan.summer.annotations.Component;
+import com.duan.summer.annotations.Mapper;
 import com.duan.summer.context.BeanDefinition;
 import com.duan.summer.context.BeanDefinitionFactory;
 import com.duan.summer.context.BeanDefinitionRegistry;

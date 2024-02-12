@@ -1,8 +1,8 @@
 package com.duan.summer.context;
 
-import com.duan.summer.annotation.Bean;
-import com.duan.summer.annotation.Order;
-import com.duan.summer.annotation.Primary;
+import com.duan.summer.annotations.Bean;
+import com.duan.summer.annotations.Order;
+import com.duan.summer.annotations.Primary;
 import com.duan.summer.exception.BeanDefinitionException;
 import com.duan.summer.utils.ClassUtils;
 import jakarta.annotation.PostConstruct;

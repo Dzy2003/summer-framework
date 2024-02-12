@@ -1,8 +1,8 @@
 package com.duan.testContext.scan.proxy;
 
 
-import com.duan.summer.annotation.Autowired;
-import com.duan.summer.annotation.Component;
+import com.duan.summer.annotations.Autowired;
+import com.duan.summer.annotations.Component;
 
 @Component
 public class InjectProxyOnPropertyBean {

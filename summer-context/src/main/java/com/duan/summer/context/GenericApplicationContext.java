@@ -1,7 +1,7 @@
 package com.duan.summer.context;
 
-import com.duan.summer.annotation.Autowired;
-import com.duan.summer.annotation.Value;
+import com.duan.summer.annotations.Autowired;
+import com.duan.summer.annotations.Value;
 import com.duan.summer.exception.*;
 import com.duan.summer.utils.ClassUtils;
 import jakarta.annotation.Nullable;

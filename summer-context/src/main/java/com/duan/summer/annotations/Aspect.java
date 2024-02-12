@@ -1,4 +1,4 @@
-package com.duan.summer.annotation;
+package com.duan.summer.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

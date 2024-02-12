@@ -1,7 +1,7 @@
 package com.duan.testContext.testInjectBean;
 
-import com.duan.summer.annotation.Component;
-import com.duan.summer.annotation.Value;
+import com.duan.summer.annotations.Component;
+import com.duan.summer.annotations.Value;
 import jakarta.annotation.PostConstruct;
 
 /**

@@ -1,9 +1,12 @@
-package com.duan.summer.annotation;
+package com.duan.summer.annotations;
 
 import java.lang.annotation.*;
 
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface Primary {
+public @interface Order {
+
+    int value();
+
 }

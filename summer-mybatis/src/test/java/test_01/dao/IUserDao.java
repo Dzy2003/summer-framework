@@ -1,6 +1,6 @@
 package test_01.dao;
 
-import com.duan.summer.annotation.Mapper;
+import com.duan.summer.annotations.Mapper;
 
 /**
  * @author 白日

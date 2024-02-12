@@ -1,15 +1,14 @@
-package com.duan.summer.annotation;
+package com.duan.summer.annotations;
 
 import java.lang.annotation.*;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Component
-public @interface Configuration {
+public @interface Component {
 
     /**
-     * Bean name. Default to simple class name with first-letter-lower-case.
+     * Bean name. Default to simple class name with first-letter-lowercase.
      */
     String value() default "";
 

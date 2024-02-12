@@ -1,7 +1,7 @@
 package com.duan.summer.utils;
 
-import com.duan.summer.annotation.Bean;
-import com.duan.summer.annotation.Component;
+import com.duan.summer.annotations.Bean;
+import com.duan.summer.annotations.Component;
 import com.duan.summer.context.BeanDefinition;
 import com.duan.summer.context.BeanDefinitionFactory;
 import com.duan.summer.exception.BeanDefinitionException;

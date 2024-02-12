@@ -44,10 +44,10 @@ public class ApiTest {
         User1 user1 = new User1();
         user1.setUserId(1);
         // 3. 测试验证
-        User1 res = userDao.queryUserInfoById(user1);
+        User1 res = userDao.queryUserInfoById(1L);
         User1 user2 = new User1();
         user2.setUserAge(20);
-        List<User1> user1List = userDao.queryUsersInfoById(user2);
+        List<User1> user1List = userDao.queryUsersInfoById(user2,5L);
         Long nums = userDao.countAge(18L, 20L);
         logger.info("测试结果：{},{},{}", res, user1List,nums);
     }
@@ -58,19 +58,14 @@ public class ApiTest {
 
     @Test
     public void test() throws NoSuchMethodException, ClassNotFoundException {
-        String resolveIgnore = "_user_name";
-        StringBuilder resolveHumpMapping = new StringBuilder();
-        for (int i = 0; i < resolveIgnore.length(); i++) {
-            char c = resolveIgnore.charAt(i);
-            if(c != '_'){
-                resolveHumpMapping.append(c);
-            }else if (i != resolveIgnore.length() - 1 && i != 0){
-                resolveHumpMapping.append(Character.toUpperCase(resolveIgnore.charAt(i+1)));
-                i++;
-            }
+        Type genericReturnType = this.getClass().getMethod("selectUserList").getGenericReturnType();
+        if(genericReturnType instanceof ParameterizedType){
+            System.out.println(genericReturnType.getTypeName());
+            System.out.println(((ParameterizedType) genericReturnType).getOwnerType());
+            System.out.println(((ParameterizedType) genericReturnType).getRawType());
+            String typeName = ((ParameterizedType) genericReturnType).getActualTypeArguments()[0].getTypeName();
+            System.out.println(Class.forName(typeName));
         }
-        System.out.println(resolveHumpMapping);
-
     }
 
 }

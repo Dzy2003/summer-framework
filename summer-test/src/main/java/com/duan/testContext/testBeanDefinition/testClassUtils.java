@@ -1,6 +1,6 @@
 package com.duan.testContext.testBeanDefinition;
 
-import com.duan.summer.annotation.Component;
+import com.duan.summer.annotations.Component;
 import com.duan.summer.io.Resource;
 import com.duan.summer.utils.ClassUtils;
 import org.junit.jupiter.api.Test;

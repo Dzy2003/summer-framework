@@ -1,7 +1,6 @@
 package com.duan.testContext.testInjectBean;
 
-import com.duan.summer.annotation.Component;
-import com.duan.summer.context.ApplicationContext;
+import com.duan.summer.annotations.Component;
 import com.duan.summer.context.BeanDefinition;
 import com.duan.summer.context.BeanDefinitionRegistry;
 import com.duan.summer.context.BeanFactoryPostProcessor;

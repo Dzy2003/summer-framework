@@ -1,6 +1,7 @@
 package com.duan.summer.binding;
 
 import cn.hutool.core.lang.ClassScanner;
+import com.duan.summer.builder.annotation.MapperAnnotationBuilder;
 import com.duan.summer.session.Configuration;
 import com.duan.summer.session.SqlSession;
 
@@ -39,6 +40,8 @@ public class MapperRegistry {
                 throw new RuntimeException("Type " + type + " is already known to the MapperRegistry.");
             }
             mappers.put(type, new MapperProxyFactory<>(type));
+            MapperAnnotationBuilder mapperAnnotationBuilder = new MapperAnnotationBuilder(configuration, type);
+            mapperAnnotationBuilder.parse();
         }
     }
 
