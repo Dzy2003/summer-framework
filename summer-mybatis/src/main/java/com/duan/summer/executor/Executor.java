@@ -20,6 +20,7 @@ public interface Executor {
     ResultHandler NO_RESULT_HANDLER = null;
 
     <E> List<E> query(MappedStatement ms, Object[] parameters);
+    int update(MappedStatement ms, Object[] parameters);
 
     Transaction getTransaction();
 

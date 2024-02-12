@@ -8,6 +8,7 @@ import com.duan.summer.transaction.Transaction;
 import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
 /**
@@ -38,6 +39,16 @@ public abstract class BaseExecutor implements Executor{
     protected abstract <E> List<E> doQuery(MappedStatement ms, Object[] parameters);
 
     @Override
+    public int update(MappedStatement ms, Object[] parameters) {
+        if (closed) {
+            throw new RuntimeException("Executor was closed.");
+        }
+        return doUpdate(ms, parameters);
+    }
+
+    protected abstract int doUpdate(MappedStatement ms, Object[] parameters);
+
+    @Override
     public Transaction getTransaction() {
         return transaction;
     }
@@ -48,7 +59,7 @@ public abstract class BaseExecutor implements Executor{
             throw new RuntimeException("Executor was closed.");
         }
         if(required){
-            transaction.rollback();
+            transaction.commit();
         }
     }
 
@@ -75,6 +86,14 @@ public abstract class BaseExecutor implements Executor{
         } finally {
             transaction = null;
             closed = true;
+        }
+    }
+    protected void closeStatement(Statement statement) {
+        if (statement != null) {
+            try {
+                statement.close();
+            } catch (SQLException ignore) {
+            }
         }
     }
 }

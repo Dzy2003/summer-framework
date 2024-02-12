@@ -49,7 +49,7 @@ public class DefaultResultSetHandler implements ResultSetHandler{
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("<==     " + mappedStatement.getSqlCommandType().name() +": " + list.size());
+        System.out.println("<==      Total: " + list.size());
         return list;
     }
 

@@ -21,7 +21,7 @@ import java.util.List;
 
 public class DefaultsSqlSession implements SqlSession {
     Configuration configuration;
-    private Executor executor;
+    private final Executor executor;
     public DefaultsSqlSession(Configuration configuration, Executor executor) {
         this.configuration = configuration;
         this.executor = executor;
@@ -80,5 +80,21 @@ public class DefaultsSqlSession implements SqlSession {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public int delete(String statement, Object[] parameter) {
+        return this.update(statement, parameter);
+    }
+
+    @Override
+    public int insert(String statement, Object[] parameter) {
+        return this.update(statement, parameter);
+    }
+
+    @Override
+    public int update(String statement, Object[] parameter) {
+        MappedStatement mappedStatement = configuration.getMappedStatement(statement);
+        return executor.update(mappedStatement, parameter);
     }
 }

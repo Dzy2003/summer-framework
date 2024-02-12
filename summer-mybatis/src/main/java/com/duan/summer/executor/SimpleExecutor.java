@@ -25,16 +25,33 @@ public class SimpleExecutor extends BaseExecutor{
 
     @Override
     protected <E> List<E> doQuery(MappedStatement ms, Object[] parameters) {
+        Statement stmt = null;
         try {
-
             StatementHandler handler = configuration.newStatementHandler(this, ms, parameters);
             Connection connection = transaction.getConnection();
-            Statement stmt = handler.prepare(connection);
+            stmt = handler.prepare(connection);
             handler.parameterize(stmt);
             return handler.query(stmt);
         } catch (SQLException | IllegalAccessException e) {
-            e.printStackTrace();
             return null;
+        }finally {
+            closeStatement(stmt);
+        }
+    }
+
+    @Override
+    protected int doUpdate(MappedStatement ms, Object[] parameters) {
+        Statement stmt = null;
+        try {
+            StatementHandler handler = configuration.newStatementHandler(this, ms, parameters);
+            Connection connection = transaction.getConnection();
+            stmt = handler.prepare(connection);
+            handler.parameterize(stmt);
+            return handler.update(stmt);
+        } catch (SQLException | IllegalAccessException e) {
+            return 0;
+        }finally {
+            closeStatement(stmt);
         }
     }
 }

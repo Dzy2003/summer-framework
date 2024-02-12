@@ -52,4 +52,7 @@ public interface SqlSession {
     void commit();
 
     void close();
+    int delete(String statement, Object[] parameter);
+    int insert(String statement, Object[] parameter);
+    int update(String statement, Object[] parameter);
 }

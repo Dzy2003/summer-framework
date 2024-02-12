@@ -63,14 +63,6 @@ public class PreparedStatementHandler extends BaseStatementHandler{
         typeHandler.setParameter(ps, parameterMapping.getIndex(), value);
 
     }
-
-    private void setParam(PreparedStatement ps) throws SQLException {
-        TypeHandler handler = configuration.getTypeHandlerRegistry().getHandler(parameters[0].getClass());
-        handler.setParameter(ps, 1, parameters[0]);
-        System.out.println("==> Parameters:"+parameters[0]  + "("
-                +parameters[0].getClass().getSimpleName()+")");
-    }
-
     private boolean isSingleParam() {
         return boundSql.getParameterMappings().size() == 1 &&
                 configuration.getTypeHandlerRegistry().hasTypeHandler(parameters[0].getClass());
@@ -97,5 +89,14 @@ public class PreparedStatementHandler extends BaseStatementHandler{
         PreparedStatement ps = (PreparedStatement) statement;
         ps.execute();
         return resultSetHandler.handleResultSets(ps);
+    }
+
+    @Override
+    public int update(Statement statement) throws SQLException {
+        PreparedStatement ps = (PreparedStatement) statement;
+        ps.execute();
+        int updateCount = ps.getUpdateCount();
+        System.out.println("<==    Updates: " +  updateCount);
+        return updateCount;
     }
 }

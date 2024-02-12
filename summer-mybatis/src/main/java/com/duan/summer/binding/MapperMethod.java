@@ -26,9 +26,9 @@ public class MapperMethod {
 
     public Object execute(SqlSession sqlSession, Object[] args) {
         return switch (command.getType()) {
-            case INSERT -> sqlSession.selectOne(command.getName(), args);
-            case DELETE -> sqlSession.selectOne(command.getName(), args);
-            case UPDATE -> sqlSession.selectOne(command.getName(), args);
+            case INSERT -> sqlSession.insert(command.getName(), args);
+            case DELETE -> sqlSession.delete(command.getName(), args);
+            case UPDATE -> sqlSession.update(command.getName(), args);
             case SELECT -> command.isResList ?
                     sqlSession.selectList(command.getName(), args) :
                     sqlSession.selectOne(command.getName(), args);

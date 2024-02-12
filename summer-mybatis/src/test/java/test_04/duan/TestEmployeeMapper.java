@@ -5,6 +5,7 @@ import com.duan.summer.session.SqlSession;
 import com.duan.summer.session.SqlSessionFactory;
 import com.duan.summer.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import test_04.duan.mapper.EmployeeMapper;
@@ -43,14 +44,14 @@ public class TestEmployeeMapper {
     @Test
     public void testSelect(){
         System.out.println(sqlSession);
-        Employee employee = employeeMapper.selectByID(8);
+        Employee employee = employeeMapper.selectByID(10);
         System.out.println(employee);
     }
 
     @Test
     public void testUpdate(){
         Employee employee = new Employee();
-        employee.setId(7);
+        employee.setId(10);
         employee.setName("陈阳");
         employee.setAge(21);
         employee.setPosition("员工");
@@ -59,12 +60,12 @@ public class TestEmployeeMapper {
     }
     @Test
     public void testDelete(){
-        int res = employeeMapper.deleteByID(7);
+        int res = employeeMapper.deleteByID(9);
         assert res == 1;
     }
 
-    @AfterAll
-    public static void destroy(){
+    @AfterEach
+    public void destroy(){
         sqlSession.commit();
         sqlSession.close();
     }
