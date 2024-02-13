@@ -89,7 +89,6 @@ public class DefaultResultSetHandler implements ResultSetHandler{
         List<ResultMapping> resultMappings = resultMap.getResultMappings();
         for (ResultMapping resultMapping : resultMappings) {
             String property = resultMapping.getProperty();
-            System.out.println(property);
             Object result;
             try {
                 result = resultMapping.getTypeHandler().getResult(resultSet, resultMapping.getColumn());

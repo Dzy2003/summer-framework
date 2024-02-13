@@ -13,11 +13,11 @@ import java.io.Reader;
  */
 public class Resources {
 
-    public static Reader getResourceAsReader(String resource) throws IOException {
+    public static Reader getResourceAsReader(String resource){
         return new InputStreamReader(getResourceAsStream(resource));
     }
 
-    public static InputStream getResourceAsStream(String resource) throws IOException {
+    public static InputStream getResourceAsStream(String resource)  {
         ClassLoader[] classLoaders = getClassLoaders();
         for (ClassLoader classLoader : classLoaders) {
             InputStream inputStream = classLoader.getResourceAsStream(resource);
@@ -25,10 +25,10 @@ public class Resources {
                 return inputStream;
             }
         }
-        throw new IOException("Could not find resource " + resource);
+        throw new RuntimeException("Could not find resource " + resource);
     }
 
-    private static ClassLoader[] getClassLoaders() {
+    public static ClassLoader[] getClassLoaders() {
         return new ClassLoader[]{
                 ClassLoader.getSystemClassLoader(),
                 Thread.currentThread().getContextClassLoader()};

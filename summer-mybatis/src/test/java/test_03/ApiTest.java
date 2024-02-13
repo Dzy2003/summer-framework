@@ -13,14 +13,22 @@ import test_03.po.User;
 import test_03.po.User1;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 /**
  * @author 小傅哥，微信：fustack
@@ -57,14 +65,21 @@ public class ApiTest {
     }
 
     @Test
-    public void test() throws NoSuchMethodException, ClassNotFoundException {
-        Type genericReturnType = this.getClass().getMethod("selectUserList").getGenericReturnType();
-        if(genericReturnType instanceof ParameterizedType){
-            System.out.println(genericReturnType.getTypeName());
-            System.out.println(((ParameterizedType) genericReturnType).getOwnerType());
-            System.out.println(((ParameterizedType) genericReturnType).getRawType());
-            String typeName = ((ParameterizedType) genericReturnType).getActualTypeArguments()[0].getTypeName();
-            System.out.println(Class.forName(typeName));
+    public void test() throws NoSuchMethodException, ClassNotFoundException, IOException, URISyntaxException {
+        ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+        Enumeration<URL> resources = contextClassLoader.getResources("mapper");
+        while (resources.hasMoreElements()){
+            URI uri = resources.nextElement().toURI();
+            List<InputStream> list = Files.walk(Paths.get(uri)).map(path -> {
+                if(path.subpath(path.getNameCount() - 1, path.getNameCount()) .toString().endsWith(".xml")){
+                    System.out.println("mapper/" + path.getFileName());
+                    return contextClassLoader.getResourceAsStream("mapper/" + path.getFileName());
+                }
+                return null;
+            }).toList();
+            list.forEach(inputStream -> {
+
+            });
         }
     }
 
