@@ -1,6 +1,7 @@
 package com.duan.summer.summer;
 
 import cn.hutool.core.lang.Assert;
+import com.duan.summer.annotations.Bean;
 import com.duan.summer.builder.XMLConfigBuilder;
 import com.duan.summer.builder.XMLMapperBuilder;
 import com.duan.summer.io.Resources;
@@ -10,6 +11,7 @@ import com.duan.summer.session.SqlSessionFactory;
 import com.duan.summer.session.SqlSessionFactoryBuilder;
 import com.duan.summer.transaction.TransactionFactory;
 import com.duan.summer.transaction.jdbc.JdbcTransactionFactory;
+import jakarta.annotation.PostConstruct;
 import org.dom4j.DocumentException;
 
 import javax.sql.DataSource;
@@ -48,7 +50,7 @@ public class SqlSessionFactoryBean {
     private SqlSessionFactory sqlSessionFactory;
     public SqlSessionFactoryBean() {
     }
-
+    @PostConstruct
     public void afterPropertiesSet()  {
         Assert.notNull(this.dataSource, "Property 'dataSource' is required");
         Assert.notNull(this.sqlSessionFactoryBuilder, "Property 'sqlSessionFactoryBuilder' is required");
@@ -93,7 +95,6 @@ public class SqlSessionFactoryBean {
                                     .getResourceAsStream(mapperPackage + "/" + path.getFileName())).toList();
                     list.forEach(inputStream -> {
                         try {
-                            System.out.println(inputStream);
                             XMLMapperBuilder xmlMapperBuilder = new XMLMapperBuilder(inputStream, configuration, "");
                             xmlMapperBuilder.parse();
                         } catch (DocumentException | ClassNotFoundException e) {
@@ -113,7 +114,7 @@ public class SqlSessionFactoryBean {
     private Boolean IsXMLFile(Path path) {
         return path.subpath(path.getNameCount() - 1, path.getNameCount()) .toString().endsWith(".xml");
     }
-
+    @Bean
     public SqlSessionFactory getSqlSessionFactory(){
         if(this.sqlSessionFactory == null){
             this.afterPropertiesSet();

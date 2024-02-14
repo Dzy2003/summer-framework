@@ -1,22 +1,24 @@
 package test_01.dao;
 
-import com.duan.summer.binding.MapperProxyFactory;
+import com.duan.summer.annotations.Autowired;
+import com.duan.summer.annotations.Component;
 import com.duan.summer.context.AnnotationConfigApplicationContext;
-import test_01.dao.Config;
-import test_01.dao.IBookDao;
-import test_01.dao.IUserDao;
+import com.duan.summer.session.SqlSession;
+import com.duan.summer.session.SqlSessionFactory;
+import com.duan.summer.summer.SqlSessionFactoryBean;
 import org.junit.jupiter.api.Test;
+import test_04.duan.mapper.EmployeeMapper;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.sql.DataSource;
 
 /**
  * @author 白日
  * @create 2024/1/18 14:04
  * @description
  */
-
+@Component
 public class APITest {
+
     @Test
     public void testMapperProxyFactory(){
 //        MapperProxyFactory<IUserDao> mapperProxyFactory = new MapperProxyFactory<>(IUserDao.class);
@@ -30,12 +32,8 @@ public class APITest {
     @Test
     public void testFactoryBean() throws NoSuchMethodException {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Config.class)) {
-//            IUserDao bean = context.getBean(IUserDao.class);
-//            bean.queryUserAge("12");
-            IUserDao iUserDao = context.getBean(IUserDao.class);
-            System.out.println(context.beans);
-            System.out.println(iUserDao.queryUserName("12"));
-            System.out.println(context.getBean(IBookDao.class).queryUserName(String.valueOf(12)));
+            EmployeeService service = context.getBean(EmployeeService.class);
+            service.selectById(10);
         }
     }
 }

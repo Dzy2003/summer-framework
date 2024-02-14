@@ -4,6 +4,7 @@ import com.duan.summer.datasource.DataSourceFactory;
 import com.duan.summer.datasource.druid.DruidDataSourceFactory;
 import com.duan.summer.session.SqlSession;
 import com.duan.summer.session.SqlSessionFactory;
+import com.duan.summer.summer.MapperFactoryBean;
 import com.duan.summer.summer.SqlSessionFactoryBean;
 import org.junit.jupiter.api.Test;
 import test_03.dao.IUserDao;
@@ -33,8 +34,8 @@ public class apiTest {
         sqlSessionFactoryBean.setMapperPackage("mapper");
         sqlSessionFactoryBean.afterPropertiesSet();
         SqlSessionFactory sqlSessionFactory = sqlSessionFactoryBean.getSqlSessionFactory();
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        IUserDao mapper = sqlSession.getMapper(IUserDao.class);
-        System.out.println(mapper.queryUserInfoById(1L));
+        MapperFactoryBean<IUserDao> iUserDaoMapperFactoryBean = new MapperFactoryBean<>(IUserDao.class);
+        IUserDao mapperProxy = iUserDaoMapperFactoryBean.getMapperProxy();
+        System.out.println(mapperProxy.queryUserInfoById(1L));
     }
 }

@@ -8,7 +8,7 @@ import test_04.duan.pojo.Employee;
  * @author 白日
  * @create 2023/11/9 17:30
  */
-
+@Component
 public interface EmployeeMapper {
     @Insert("INSERT INTO  employee (name, age, position) VALUES (#{name}, #{age}, #{position})")
     int insert(Employee employee);

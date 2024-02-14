@@ -13,7 +13,7 @@ import java.util.List;
  */
 
 public class BeanDefinitionScanner {
-    private final BeanDefinitionRegistry registry;
+    protected final BeanDefinitionRegistry registry;
 
     public BeanDefinitionScanner(BeanDefinitionRegistry registry) {
         this.registry = registry;
@@ -24,7 +24,7 @@ public class BeanDefinitionScanner {
         }
     }
 
-    private List<BeanDefinition> doScan(String basePackage) {
+    protected List<BeanDefinition> doScan(String basePackage) {
         List<Class<?>> beanDefinitionClasses = new ResourceResolver(basePackage).scan(resource -> {
             if (resource.name().endsWith(".class")) {
                 try {

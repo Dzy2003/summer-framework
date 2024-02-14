@@ -37,9 +37,9 @@ public abstract class ApplicationContextImpl implements ApplicationContext,FileC
 
     @Override
     public Object getBean(String name) {
-        Object instance = beans.get(name).getInstance();
-        if(instance == null) throw new BeanNotOfRequiredTypeException("Bean Not Find");
-        return instance;
+        BeanDefinition definition = beans.get(name);
+        if(definition == null) throw new BeanNotOfRequiredTypeException("Bean Not Find:"+name);
+        return definition.getInstance();
     }
 
     @Override
@@ -86,6 +86,10 @@ public abstract class ApplicationContextImpl implements ApplicationContext,FileC
     protected void initBean(){
         this.beans.values().forEach(this::injectBean);//注入依赖
         this.beans.values().forEach(this::callInitMethod);//调用init方法
+    }
+    protected void initBean(BeanDefinition definition){
+        injectBean(definition);
+        callInitMethod(definition);
     }
 
 
@@ -218,7 +222,7 @@ public abstract class ApplicationContextImpl implements ApplicationContext,FileC
     }
 
 
-    private void callInitMethod(BeanDefinition definition){
+    protected void callInitMethod(BeanDefinition definition){
         String factoryName = definition.getFactoryName();
         callMethod(definition.getInstance(), definition.getInitMethod(),
                 definition.getInitMethodName(),factoryName);

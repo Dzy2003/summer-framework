@@ -1,6 +1,7 @@
 package test_01.dao;
 
 import com.duan.summer.annotations.ComponentScan;
+import com.duan.summer.annotations.PropertySource;
 
 /**
  * @author 白日
@@ -8,5 +9,6 @@ import com.duan.summer.annotations.ComponentScan;
  * @description
  */
 @ComponentScan
+@PropertySource("jdbc.properties")
 public class Config {
 }

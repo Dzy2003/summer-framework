@@ -9,5 +9,5 @@ import com.duan.summer.exception.BeansException;
  */
 
 public interface BeanFactoryPostProcessor {
-    void postProcessBeanFactory(BeanDefinitionRegistry definitions) throws BeansException;
+    void postProcessBeanFactory(BeanDefinitionRegistry beanDefinitionRegistry) throws BeansException;
 }

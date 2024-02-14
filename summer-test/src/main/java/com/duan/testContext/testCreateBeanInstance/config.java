@@ -11,7 +11,6 @@ import com.duan.summer.annotations.PropertySource;
  */
 @Configuration
 @PropertySource("jdbc.properties")
-@ComponentScan("testCreateBeanInstance")
 public class config {
 
 }

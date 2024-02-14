@@ -39,7 +39,10 @@ public class GenericApplicationContext extends ApplicationContextImpl implements
         if (def == null) {
             throw new NoSuchBeanDefinitionException(String.format("No bean defined with type '%s'.", requiredType));
         }
-        return (T) def.getRequiredInstance();
+        if(def.getInstance() == null){
+            createBeanAsEarlySingleton(def);
+        }
+        return (T) def.getInstance();
     }
     @Override
     @SuppressWarnings("unchecked")
@@ -124,7 +127,10 @@ public class GenericApplicationContext extends ApplicationContextImpl implements
      */
     @Override
     public Object createBeanAsEarlySingleton(BeanDefinition definition) {
-        if(definition.getInstance() != null) return null;
+        if(definition.getInstance() != null) {
+            initBean(definition);
+            return null;
+        }
         logger.atDebug().log("Try create bean '{}' as early singleton: {}",
                 definition.getName(), definition.getBeanClass().getName());
         //循环依赖报错
@@ -170,6 +176,7 @@ public class GenericApplicationContext extends ApplicationContextImpl implements
                 args[i] = configResolver.getConfig(value.value(),type);
             }else{
                 String dependencyName = autowired.name();
+                System.out.println(dependencyName);
                 boolean required = autowired.value();
                 BeanDefinition dependencyDefinition = dependencyName.isEmpty() ?
                         findBeanDefinition(type) : findBeanDefinition(dependencyName, type);
@@ -195,6 +202,10 @@ public class GenericApplicationContext extends ApplicationContextImpl implements
                 instance = definition.getConstructor().newInstance(args);
             }else{
                 Object bean = getBean(definition.getFactoryName());
+                if(bean == null){
+                    createBeanAsEarlySingleton(findBeanDefinition(definition.getFactoryName()));
+                }
+                bean = getBean(definition.getFactoryName());
                 instance = definition.getFactoryMethod().invoke(bean,args);
             }
         }catch (Exception e){
@@ -203,6 +214,7 @@ public class GenericApplicationContext extends ApplicationContextImpl implements
         }
         definition.setInstance(instance);
         instance = callPostProcessor(definition);
+        initBean(definition);
         return instance;
     }
 
@@ -237,7 +249,17 @@ public class GenericApplicationContext extends ApplicationContextImpl implements
                 .stream()
                 .filter(this::isBeanFactoryPostProcessorDefinition)
                 .sorted()
-                .map(def -> (BeanFactoryPostProcessor) createBeanAsEarlySingleton(def))
+                .map(def -> {
+                    if(def.getFactoryName() != null){
+                        BeanDefinition factoryBeanDef = findBeanDefinition(def.getFactoryName());
+                        if(factoryBeanDef == null){
+                            throw new BeanCreationException(String.format("BeanFactoryPostProcessor '%s' must be defined before '%s'",
+                                    def.getFactoryName(), def.getName()));
+                        }
+                        createBeanAsEarlySingleton(factoryBeanDef);
+                    }
+                    return (BeanFactoryPostProcessor) createBeanAsEarlySingleton(def);
+                })
                 .toList());
     }
 

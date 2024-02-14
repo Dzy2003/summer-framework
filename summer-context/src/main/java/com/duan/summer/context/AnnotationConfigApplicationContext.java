@@ -24,7 +24,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
         invokeFactoryBeanPostProcessors();
         loadConfig(componentClasses);
         createBean();
-        initBean();
+        //initBean();
     }
 
     private void loadConfig(Class<?> ... componentClasses) {

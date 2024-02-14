@@ -10,6 +10,7 @@ import jakarta.annotation.Nullable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -113,7 +114,7 @@ public class  ClassUtils {
     }
 
     @Nullable
-    public static BeanDefinition findFactoryMethods(Class<?> clazz) {
+    public static void findFactoryMethods(Class<?> clazz, ArrayList<BeanDefinition> factoryBeanDefinitions) {
         for (Method method : clazz.getDeclaredMethods()) {
             Bean bean = method.getAnnotation(Bean.class);
             if (bean != null) {
@@ -135,10 +136,11 @@ public class  ClassUtils {
                     throw new BeanDefinitionException("@Bean method " + clazz.getName() + "." + method.getName() + " must not return void.");
                 }
                 String factoryBeanName = ClassUtils.getBeanName(clazz);
-                return BeanDefinitionFactory.createBeanDefinition(method, factoryBeanName);
+                BeanDefinition beanDefinition = BeanDefinitionFactory.createBeanDefinition(method, factoryBeanName);
+                factoryBeanDefinitions.add(beanDefinition);
+                findFactoryMethods(beanDefinition.getBeanClass(), factoryBeanDefinitions);
             }
         }
-        return null;
     }
     @Nullable
     @SuppressWarnings("unchecked")

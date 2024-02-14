@@ -40,20 +40,30 @@ public class AnnotatedBeanDefinitionReader {
             } catch (ClassNotFoundException e) {
                 throw new BeansException(e);
             }
-            //是否带有@Component注解
-            Component component = ClassUtils.findAnnotation(clazz, Component.class);
-            if(component != null) {
-                BeanDefinition def = BeanDefinitionFactory.createBeanDefinition(clazz);
-                this.registry.registerBeanDefinition(def.getName(), def);
-            }
-            //是否带有@Configuration注解，将@Bean标注的方法当作工厂方法
-            Configuration configuration = ClassUtils.findAnnotation(clazz, Configuration.class);
-            if(configuration != null){
-                BeanDefinition def = ClassUtils.findFactoryMethods(clazz);
-                if(def == null) return;
-                this.registry.registerBeanDefinition(def.getName(), def);
-            }
+            registerCommonBean(clazz);
+            registerFactoryBean(clazz);
         });
+    }
+
+    private void registerFactoryBean(Class<?> clazz) {
+        //是否带有@Configuration注解，将@Bean标注的方法当作工厂方法
+        Configuration configuration = ClassUtils.findAnnotation(clazz, Configuration.class);
+        if(configuration != null){
+            ArrayList<BeanDefinition> FactoryBeanDefinitions = new ArrayList<>();
+            ClassUtils.findFactoryMethods(clazz,FactoryBeanDefinitions);
+            for (BeanDefinition beanFactoryDef : FactoryBeanDefinitions) {
+                this.registry.registerBeanDefinition(beanFactoryDef.getName(), beanFactoryDef);
+            }
+        }
+    }
+
+    private void registerCommonBean(Class<?> clazz) {
+        //是否带有@Component注解
+        Component component = ClassUtils.findAnnotation(clazz, Component.class);
+        if(component != null) {
+            BeanDefinition def = BeanDefinitionFactory.createBeanDefinition(clazz);
+            this.registry.registerBeanDefinition(def.getName(), def);
+        }
     }
 
     private Set<String> scanForClassNames(Class<?> configClass) {
