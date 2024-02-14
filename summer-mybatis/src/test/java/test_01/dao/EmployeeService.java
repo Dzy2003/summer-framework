@@ -3,6 +3,7 @@ package test_01.dao;
 import com.duan.summer.annotations.Autowired;
 import com.duan.summer.annotations.Component;
 import test_04.duan.mapper.EmployeeMapper;
+import test_04.duan.pojo.Employee;
 
 /**
  * @author 白日
@@ -14,7 +15,7 @@ public class EmployeeService {
     @Autowired
     EmployeeMapper employeeMapper;
 
-    public void selectById(int id){
-        employeeMapper.selectByID(id);
+    public Employee selectById(int id){
+        return employeeMapper.selectByID(id);
     }
 }

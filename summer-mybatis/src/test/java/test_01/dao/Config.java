@@ -1,7 +1,12 @@
 package test_01.dao;
 
 import com.duan.summer.annotations.ComponentScan;
+import com.duan.summer.annotations.Import;
 import com.duan.summer.annotations.PropertySource;
+import com.duan.summer.summer.JDBCConfig;
+import com.duan.summer.summer.MapperScannerConfigurer;
+import com.duan.summer.summer.SqlSessionFactoryBean;
+import org.testng.annotations.Ignore;
 
 /**
  * @author 白日
@@ -10,5 +15,6 @@ import com.duan.summer.annotations.PropertySource;
  */
 @ComponentScan
 @PropertySource("jdbc.properties")
+@Import({MapperScannerConfigurer.class, SqlSessionFactoryBean.class, JDBCConfig.class})
 public class Config {
 }

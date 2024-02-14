@@ -1,18 +1,19 @@
-package test_01.dao;
+package com.duan.summer.summer;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.duan.summer.annotations.Bean;
 import com.duan.summer.annotations.Configuration;
 import com.duan.summer.annotations.Value;
 
-
 import javax.sql.DataSource;
 
 /**
- * jdbc的数据源注入
+ * @author 白日
+ * @create 2024/2/14 22:49
+ * @description
  */
 @Configuration
-public class JdbcConfig {
+public class JDBCConfig {
     @Bean
     public DataSource dataSource(@Value("${driver}") String driver,
                                  @Value("${url}")  String url,
@@ -25,6 +26,4 @@ public class JdbcConfig {
         dataSource.setPassword(password);
         return dataSource;
     }
-
-
 }

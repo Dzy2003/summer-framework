@@ -1,0 +1,10 @@
+app:
+  title: Summer Framework
+  version: 1.0.0
+
+# standard structure for datasource, mail, etc:
+
+
+mybatis:
+  basePackage: test_04.duan.mapper
+  mapperPackage: mapper

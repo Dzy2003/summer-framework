@@ -20,9 +20,9 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
         this.reader = new AnnotatedBeanDefinitionReader(this);
         this.loader = new ConfigLoader(this);
         register(componentClasses);
+        loadConfig(componentClasses);
         createFactoryBeanProcessorBean();
         invokeFactoryBeanPostProcessors();
-        loadConfig(componentClasses);
         createBean();
         //initBean();
     }

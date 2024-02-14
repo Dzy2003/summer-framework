@@ -41,7 +41,6 @@ public class MapperAnnotationBuilder extends ConfigBuilder {
                 parseStatement(method);
             }
         }
-
         return this.configuration;
     }
 

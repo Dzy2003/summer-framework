@@ -1,7 +1,9 @@
 package com.duan.summer.summer;
 
 import cn.hutool.core.lang.Assert;
+import com.duan.summer.annotations.Autowired;
 import com.duan.summer.annotations.Bean;
+import com.duan.summer.annotations.Value;
 import com.duan.summer.builder.XMLConfigBuilder;
 import com.duan.summer.builder.XMLMapperBuilder;
 import com.duan.summer.io.Resources;
@@ -32,22 +34,27 @@ import java.util.List;
  * @create 2024/2/12 23:18
  * @description 构建SqlSession的工厂Bean
  */
-
+@com.duan.summer.annotations.Configuration
 public class SqlSessionFactoryBean {
-    private String configLocation;
-
     private Configuration configuration;
-
-    private String mapperPackage;
     private String environment;
-
-    private DataSource dataSource;
-
     private TransactionFactory transactionFactory;
 
     private final SqlSessionFactoryBuilder sqlSessionFactoryBuilder = new SqlSessionFactoryBuilder();
 
     private SqlSessionFactory sqlSessionFactory;
+    @Value("${mybatis.configLocation}")
+    private String configLocation;
+    @Value("${mybatis.mapperPackage}")
+    private String mapperPackage;
+    @Autowired
+    private DataSource dataSource;
+    @Value("${mybatis.ignorePrefix:}")
+    private String ignorePrefix;
+    @Value("${mybatis.ignoreSuffix:}")
+    private String ignoreSuffix;
+    @Value("${mybatis.mapUnderscoreToCamelCase:}")
+    private Boolean mapUnderscoreToCamelCase;
     public SqlSessionFactoryBean() {
     }
     @PostConstruct
@@ -88,21 +95,22 @@ public class SqlSessionFactoryBean {
                 Enumeration<URL> resources = contextClassLoader.getResources(mapperPackage);
                 while (resources.hasMoreElements()){
                     URI uri = resources.nextElement().toURI();
-                    List<InputStream> list = Files
+                    Files
                             .walk(Paths.get(uri))
                             .filter(this::IsXMLFile)
-                            .map(path -> contextClassLoader
-                                    .getResourceAsStream(mapperPackage + "/" + path.getFileName())).toList();
-                    list.forEach(inputStream -> {
-                        try {
-                            XMLMapperBuilder xmlMapperBuilder = new XMLMapperBuilder(inputStream, configuration, "");
-                            xmlMapperBuilder.parse();
-                        } catch (DocumentException | ClassNotFoundException e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
+                            .forEach(path -> {
+                                        String resource = mapperPackage + "/" + path.getFileName();
+                                try {
+                                    new XMLMapperBuilder(contextClassLoader.getResourceAsStream(resource)
+                                            , configuration, resource).parse();
+                                } catch (ClassNotFoundException | DocumentException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            });
+
                 }
             }catch (Exception e){
+                e.printStackTrace();
                 throw new RuntimeException("扫描XML包构建Mapper失败");
             }
 

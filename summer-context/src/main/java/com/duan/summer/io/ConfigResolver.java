@@ -133,8 +133,7 @@ public class ConfigResolver {
      * @return value
      */
     public String getRequiredConfig(String key) {
-        String value = this.configurations.get(key);
-        return Objects.requireNonNull(value, "Property '" + key + "' not found.");
+        return this.configurations.get(key);
     }
 
 
