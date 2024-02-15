@@ -19,12 +19,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * @author 小傅哥，微信：fustack
- * @description XML配置构建器，建造者模式，继承BaseBuilder
- * @github https://github.com/fuzhengwei
- * @copyright 公众号：bugstack虫洞栈 | 博客：https://bugstack.cn - 沉淀、分享、成长，让自己和他人都能有所收获！
- */
+
 public class XMLConfigBuilder extends ConfigBuilder {
 
     private Element root;

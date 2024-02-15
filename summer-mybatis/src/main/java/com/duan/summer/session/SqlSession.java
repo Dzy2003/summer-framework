@@ -2,13 +2,6 @@ package com.duan.summer.session;
 
 import java.util.List;
 
-/**
- * @author 小傅哥，微信：fustack
- * @description SqlSession 用来执行SQL，获取映射器，管理事务。
- * PS：通常情况下，我们在应用程序中使用的Mybatis的API就是这个接口定义的方法。
- * @github https://github.com/fuzhengwei
- * @copyright 公众号：bugstack虫洞栈 | 博客：https://bugstack.cn - 沉淀、分享、成长，让自己和他人都能有所收获！
- */
 public interface SqlSession {
 
     /**

@@ -6,12 +6,7 @@ package com.duan.summer.mapping;
 import com.duan.summer.session.Configuration;
 import com.duan.summer.type.TypeHandler;
 
-/**
- * @author 小傅哥，微信：fustack
- * @description 参数映射 #{property,javaType=int,jdbcType=NUMERIC}
- * @github https://github.com/fuzhengwei
- * @copyright 公众号：bugstack虫洞栈 | 博客：https://bugstack.cn - 沉淀、分享、成长，让自己和他人都能有所收获！
- */
+
 public class ParameterMapping {
 
     private Configuration configuration;
