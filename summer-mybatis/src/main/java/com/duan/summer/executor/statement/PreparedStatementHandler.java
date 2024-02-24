@@ -3,7 +3,6 @@ package com.duan.summer.executor.statement;
 import com.duan.summer.executor.Executor;
 import com.duan.summer.mapping.MappedStatement;
 import com.duan.summer.mapping.ParameterMapping;
-import com.duan.summer.session.ResultHandler;
 import com.duan.summer.type.TypeHandler;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,7 +18,7 @@ import java.util.Map;
  * @description
  */
 
-public class PreparedStatementHandler extends BaseStatementHandler{
+public class PreparedStatementHandler extends AbstractStatementHandler {
     public PreparedStatementHandler(Executor executor, MappedStatement mappedStatement, Object[] parameters) {
         super(executor, mappedStatement, parameters);
     }
@@ -47,6 +46,22 @@ public class PreparedStatementHandler extends BaseStatementHandler{
         }
         System.out.println("==> Parameters: " + sb);
 
+    }
+
+    @Override
+    public <E> List<E> query(Statement statement) throws SQLException {
+        PreparedStatement ps = (PreparedStatement) statement;
+        ps.execute();
+        return resultSetHandler.handleResultSets(ps);
+    }
+
+    @Override
+    public int update(Statement statement) throws SQLException {
+        PreparedStatement ps = (PreparedStatement) statement;
+        ps.execute();
+        int updateCount = ps.getUpdateCount();
+        System.out.println("<==    Updates: " +  updateCount);
+        return updateCount;
     }
 
     @NotNull
@@ -82,21 +97,5 @@ public class PreparedStatementHandler extends BaseStatementHandler{
             }
         }
         return parameterMap;
-    }
-
-    @Override
-    public <E> List<E> query(Statement statement) throws SQLException {
-        PreparedStatement ps = (PreparedStatement) statement;
-        ps.execute();
-        return resultSetHandler.handleResultSets(ps);
-    }
-
-    @Override
-    public int update(Statement statement) throws SQLException {
-        PreparedStatement ps = (PreparedStatement) statement;
-        ps.execute();
-        int updateCount = ps.getUpdateCount();
-        System.out.println("<==    Updates: " +  updateCount);
-        return updateCount;
     }
 }

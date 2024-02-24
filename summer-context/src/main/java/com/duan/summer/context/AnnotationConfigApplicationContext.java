@@ -9,6 +9,7 @@ package com.duan.summer.context;
 
 public class AnnotationConfigApplicationContext extends GenericApplicationContext implements AnnotationConfigRegistry{
     AnnotatedBeanDefinitionReader reader;
+    protected Class<?>[] componentClasses;
     ConfigLoader loader;
     public AnnotationConfigApplicationContext(){
         super();
@@ -17,14 +18,10 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
     }
     public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
         super();
+        this.componentClasses = componentClasses;
         this.reader = new AnnotatedBeanDefinitionReader(this);
         this.loader = new ConfigLoader(this);
-        register(componentClasses);
-        loadConfig(componentClasses);
-        createFactoryBeanProcessorBean();
-        invokeFactoryBeanPostProcessors();
-        createBean();
-        //initBean();
+        refresh();
     }
 
     private void loadConfig(Class<?> ... componentClasses) {
@@ -36,7 +33,12 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
         }
     }
 
-    private void refresh() {
+    public void refresh() {
+        this.close();
+        register(this.componentClasses);
+        loadConfig(this.componentClasses);
+        createFactoryBeanProcessorBean();
+        invokeFactoryBeanPostProcessors();
         createBean();
     }
 

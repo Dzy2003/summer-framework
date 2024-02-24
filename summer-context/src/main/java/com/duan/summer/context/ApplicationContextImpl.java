@@ -64,7 +64,16 @@ public abstract class ApplicationContextImpl implements ApplicationContext,FileC
 
     @Override
     public void close() {
-
+        logger.info("Closing {}...", this.getClass().getName());
+        this.beans.values().forEach(def -> {
+            final Object beanInstance = getProxiedInstance(def);
+            callMethod(beanInstance, def.getDestroyMethod(), def.getDestroyMethodName());
+        });
+        this.beanFactoryPostProcessors.clear();
+        this.beanPostProcessors.clear();
+        this.creatingBeanNames.clear();
+        this.beans.clear();
+        logger.info("{} closed.", this.getClass().getName());
     }
 
     protected void createBean(){
@@ -223,24 +232,24 @@ public abstract class ApplicationContextImpl implements ApplicationContext,FileC
 
 
     protected void callInitMethod(BeanDefinition definition){
-        String factoryName = definition.getFactoryName();
         callMethod(definition.getInstance(), definition.getInitMethod(),
-                definition.getInitMethodName(),factoryName);
+                definition.getInitMethodName());
     }
 
-    private void callMethod(Object instance, Method Method, String MethodName,String factoryName) {
-        if(Method != null){
+    private void callMethod(Object beanInstance, Method method, String namedMethod) {
+        // 调用init/destroy方法:
+        if (method != null) {
             try {
-                Method.invoke(instance);
-            } catch (IllegalAccessException | InvocationTargetException e) {
+                method.invoke(beanInstance);
+            } catch (ReflectiveOperationException e) {
                 throw new BeanCreationException(e);
             }
-        }
-        if(MethodName != null && !MethodName.isEmpty()){
+        } else if (namedMethod != null) {
+            // 查找initMethod/destroyMethod="xyz"，注意是在实际类型中查找:
+            Method named = ClassUtils.getNamedMethod(beanInstance.getClass(), namedMethod);
+            named.setAccessible(true);
             try {
-                Object factoryBean = getBean(factoryName);
-                Method initmethod = factoryBean.getClass().getDeclaredMethod(MethodName);
-                initmethod.invoke(factoryBean);
+                named.invoke(beanInstance);
             } catch (ReflectiveOperationException e) {
                 throw new BeanCreationException(e);
             }

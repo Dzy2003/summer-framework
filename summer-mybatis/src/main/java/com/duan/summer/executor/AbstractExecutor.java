@@ -1,9 +1,7 @@
 package com.duan.summer.executor;
 
-import com.duan.summer.mapping.BoundSql;
 import com.duan.summer.mapping.MappedStatement;
 import com.duan.summer.session.Configuration;
-import com.duan.summer.session.ResultHandler;
 import com.duan.summer.transaction.Transaction;
 import org.slf4j.LoggerFactory;
 
@@ -17,13 +15,13 @@ import java.util.List;
  * @description
  */
 
-public abstract class BaseExecutor implements Executor{
-    private org.slf4j.Logger logger = LoggerFactory.getLogger(BaseExecutor.class);
+public abstract class AbstractExecutor implements Executor{
+    private org.slf4j.Logger logger = LoggerFactory.getLogger(AbstractExecutor.class);
     Configuration configuration;
     Transaction transaction;
     private boolean closed;
 
-    public BaseExecutor(Configuration configuration, Transaction transaction) {
+    public AbstractExecutor(Configuration configuration, Transaction transaction) {
         this.configuration = configuration;
         this.transaction = transaction;
     }

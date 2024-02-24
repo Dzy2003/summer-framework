@@ -52,5 +52,4 @@ public class JdbcTransaction implements Transaction {
             connection.close();
         }
     }
-
 }

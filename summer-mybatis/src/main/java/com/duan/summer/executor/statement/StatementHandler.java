@@ -23,6 +23,9 @@ public interface StatementHandler {
      */
     <E> List<E> query(Statement statement) throws SQLException;
 
+    /**
+     *执行更新操作
+     */
     int update(Statement statement) throws SQLException;
 
 }

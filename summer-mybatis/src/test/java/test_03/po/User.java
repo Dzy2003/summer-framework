@@ -1,64 +1,46 @@
 package test_03.po;
 
-import java.util.Date;
+/**
+ * @author 白日
+ * @create 2024/1/31 23:10
+ * @description
+ */
 
 public class User {
-
-    private Long id;
-    private String userId;          // 用户ID
-    private String userHead;        // 头像
-    private Date createTime;        // 创建时间
-    private Date updateTime;        // 更新时间
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getUserHead() {
-        return userHead;
-    }
-
-    public void setUserHead(String userHead) {
-        this.userHead = userHead;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
+    private Integer userId;
+    private String userName;
+    private Integer userAge;
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", userId='" + userId + '\'' +
-                ", userHead='" + userHead + '\'' +
-                ", createTime=" + createTime +
-                ", updateTime=" + updateTime +
+        return "User1{" +
+                "userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", userAge=" + userAge +
                 '}';
     }
 
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public Integer getUserAge() {
+        return userAge;
+    }
+
+    public void setUserAge(Integer userAge) {
+        this.userAge = userAge;
+    }
 }

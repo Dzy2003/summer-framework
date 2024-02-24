@@ -1,19 +1,16 @@
 package com.duan.summer.executor.statement;
 
-import cn.hutool.log.LogFactory;
 import com.duan.summer.executor.Executor;
 import com.duan.summer.executor.resultset.ResultSetHandler;
 import com.duan.summer.mapping.BoundSql;
 import com.duan.summer.mapping.MappedStatement;
 import com.duan.summer.session.Configuration;
-import com.duan.summer.session.ResultHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
 
 /**
  * @author 白日
@@ -21,7 +18,7 @@ import java.util.List;
  * @description
  */
 
-public abstract class BaseStatementHandler implements StatementHandler{
+public abstract class AbstractStatementHandler implements StatementHandler{
     public final Logger logger = LoggerFactory.getLogger(getClass());
 
     protected final Configuration configuration;
@@ -33,7 +30,7 @@ public abstract class BaseStatementHandler implements StatementHandler{
 
     protected BoundSql boundSql;
 
-    public BaseStatementHandler(Executor executor, MappedStatement mappedStatement, Object[] parameters) {
+    public AbstractStatementHandler(Executor executor, MappedStatement mappedStatement, Object[] parameters) {
         this.configuration = mappedStatement.getConfiguration();
         this.executor = executor;
         this.mappedStatement = mappedStatement;

@@ -1,7 +1,6 @@
 package test_03;
 
 import com.duan.summer.io.Resources;
-import com.duan.summer.mapping.BoundSql;
 import com.duan.summer.session.SqlSession;
 import com.duan.summer.session.SqlSessionFactory;
 import com.duan.summer.session.SqlSessionFactoryBuilder;
@@ -10,25 +9,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import test_03.dao.IUserDao;
 import test_03.po.User;
-import test_03.po.User1;
+import test_04.duan.mapper.UserMapper;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 /**
  * @author 小傅哥，微信：fustack
@@ -48,15 +40,13 @@ public class ApiTest {
         SqlSession sqlSession = sqlSessionFactory.openSession();
 
         // 2. 获取映射器对象
-        IUserDao userDao = sqlSession.getMapper(IUserDao.class);
-        User1 user1 = new User1();
-        user1.setUserId(1);
+        UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
         // 3. 测试验证
-        User1 res = userDao.queryUserInfoById(1L);
-        User1 user2 = new User1();
+        User res = userMapper.queryUserInfoById(1L);
+        User user2 = new User();
         user2.setUserAge(20);
-        List<User1> user1List = userDao.queryUsersInfoById(user2,5L);
-        Long nums = userDao.countAge(18L, 20L);
+        List<User> user1List = userMapper.queryUsersInfoById(user2);
+        Long nums = userMapper.countAge(18L, 20L);
         logger.info("测试结果：{},{},{}", res, user1List,nums);
     }
 

@@ -225,8 +225,8 @@ public class GenericApplicationContext extends ApplicationContextImpl implements
      */
     private Object callPostProcessor(BeanDefinition def) {
         Object instance = def.getInstance();
-        if(instance instanceof BeansAware){
-            ((BeansAware) instance).setApplicationContext(beans);
+        if(instance instanceof BeansAware beansAware){
+            beansAware.setApplicationContext(beans);
         }
         for (BeanPostProcessor processor : beanPostProcessors) {
             Object processed = processor

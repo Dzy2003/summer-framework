@@ -30,7 +30,7 @@
         </dependency>
         <dependency>
             <groupId>com.duan.summer</groupId>
-            <artifactId>summer-context</artifactId>
+            <artifactId>summer-aop</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>

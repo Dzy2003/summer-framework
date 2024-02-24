@@ -1,10 +1,8 @@
 package com.duan.summer.executor;
 
 import com.duan.summer.executor.statement.StatementHandler;
-import com.duan.summer.mapping.BoundSql;
 import com.duan.summer.mapping.MappedStatement;
 import com.duan.summer.session.Configuration;
-import com.duan.summer.session.ResultHandler;
 import com.duan.summer.transaction.Transaction;
 
 import java.sql.Connection;
@@ -18,7 +16,7 @@ import java.util.List;
  * @description
  */
 
-public class SimpleExecutor extends BaseExecutor{
+public class SimpleExecutor extends AbstractExecutor {
     public SimpleExecutor(Configuration configuration, Transaction transaction) {
         super(configuration, transaction);
     }

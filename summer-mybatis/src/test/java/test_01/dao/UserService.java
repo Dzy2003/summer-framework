@@ -2,6 +2,7 @@ package test_01.dao;
 
 import com.duan.summer.annotations.Autowired;
 import com.duan.summer.annotations.Component;
+import test_03.po.User;
 import test_04.duan.mapper.UserMapper;
 
 /**
@@ -14,7 +15,7 @@ public class UserService {
     @Autowired
     UserMapper userMapper;
 
-    public test_03.po.User1 selectById(Long id){
+    public User selectById(Long id){
         return userMapper.queryUserInfoById(id);
     }
 

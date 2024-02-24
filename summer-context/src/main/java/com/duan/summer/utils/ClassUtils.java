@@ -152,5 +152,13 @@ public class  ClassUtils {
         }
         return null;
     }
+
+    public static Method getNamedMethod(Class<?> clazz, String namedMethod) {
+        try {
+            return clazz.getDeclaredMethod(namedMethod);
+        } catch (ReflectiveOperationException e) {
+            throw new BeanDefinitionException(String.format("Method '%s' not found in class: %s", namedMethod, clazz.getName()));
+        }
+    }
 }
 
