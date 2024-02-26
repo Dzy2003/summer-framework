@@ -25,21 +25,24 @@ public class BaseHttpServlet  extends HttpServlet {
     }
 
     @Override
-    public void init() throws ServletException {
-        initServletBean();
+    public void init() {
+        logger.info("加载成功");
+        this.webApplicationContext = initServletBean();
     }
 
-    protected final void initServletBean() {
+    protected final WebApplicationContext initServletBean() {
         WebApplicationContext rootContext = WebApplicationContextUtils.getWebApplicationContext(this.getServletContext());
         WebApplicationContext wac = null;
         if(this.webApplicationContext != null){
             wac = this.webApplicationContext;
-            if(wac instanceof AnnotationConfigWebApplicationContext){
-                if(((AnnotationConfigWebApplicationContext) wac).getParent() == null){
-                    ((AnnotationConfigWebApplicationContext) wac).setParent(rootContext);
+            if(wac instanceof AnnotationConfigWebApplicationContext acwa){
+                if(acwa.getParent() == null){
+                    acwa.setParent(rootContext);
                 }
+                acwa.refresh();
             }
         }
+        return wac;
     }
     public ServletContext getServletContext() {
         return this.getServletConfig().getServletContext();
