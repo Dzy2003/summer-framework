@@ -1,7 +1,9 @@
+import com.duan.summer.annotations.PostMapping;
 import com.duan.summer.web.AnnotationConfigWebApplicationContext;
 import config.SpringConfig;
 import config.SpringMvcConfig;
 import controller.UserController;
+import org.junit.jupiter.api.Test;
 import service.UserService;
 
 /**
@@ -24,5 +26,9 @@ public class test {
         childApplicationContext.refresh();
         UserController userController = childApplicationContext.getBean(UserController.class);
         userController.introduction();
+    }
+    @Test
+    public void dad(){
+        System.out.println(PostMapping.class.getSimpleName());
     }
 }

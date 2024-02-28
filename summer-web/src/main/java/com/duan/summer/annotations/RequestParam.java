@@ -11,5 +11,7 @@ public @interface RequestParam {
 
     String value();
 
-    //String defaultValue() default WebUtils.DEFAULT_PARAM_VALUE;
+    String defaultValue() default "";
+
+    boolean Required() default true;
 }

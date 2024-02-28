@@ -61,7 +61,7 @@ public class AOPProxyCreator implements BeanPostProcessor, BeansAware {
     }
 
     @Override
-    public void setApplicationContext(Map<String, BeanDefinition> beans) {
+    public void setBeans(Map<String, BeanDefinition> beans) {
         this.beans = beans;
         aspectInstance = getAspectInstance();
         parseAspectjClass();

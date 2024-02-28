@@ -30,6 +30,11 @@ public interface ApplicationContext extends AutoCloseable {
     <T> List<T> getBeans(Class<T> requiredType);
 
     /**
+     * 获取所以Bean
+     */
+    List<Object> getAllBeans();
+
+    /**
      * 关闭并执行所有bean的destroy方法
      */
     void close();

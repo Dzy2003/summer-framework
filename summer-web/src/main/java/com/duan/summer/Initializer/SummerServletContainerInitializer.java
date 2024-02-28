@@ -13,7 +13,7 @@ import java.util.Set;
 /**
  * @author 白日
  * @create 2024/2/25 13:15
- * @description
+ * @description 代替web.xml，当tomcat启动时会自动扫描WebApplicationInitializer的实现类并执行它的onStartup方法
  */
 //注解指定初始化类的接口
 @HandlesTypes({WebApplicationInitializer.class})

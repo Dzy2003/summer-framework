@@ -96,6 +96,9 @@ public class  ClassUtils {
      */
     @Nullable
     public static Method findAnnotationMethod(Class<?> clazz, Class<? extends Annotation> annoClass) {
+        if(clazz == null){
+            return null;
+        }
         // 首先尝试获取声明在类中的方法：
         List<Method> ms = Arrays.stream(clazz.getDeclaredMethods()).filter(m -> m.isAnnotationPresent(annoClass)).map(m -> {
             if (m.getParameterCount() != 0) {
@@ -105,7 +108,7 @@ public class  ClassUtils {
             return m;
         }).toList();
         if (ms.isEmpty()) {
-            return null;
+            return findAnnotationMethod(clazz.getSuperclass(), annoClass);
         }
         if (ms.size() == 1) {
             return ms.get(0);
@@ -114,7 +117,8 @@ public class  ClassUtils {
     }
 
     @Nullable
-    public static void findFactoryMethods(Class<?> clazz, ArrayList<BeanDefinition> factoryBeanDefinitions) {
+    public static void findFactoryMethods(Class<?> clazz, ArrayList<BeanDefinition> factoryBeanDefinitions, String factoryBeanName) {
+        if(clazz == null) return;
         for (Method method : clazz.getDeclaredMethods()) {
             Bean bean = method.getAnnotation(Bean.class);
             if (bean != null) {
@@ -135,10 +139,12 @@ public class  ClassUtils {
                 if (beanClass == void.class || beanClass == Void.class) {
                     throw new BeanDefinitionException("@Bean method " + clazz.getName() + "." + method.getName() + " must not return void.");
                 }
-                String factoryBeanName = ClassUtils.getBeanName(clazz);
+                if(factoryBeanName == null){
+                    factoryBeanName = getBeanName(clazz);
+                }
                 BeanDefinition beanDefinition = BeanDefinitionFactory.createBeanDefinition(method, factoryBeanName);
                 factoryBeanDefinitions.add(beanDefinition);
-                findFactoryMethods(beanDefinition.getBeanClass(), factoryBeanDefinitions);
+                findFactoryMethods(beanDefinition.getBeanClass(), factoryBeanDefinitions, null);
             }
         }
     }
@@ -154,11 +160,17 @@ public class  ClassUtils {
     }
 
     public static Method getNamedMethod(Class<?> clazz, String namedMethod) {
+        if(clazz == null) return null;
+        Method method = null;
         try {
-            return clazz.getDeclaredMethod(namedMethod);
+            method = clazz.getDeclaredMethod(namedMethod);
         } catch (ReflectiveOperationException e) {
-            throw new BeanDefinitionException(String.format("Method '%s' not found in class: %s", namedMethod, clazz.getName()));
+            method = getNamedMethod(clazz.getSuperclass(), namedMethod);
         }
+        if(method == null){
+            throw new RuntimeException(namedMethod + "is not find in class" + clazz.getSimpleName());
+        }
+        return method;
     }
 }
 

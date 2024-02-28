@@ -47,7 +47,6 @@ public class SqlSessionFactoryBean {
     private String configLocation;
     @Value("${mybatis.mapperPackage}")
     private String mapperPackage;
-    @Autowired
     private DataSource dataSource;
     @Value("${mybatis.ignorePrefix:}")
     private String ignorePrefix;
@@ -123,7 +122,8 @@ public class SqlSessionFactoryBean {
         return path.subpath(path.getNameCount() - 1, path.getNameCount()) .toString().endsWith(".xml");
     }
     @Bean
-    public SqlSessionFactory getSqlSessionFactory(){
+    public SqlSessionFactory getSqlSessionFactory(@Autowired DataSource dataSource){
+        this.dataSource = dataSource;
         if(this.sqlSessionFactory == null){
             this.afterPropertiesSet();
         }

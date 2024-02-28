@@ -50,7 +50,12 @@ public class AnnotatedBeanDefinitionReader {
         Configuration configuration = ClassUtils.findAnnotation(clazz, Configuration.class);
         if(configuration != null){
             ArrayList<BeanDefinition> FactoryBeanDefinitions = new ArrayList<>();
-            ClassUtils.findFactoryMethods(clazz,FactoryBeanDefinitions);
+            String factoryBeanName = ClassUtils.getBeanName(clazz);
+            ClassUtils.findFactoryMethods(clazz,FactoryBeanDefinitions,null);
+            while (clazz.getSuperclass() != null){
+                clazz = clazz.getSuperclass();
+                ClassUtils.findFactoryMethods(clazz, FactoryBeanDefinitions, factoryBeanName);
+            }
             for (BeanDefinition beanFactoryDef : FactoryBeanDefinitions) {
                 this.registry.registerBeanDefinition(beanFactoryDef.getName(), beanFactoryDef);
             }

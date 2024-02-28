@@ -15,7 +15,7 @@ import java.util.Map;
 public class ApplicationContextAwareImpl implements BeansAware {
     Map<String, BeanDefinition> beans;
     @Override
-    public void setApplicationContext(Map<String, BeanDefinition> beans) {
+    public void setBeans(Map<String, BeanDefinition> beans) {
         this.beans = beans;
     }
 }

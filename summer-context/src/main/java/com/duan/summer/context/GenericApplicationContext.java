@@ -213,9 +213,20 @@ public class GenericApplicationContext extends ApplicationContextImpl implements
                     definition.getName(), definition.getBeanClass().getName()), e);
         }
         definition.setInstance(instance);
+        if(instance instanceof Aware){
+            callAware(instance);
+        }
         instance = callPostProcessor(definition);
-        initBean(definition);
+        injectBean(definition);
         return instance;
+    }
+
+    private void callAware(Object instance) {
+        if(instance instanceof BeansAware beansAware){
+            beansAware.setBeans(this.beans);
+        }else if(instance instanceof ApplicationContextAware applicationContextAware){
+            applicationContextAware.setApplication(this);
+        }
     }
 
     /**
@@ -225,9 +236,6 @@ public class GenericApplicationContext extends ApplicationContextImpl implements
      */
     private Object callPostProcessor(BeanDefinition def) {
         Object instance = def.getInstance();
-        if(instance instanceof BeansAware beansAware){
-            beansAware.setApplicationContext(beans);
-        }
         for (BeanPostProcessor processor : beanPostProcessors) {
             Object processed = processor
                     .postProcessBeforeInitialization(def.getInstance(), def.getName());
@@ -249,18 +257,13 @@ public class GenericApplicationContext extends ApplicationContextImpl implements
                 .stream()
                 .filter(this::isBeanFactoryPostProcessorDefinition)
                 .sorted()
-                .map(def -> {
-                    if(def.getFactoryName() != null){
-                        BeanDefinition factoryBeanDef = findBeanDefinition(def.getFactoryName());
-                        if(factoryBeanDef == null){
-                            throw new BeanCreationException(String.format("BeanFactoryPostProcessor '%s' must be defined before '%s'",
-                                    def.getFactoryName(), def.getName()));
-                        }
-                        createBeanAsEarlySingleton(factoryBeanDef);
-                    }
-                    return (BeanFactoryPostProcessor) createBeanAsEarlySingleton(def);
-                })
+                .map(this::createBeanFactoryPostProcessorDefinition)
                 .toList());
+    }
+
+    private BeanFactoryPostProcessor createBeanFactoryPostProcessorDefinition(BeanDefinition definition) {
+        Object beanFactoryPostProcessor = createBeanAsEarlySingleton(definition);
+        return (BeanFactoryPostProcessor) beanFactoryPostProcessor;
     }
 
     protected void invokeFactoryBeanPostProcessors(){

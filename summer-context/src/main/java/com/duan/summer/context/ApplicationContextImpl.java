@@ -61,6 +61,13 @@ public abstract class ApplicationContextImpl implements ApplicationContext,FileC
     public <T> List<T> getBeans(Class<T> requiredType) {
         throw new RuntimeException("Not Support");
     }
+    @Override
+    public List<Object>  getAllBeans(){
+        return beans.values()
+                .stream()
+                .map(BeanDefinition::getInstance)
+                .toList();
+    }
 
     @Override
     public void close() {
@@ -93,7 +100,6 @@ public abstract class ApplicationContextImpl implements ApplicationContext,FileC
 
 
     protected void initBean(){
-        this.beans.values().forEach(this::injectBean);//注入依赖
         this.beans.values().forEach(this::callInitMethod);//调用init方法
     }
     protected void initBean(BeanDefinition definition){
@@ -102,7 +108,7 @@ public abstract class ApplicationContextImpl implements ApplicationContext,FileC
     }
 
 
-    private void injectBean(BeanDefinition def){
+    protected void injectBean(BeanDefinition def){
         Class<?> beanClass = def.getBeanClass();
         try {
             for (Field field : beanClass.getDeclaredFields()) {
@@ -265,7 +271,6 @@ public abstract class ApplicationContextImpl implements ApplicationContext,FileC
                 .filter(this::isConfigurationDefinition)
                 .sorted()
                 .forEach(this::createBeanAsEarlySingleton);
-
     }
 
     /**

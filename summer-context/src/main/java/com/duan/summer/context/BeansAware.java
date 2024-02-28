@@ -8,6 +8,6 @@ import java.util.Map;
  * @description
  */
 
-public interface BeansAware {
-    public void setApplicationContext(Map<String, BeanDefinition> beans);
+public interface BeansAware extends Aware{
+    void setBeans(Map<String, BeanDefinition> beans);
 }

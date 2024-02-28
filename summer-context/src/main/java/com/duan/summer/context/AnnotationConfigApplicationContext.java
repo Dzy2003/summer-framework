@@ -40,6 +40,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
         createFactoryBeanProcessorBean();
         invokeFactoryBeanPostProcessors();
         createBean();
+        initBean();
     }
 
     @Override
