@@ -8,4 +8,16 @@ package com.duan.summer.handler;
 
 public class HandlerExecutionChain {
 
+    private HandlerMethod handlerMethod;
+    public HandlerExecutionChain(HandlerMethod handlerMethod){
+        this.handlerMethod = handlerMethod;
+    }
+
+    public void setHandlerMethod(HandlerMethod handlerMethod) {
+        this.handlerMethod = handlerMethod;
+    }
+
+    public HandlerMethod getHandlerMethod() {
+        return handlerMethod;
+    }
 }

@@ -20,7 +20,7 @@ public class HandlerMethod {
     protected Class<?> type;
 
     protected Method method;
-    protected String path;
+    protected String path = "";
     protected RequestType requestMethod;
     protected ParameterInfo[] parameters;
 
@@ -45,12 +45,12 @@ public class HandlerMethod {
     private void processorAnnotation() {
         if(type.isAnnotationPresent(RequestMapping.class)){
             RequestMapping requestMapping = type.getAnnotation(RequestMapping.class);
-            this.path = requestMapping.value();
+            getPath(requestMapping.value());
         }
         if(method.isAnnotationPresent(RequestMapping.class)){
             RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
             this.requestMethod = requestMapping.requestMethod();
-            this.path += "/" + requestMapping.value();
+            getPath(requestMapping.value());
         }
         for (Annotation annotation : method.getAnnotations()) {
             Class<? extends Annotation> annotationType = annotation.annotationType();
@@ -68,6 +68,10 @@ public class HandlerMethod {
                 }
             }
         }
+    }
+
+    private void getPath(String path) {
+        this.path += path.startsWith("/") ? path : "/" + path;
     }
 
     public Object getHandler() {
@@ -108,6 +112,14 @@ public class HandlerMethod {
 
     public void setParameters(ParameterInfo[] parameters) {
         this.parameters = parameters;
+    }
+
+    public RequestType getRequestMethod() {
+        return requestMethod;
+    }
+
+    public void setRequestMethod(RequestType requestMethod) {
+        this.requestMethod = requestMethod;
     }
 
     @Override

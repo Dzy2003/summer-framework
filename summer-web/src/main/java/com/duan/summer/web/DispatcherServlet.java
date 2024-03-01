@@ -2,13 +2,16 @@ package com.duan.summer.web;
 
 import com.duan.summer.context.AnnotationConfigApplicationContext;
 import com.duan.summer.context.ApplicationContextImpl;
+import com.duan.summer.handler.HandlerExecutionChain;
 import com.duan.summer.handler.HandlerMapping;
+import com.duan.summer.handler.HandlerMethod;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author 白日
@@ -30,14 +33,19 @@ public class DispatcherServlet extends BaseHttpServlet{
 
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         logger.info("{} {}", req.getMethod(), req.getRequestURI());
         PrintWriter pw = resp.getWriter();
         pw.write("<h1>Hello, world!</h1>");
-        HandlerMapping handlerMapping = context.getBean(HandlerMapping.class);
+        System.out.println(req.getRequestURI().substring(req.getContextPath().length()));
         System.out.println(handlerMapping.getMappingRegistry());
-        System.out.println();
-        //System.out.println(handlerMapping.getMappingRegistry());
+        HandlerExecutionChain handler = this.handlerMapping.getHandler(req);
+        HandlerMethod handlerMethod = handler.getHandlerMethod();
+        try {
+            handlerMethod.getMethod().invoke(handlerMethod.getHandler());
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
         pw.flush();
     }
 

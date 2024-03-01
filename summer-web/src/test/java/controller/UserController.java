@@ -2,6 +2,8 @@ package controller;
 
 import com.duan.summer.annotations.Autowired;
 import com.duan.summer.annotations.Component;
+import com.duan.summer.annotations.Controller;
+import com.duan.summer.annotations.RequestMapping;
 import service.UserService;
 
 /**
@@ -9,10 +11,11 @@ import service.UserService;
  * @create 2024/2/24 0:31
  * @description
  */
-@Component
+@Controller
 public class UserController {
     @Autowired
     UserService userService;
+
     public void introduction() {
         userService.introduction();
         System.out.println("我是Controller控制器");

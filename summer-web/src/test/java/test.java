@@ -6,6 +6,11 @@ import controller.UserController;
 import org.junit.jupiter.api.Test;
 import service.UserService;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * @author 白日
  * @create 2024/2/24 0:34
@@ -29,6 +34,9 @@ public class test {
     }
     @Test
     public void dad(){
-        System.out.println(PostMapping.class.getSimpleName());
+        List<String> originalList = Arrays.asList("Java", "Python", "C++", "PHP");
+        List<String> list = Arrays.asList("吃饭", "睡觉", "玩游戏", "打胶");
+        List<List<String>> listList = Arrays.asList(originalList, list);
+        System.out.println(new ArrayList<>(listList));
     }
 }

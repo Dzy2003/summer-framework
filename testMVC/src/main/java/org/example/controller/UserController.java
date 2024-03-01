@@ -1,9 +1,6 @@
 package org.example.controller;
 
-import com.duan.summer.annotations.Autowired;
-import com.duan.summer.annotations.Component;
-import com.duan.summer.annotations.Controller;
-import com.duan.summer.annotations.RequestMapping;
+import com.duan.summer.annotations.*;
 import com.duan.summer.handler.RequestType;
 import org.example.service.UserService;
 
@@ -21,5 +18,14 @@ public class UserController {
     public void introduction() {
         userService.introduction();
         System.out.println("我是Controller控制器");
+    }
+
+    @RequestMapping(value = "name",requestMethod = RequestType.GET)
+    public void getName() {
+        System.out.println("段志宇");
+    }
+    @RequestMapping(value = "{id}",requestMethod = RequestType.GET)
+    public void getPath() {
+        System.out.println("段志宇");
     }
 }

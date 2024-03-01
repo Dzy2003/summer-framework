@@ -4,6 +4,7 @@ import com.duan.summer.context.ApplicationContext;
 import com.duan.summer.context.ApplicationContextAware;
 import com.duan.summer.web.WebApplicationContext;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +26,15 @@ public abstract class AbstractHandlerMapping implements HandlerMapping, Applicat
         logger.debug("HandlerMapping初始化");
         initHandlerMethods();
     }
+
+    @Override
+    public HandlerExecutionChain getHandler(HttpServletRequest request){
+        HandlerMethod handlerMethod = getHandlerInternal(request);
+        if(handlerMethod == null) return null;
+        return new HandlerExecutionChain(handlerMethod);
+    }
+
+    protected abstract HandlerMethod getHandlerInternal(HttpServletRequest request);
 
     @Override
     public void setApplication(ApplicationContext application) {
@@ -104,6 +114,22 @@ public abstract class AbstractHandlerMapping implements HandlerMapping, Applicat
                     "MatchingPath=" + MatchingPath +
                     ", containsPathVariableMatchingPath=" + containsPathVariableMatchingPath +
                     '}';
+        }
+
+        public Map<String, Set<HandlerMethod>> getMatchingPath() {
+            return MatchingPath;
+        }
+
+        public void setMatchingPath(Map<String, Set<HandlerMethod>> matchingPath) {
+            MatchingPath = matchingPath;
+        }
+
+        public Map<String, Set<HandlerMethod>> getContainsPathVariableMatchingPath() {
+            return containsPathVariableMatchingPath;
+        }
+
+        public void setContainsPathVariableMatchingPath(Map<String, Set<HandlerMethod>> containsPathVariableMatchingPath) {
+            this.containsPathVariableMatchingPath = containsPathVariableMatchingPath;
         }
     }
 }
