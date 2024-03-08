@@ -1,5 +1,7 @@
 package com.duan.summer.support;
 
+import com.duan.summer.adapter.HandlerAdapter;
+import com.duan.summer.adapter.RequestMappingHandlerAdapter;
 import com.duan.summer.annotations.Bean;
 import com.duan.summer.handler.HandlerMapping;
 import com.duan.summer.handler.RequestMappingHandlerMapping;
@@ -22,6 +24,10 @@ public abstract class WebMvcConfigurationSupport {
         return requestMappingHandlerMapping;
     }
 
-
+    @Bean(initMethod = "afterPropertiesSet")
+    public HandlerAdapter handlerAdapter(){
+        RequestMappingHandlerAdapter requestMappingHandlerAdapter = new RequestMappingHandlerAdapter();
+        return requestMappingHandlerAdapter;
+    }
 
 }

@@ -22,7 +22,7 @@ public class HandlerMethod {
     protected Method method;
     protected String path = "";
     protected RequestType requestMethod;
-    protected ParameterInfo[] parameters;
+    protected MethodParameter[] parameters;
 
     public final static Set<Class<? extends Annotation>> mappingAnnotations = Set.of(
             GetMapping.class, PostMapping.class, PutMapping.class, DeleteMapping.class);
@@ -33,13 +33,24 @@ public class HandlerMethod {
         initHandlerMethod();
     }
 
+    public HandlerMethod(HandlerMethod handlerMethod) {
+        this.path = handlerMethod.getPath();
+        this.requestMethod = handlerMethod.getRequestMethod();
+        this.method = handlerMethod.getMethod();
+        this.type = handlerMethod.getType();
+        this.handler = handlerMethod.getHandler();
+        this.parameters = handlerMethod.getParameters();
+    }
+
     private void initHandlerMethod() {
         this.type = handler.getClass();
         processorAnnotation();
-        this.parameters = Arrays.stream(method.getParameters())
-                .map(ParameterInfo::new)
-                .toArray(ParameterInfo[]::new);
-
+        Parameter[] parameters = method.getParameters();
+        MethodParameter[] methodParameters = new MethodParameter[parameters.length];
+        for (int i = 0; i < methodParameters.length; i++) {
+            methodParameters[i] = new MethodParameter(parameters[i], i);
+        }
+        this.parameters = methodParameters;
     }
 
     private void processorAnnotation() {
@@ -106,11 +117,11 @@ public class HandlerMethod {
         this.path = path;
     }
 
-    public ParameterInfo[] getParameters() {
+    public MethodParameter[] getParameters() {
         return parameters;
     }
 
-    public void setParameters(ParameterInfo[] parameters) {
+    public void setParameters(MethodParameter[] parameters) {
         this.parameters = parameters;
     }
 

@@ -168,7 +168,7 @@ public class  ClassUtils {
             method = getNamedMethod(clazz.getSuperclass(), namedMethod);
         }
         if(method == null){
-            throw new RuntimeException(namedMethod + "is not find in class" + clazz.getSimpleName());
+            throw new RuntimeException(namedMethod + " is not find in class" + clazz.getSimpleName());
         }
         return method;
     }

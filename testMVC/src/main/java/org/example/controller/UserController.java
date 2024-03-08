@@ -15,8 +15,9 @@ public class UserController {
     @Autowired
     UserService userService;
     @RequestMapping(value = "id",requestMethod = RequestType.GET)
-    public void introduction() {
+    public void introduction(@RequestParam(value = "id", defaultValue = "2") Integer id) {
         userService.introduction();
+        System.out.println(id);
         System.out.println("我是Controller控制器");
     }
 
