@@ -2,8 +2,11 @@ package com.duan.summer.resolve;
 
 import com.duan.summer.annotations.RequestParam;
 import com.duan.summer.convert.Convent;
+import com.duan.summer.handler.HandlerMethod;
 import com.duan.summer.handler.MethodParameter;
 import com.duan.summer.support.WebServletRequest;
+
+import java.lang.invoke.MethodHandle;
 
 /**
  * @author 白日
@@ -13,7 +16,7 @@ import com.duan.summer.support.WebServletRequest;
 
 public class RequestParamMethodArgumentResolver extends AbstractNamedValueMethodArgumentResolver{
     @Override
-    protected Object resolveName(String parameterName, WebServletRequest webServletRequest, Convent<?> convent) {
+    protected Object resolveName(String parameterName, HandlerMethod handlerMethod, WebServletRequest webServletRequest, Convent<?> convent) {
         Object arg = null;
         String[] paramValues = webServletRequest.request().getParameterValues(parameterName);
         if (paramValues != null) {

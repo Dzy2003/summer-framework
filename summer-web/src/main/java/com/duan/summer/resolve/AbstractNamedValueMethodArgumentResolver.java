@@ -19,21 +19,29 @@ public abstract class AbstractNamedValueMethodArgumentResolver implements Handle
     public Object resolveArgument(MethodParameter parameter, HandlerMethod handlerMethod,
                                   WebServletRequest webServletRequest, Convent<?> convent) throws Exception {
         NamedValueInfo namedValueInfo = this.getNamedValueInfo(parameter);
-        Object arg = resolveName(parameter.getParameterName(), webServletRequest, convent);
+        Object arg = null;
+        try {
+            arg = resolveName(namedValueInfo.name(),handlerMethod, webServletRequest, convent);
+        }catch (Exception e){
+            throw new RuntimeException("resolve parameter" +
+                    namedValueInfo.name + "error in " +handlerMethod.getHandler().getClass().getName() +
+                    "." + handlerMethod.getMethod().getName());
+        }
+
         if(arg == null) {
             if(namedValueInfo.defaultValue != null){
                 arg = convent.convent(namedValueInfo.defaultValue);
             }else if(namedValueInfo.required){
-                throw new IllegalArgumentException("参数[" + parameter.getParameterName() + "]不能为空");
+                throw new IllegalArgumentException("参数[" + namedValueInfo.name() + "]不能为空");
             }
         }
         resolveArgumentName();
-        logger.debug("Method {} index {} param resolve: {}",
-                handlerMethod.getMethod().getName(), parameter.getParameterIndex(), arg);
+        logger.debug("Method {} index {} param resolve: {} by resolver {}",
+                handlerMethod.getMethod().getName(), parameter.getParameterIndex(), arg, this.getClass().getSimpleName());
         return arg;
     }
 
-    protected abstract Object resolveName(String parameterName, WebServletRequest webServletRequest, Convent<?> convent);
+    protected abstract Object resolveName(String parameterName, HandlerMethod handlerMethod, WebServletRequest webServletRequest, Convent<?> convent);
 
     protected abstract NamedValueInfo getNamedValueInfo(MethodParameter parameter);
 

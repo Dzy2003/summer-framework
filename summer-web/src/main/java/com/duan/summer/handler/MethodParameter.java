@@ -1,12 +1,9 @@
 package com.duan.summer.handler;
 
-import com.duan.summer.convert.Convent;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -92,5 +89,9 @@ public class MethodParameter {
 
     public void setGenericClass(Class<?> genericClass) {
         GenericClass = genericClass;
+    }
+
+    public <A extends Annotation> A getParameterAnnotation(Class<A> anno) {
+        return this.getParameter().getAnnotation(anno);
     }
 }

@@ -51,6 +51,9 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter{
         ArrayList<HandlerMethodArgumentResolver> handlerMethodArgumentResolvers = new ArrayList<>();
         // TODO 将实现的HandlerMethodArgumentResolver添加到List中
         handlerMethodArgumentResolvers.add(new RequestParamMethodArgumentResolver());
+        handlerMethodArgumentResolvers.add(new PathVariableMethodArgumentResolver());
+        handlerMethodArgumentResolvers.add(new SessionAttributeMethodArgumentResolver());
+        handlerMethodArgumentResolvers.add(new RequestHeaderMethodArgumentResolver());
         return handlerMethodArgumentResolvers;
     }
 
