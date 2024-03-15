@@ -27,10 +27,9 @@ public class ServletInvocableHandlerMethod extends InvocableHandlerMethod{
     }
 
     public void invokeAndHandle(WebServletRequest servletRequest, ModelAndView modelAndView, Map<Class<?>, Convent<?>> conventMap) throws Exception{
-        Object returnValue = this.invokeForRequest(servletRequest, modelAndView,conventMap);
+        Object returnValue = this.invokeForRequest(servletRequest, modelAndView,conventMap); //调用方法
         if(returnValue == null) return;
-        if(returnValueHandlers == null) return;//throw new Exception("no return value handlers");
-        returnValueHandlers.handleReturnValue(returnValue, returnValue.getClass(), modelAndView, servletRequest);
+        returnValueHandlers.handleReturnValue(returnValue, returnValue.getClass(), modelAndView, servletRequest); //处理返回值
     }
 
     public void setReturnValueHandlers(HandlerMethodReturnValueHandlerComposite returnValueHandlers) {

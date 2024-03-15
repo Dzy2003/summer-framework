@@ -54,11 +54,15 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter{
         handlerMethodArgumentResolvers.add(new PathVariableMethodArgumentResolver());
         handlerMethodArgumentResolvers.add(new SessionAttributeMethodArgumentResolver());
         handlerMethodArgumentResolvers.add(new RequestHeaderMethodArgumentResolver());
+        handlerMethodArgumentResolvers.add(new RequestResponseBodyMethodProcessor());
         return handlerMethodArgumentResolvers;
     }
 
     private List<HandlerMethodReturnValueHandler> getDefaultReturnValueHandlers() {
         ArrayList<HandlerMethodReturnValueHandler> handlerMethodReturnValueHandlers = new ArrayList<>();
+        handlerMethodReturnValueHandlers.add(new RequestResponseBodyMethodProcessor());
+        handlerMethodReturnValueHandlers.add(new ViewNameMethodReturnValueHandler());
+        handlerMethodReturnValueHandlers.add(new ModelAndViewMethodReturnValueHandler());
         // TODO 将实现的HandlerMethodReturnValueHandler添加到List中
         return handlerMethodReturnValueHandlers;
     }

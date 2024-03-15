@@ -2,9 +2,14 @@ package com.duan.summer.web;
 
 import com.duan.summer.utils.WebApplicationContextUtils;
 import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 /**
  * @author 白日
@@ -28,6 +33,52 @@ public abstract class BaseHttpServlet  extends HttpServlet {
         logger.info("加载成功");
         this.context = initServletBean();
     }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        this.processRequest(req, resp);
+    }
+
+    @Override
+    protected void doHead(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        this.processRequest(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        this.processRequest(req, resp);
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        this.processRequest(req, resp);
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        this.processRequest(req, resp);
+    }
+
+    @Override
+    protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        this.processRequest(req, resp);
+    }
+
+    @Override
+    protected void doTrace(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        this.processRequest(req, resp);
+    }
+
+    protected void processRequest(HttpServletRequest req, HttpServletResponse resp) {
+        logger.info("{} {}", req.getMethod(), req.getRequestURI());
+        try {
+            this.doService(req,resp);
+        } catch (Exception e) {
+            throw new RuntimeException("request" + req.getRequestURI() + " error", e);
+        }
+    }
+
+    protected abstract void doService(HttpServletRequest req, HttpServletResponse resp) throws Exception;
 
     protected final WebApplicationContext initServletBean() {
         WebApplicationContext rootContext = WebApplicationContextUtils.getWebApplicationContext(this.getServletContext());

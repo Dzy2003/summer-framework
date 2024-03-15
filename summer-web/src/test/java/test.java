@@ -1,15 +1,11 @@
-import com.duan.summer.annotations.PostMapping;
 import com.duan.summer.web.AnnotationConfigWebApplicationContext;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import config.Calculator;
 import config.SpringConfig;
 import config.SpringMvcConfig;
 import controller.UserController;
 import org.junit.jupiter.api.Test;
 import service.UserService;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author 白日
@@ -33,10 +29,12 @@ public class test {
         userController.introduction();
     }
     @Test
-    public void dad(){
-        List<String> originalList = Arrays.asList("Java", "Python", "C++", "PHP");
-        List<String> list = Arrays.asList("吃饭", "睡觉", "玩游戏", "打胶");
-        List<List<String>> listList = Arrays.asList(originalList, list);
-        System.out.println(new ArrayList<>(listList));
+    public void dad() throws JsonProcessingException {
+        Calculator calculator = new Calculator(); // 创建计算器对象
+        int res = calculator.add(2).add(2).add(2).calculate(); // 计算 2+2+2
+        System.out.println(res); // 6
+        calculator.eliminate();//清零
+        //calculator.res = 5; 错误，不允许访问隐藏字段
+        System.out.println(calculator.calculate());// 0
     }
 }

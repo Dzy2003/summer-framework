@@ -12,7 +12,13 @@ import java.util.Map;
 public class ModelAndView {
     Map<String, Object> ModelMap = new HashMap<>();
     Object View;
+
+    String viewName;
     private Integer HttpStatusCode;
+
+    private Boolean isRedirect;
+
+    private boolean isRest = false;
 
     public ModelAndView() {
     }
@@ -20,6 +26,34 @@ public class ModelAndView {
         ModelMap = modelMap;
         View = view;
         HttpStatusCode = httpStatusCode;
+    }
+
+    public void isRedirect(Boolean redirect) {
+        isRedirect = redirect;
+    }
+
+    public boolean isRest() {
+        return isRest;
+    }
+
+    public String getViewName() {
+        return viewName;
+    }
+
+    public Boolean getRedirect() {
+        return isRedirect;
+    }
+
+    public void addModel(String key, Object value) {
+        ModelMap.put(key, value);
+    }
+
+    public void setViewName(String viewName) {
+        this.viewName = viewName;
+    }
+
+    public void setRest(boolean rest) {
+        isRest = rest;
     }
 
     public Map<String, Object> getModelMap() {
@@ -44,5 +78,17 @@ public class ModelAndView {
 
     public void setHttpStatusCode(Integer httpStatusCode) {
         HttpStatusCode = httpStatusCode;
+    }
+
+    @Override
+    public String toString() {
+        return "ModelAndView{" +
+                "ModelMap=" + ModelMap +
+                ", View=" + View +
+                ", viewName='" + viewName + '\'' +
+                ", HttpStatusCode=" + HttpStatusCode +
+                ", isRedirect=" + isRedirect +
+                ", isRest=" + isRest +
+                '}';
     }
 }

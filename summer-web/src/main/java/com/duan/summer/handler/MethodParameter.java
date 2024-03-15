@@ -35,7 +35,7 @@ public class MethodParameter {
         }
     }
 
-    public Boolean getList() {
+    public Boolean isList() {
         return isList;
     }
 
