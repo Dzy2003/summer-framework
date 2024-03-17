@@ -1,6 +1,7 @@
 package org.example.config;
 
 import com.duan.summer.annotations.ComponentScan;
+import com.duan.summer.annotations.Import;
 
 /**
  * @author 白日

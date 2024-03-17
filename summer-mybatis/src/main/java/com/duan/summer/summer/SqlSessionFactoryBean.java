@@ -43,16 +43,16 @@ public class SqlSessionFactoryBean {
     private final SqlSessionFactoryBuilder sqlSessionFactoryBuilder = new SqlSessionFactoryBuilder();
 
     private SqlSessionFactory sqlSessionFactory;
-    @Value("${mybatis.configLocation}")
+    //@Value("${mybatis.configLocation}")
     private String configLocation;
-    @Value("${mybatis.mapperPackage}")
+    //@Value("${mybatis.mapperPackage}")
     private String mapperPackage;
     private DataSource dataSource;
-    @Value("${mybatis.ignorePrefix:}")
+    //@Value("${mybatis.ignorePrefix:}")
     private String ignorePrefix;
-    @Value("${mybatis.ignoreSuffix:}")
+    //@Value("${mybatis.ignoreSuffix:}")
     private String ignoreSuffix;
-    @Value("${mybatis.mapUnderscoreToCamelCase:}")
+    //@Value("${mybatis.mapUnderscoreToCamelCase:}")
     private Boolean mapUnderscoreToCamelCase;
     public SqlSessionFactoryBean() {
     }

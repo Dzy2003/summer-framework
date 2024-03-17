@@ -1,4 +1,4 @@
-package org.example.config;
+package org.example.controller;
 
 import com.duan.summer.annotations.Bean;
 import com.duan.summer.annotations.Configuration;

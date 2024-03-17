@@ -1,4 +1,4 @@
-package com.duan.summer.summer;
+package org.example.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.duan.summer.annotations.Bean;
@@ -12,9 +12,9 @@ import javax.sql.DataSource;
  * @create 2024/2/14 22:49
  * @description
  */
-
-public class JDBCConfig {
-
+@Configuration
+public class JdbcConfig {
+    @Bean
     public DataSource dataSource(@Value("${driver}") String driver,
                                  @Value("${url}")  String url,
                                  @Value("${username}") String username,

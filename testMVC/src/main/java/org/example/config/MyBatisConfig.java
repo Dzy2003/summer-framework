@@ -1,4 +1,4 @@
-package test_01.dao;
+package org.example.config;
 
 
 
@@ -28,7 +28,7 @@ public class MyBatisConfig {
     @Bean
     public MapperScannerConfigurer mapperScannerConfigurer(){
         MapperScannerConfigurer mapperScannerConfigurer=new MapperScannerConfigurer();
-        mapperScannerConfigurer.setBasePackage("test_04.duan.mapper");
+        mapperScannerConfigurer.setBasePackage("org.example.mapper");
         return mapperScannerConfigurer;
     }
 }

@@ -15,6 +15,5 @@ import org.testng.annotations.Ignore;
  */
 @ComponentScan
 @PropertySource("jdbc.properties")
-@Import({MapperScannerConfigurer.class, SqlSessionFactoryBean.class, JDBCConfig.class})
 public class Config {
 }

@@ -14,7 +14,7 @@ import org.testng.Assert;
  */
 @Configuration
 public class MapperScannerConfigurer implements BeanFactoryPostProcessor {
-    @Value("${mybatis.basePackage}")
+    //@Value("${mybatis.basePackage}")
     String basePackage;
 
     @Override

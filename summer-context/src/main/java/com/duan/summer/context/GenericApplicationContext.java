@@ -154,11 +154,11 @@ public class GenericApplicationContext extends ApplicationContextImpl implements
             Autowired autowired = ClassUtils.getAnnotation(curParameterAnnotations, Autowired.class);
             // @Configuration类型的Bean是工厂，不允许使用@Autowired创建:
             final boolean isConfiguration = isConfigurationDefinition(definition);
-            if (isConfiguration && autowired != null) {
-                throw new BeanCreationException(
-                        String.format("Cannot specify @Autowired when create @Configuration bean '%s': %s."
-                                , definition.getName(), definition.getBeanClass().getName()));
-            }
+//            if (isConfiguration && autowired != null) {
+//                throw new BeanCreationException(
+//                        String.format("Cannot specify @Autowired when create @Configuration bean '%s': %s."
+//                                , definition.getName(), definition.getBeanClass().getName()));
+//            }
 
             // 参数需要@Value或@Autowired两者之一:
             if (value != null && autowired != null) {
