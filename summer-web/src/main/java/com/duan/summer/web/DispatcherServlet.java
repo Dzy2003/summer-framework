@@ -33,7 +33,7 @@ public class DispatcherServlet extends BaseHttpServlet{
     @Override
     protected void doService(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         HandlerExecutionChain handler = handlerMapping.getHandler(req);
-        logger.info(this.handlerMapping.getMappingRegistry().toString());
+        //logger.info(this.handlerMapping.getMappingRegistry().toString());
         if(handler == null){
             this.noHandlerFound(req, resp);
             return;

@@ -8,7 +8,7 @@ import com.duan.summer.annotations.PropertySource;
  * @create 2024/2/24 0:32
  * @description
  */
-@ComponentScan({"org.example.service","org.example.config"})
+@ComponentScan({"org.example.service","org.example.config","org.example.aspect"})
 @PropertySource("jdbc.properties")
 public class SpringConfig {
 }

@@ -34,8 +34,15 @@ public class ProceedingJoinPoint {
     private int chainsIndex = 0;
 
 
-    public Object proceed() throws InvocationTargetException, IllegalAccessException {
-        return method.invoke(target,args);
+    public Object proceed(){
+
+        try {
+            return method.invoke(target,args);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException("AOP代理调用原始方法失败",e);
+        }
+
+
     }
 
     public Object[] getArgs() {
