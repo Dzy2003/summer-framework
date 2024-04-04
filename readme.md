@@ -1,7 +1,6 @@
-
 # Summer框架
 
-通过自己实现简化版本的SSM框架来熟悉SSM框架的源码和掌握基本原理以及巩固`JavaSe`基础和学习框架中的一些设计模式。
+通过阅读SSM框架相关书籍，文章，源码从而仿照了一个实现了大部分功能的SSM框架。通过学习这个框架
 
 ## 关于
 
@@ -13,11 +12,11 @@ Summer 框架是一个仿真的轻量级 JavaEE 开发框架，旨在模拟实�
 
 ### context模块
 
-这是项目的核心模块，在这个模块实现了一个简单的IOC容器。在这里我们没有实现过时的XML配置而仅通过注解配置来实现Bean的注册，除此之外IOC容器还支持Yaml和XML格式的配置信息读取、BeanPostProcessor、BeanFactoryPostProcessor、Aware等扩展机制。
+这是项目的核心模块，在这个模块实现了一个简单的IOC容器。在这里我们没有实现过时的XML配置而仅通过注解配置来实现Bean的注册，除此之外IOC容器还支持`Yaml`和`XML`格式的配置信息读取、`BeanPostProcessor`、BeanFactoryPostProcessor、Aware等扩展机制。
 
 **过程文档**：
 
-* [实现ResourceResolver](doc/01.实现ResourceResolver.md)
+* [实现ResourceResolver](./doc/01.实现ResourceResolver.md)
 * [实现PropertyResolver](doc/02.实现PropertyResolver.md)
 * [创建BeanDefinition](doc/03.创建BeanDefinition.md)
 * [实例化Bean](doc/04.实例化Bean.md)
@@ -50,6 +49,70 @@ Summer 框架是一个仿真的轻量级 JavaEE 开发框架，旨在模拟实�
 
 * [SpringMVC与Spring是如何联系的](doc/12.SpringMVC与Spring是如何联系的.md)
 * .....(没写完)
+
+
+
+## 框架启动过程分析
+
+框架启动的过程总结起来就是：
+
+**启动Tomcat时使用ServletContainerInitializer接口加载IOC父子容器和DispatcherServlet。**
+
+下面我们来分析一下启动的详细流程：
+
+1. 启动`Tomcat`时调用`WebApplicationInitializer`实现类的`onStartup`
+2. 在`onStartup`方法中向`ServletContext`容器中注册一个监听器`ContextLoaderInitializer`和`持有子容器的DispatcherServlet`
+3. `ContextLoaderInitializer`和`DispatcherServlet`组件的初始化
+   * `ContextLoaderInitializer`：在初始化方法中将根IOC容器保存到`ServletContext`中。
+   * `DispatcherServlet`：在初始化方法中设置子容器的`Parent`属性为保存的根容器并刷新（`Refresh`），然后初始化处理请求的组件。
+
+注意：我们知道`ApplicationContext`容器在初始化阶段会将需要的`Bean`全部创建完成，但我们这里需要使用父子结构(父容器感知不到子容器，子容器能够感知父容器)，因此我们的**子容器会在设置其`Parent`属性后再进行`Refresh`加载来感知父容器的Bean**。
+
+**根容器：管理Service和Mapper的Bean容器。**
+
+**子容器：管理Controller的Bean容器。**
+
+两个容器启动扫描的包需要用户继承抽象类`AbstractAnnotationConfigDispatcherServletInitializer`并重写两个抽象方法来分别指定父子容器的配置入口类。
+
+```java
+@Nullable
+//指定父容器的配置入口类(Service,Mapper)
+protected abstract Class<?>[] getRootConfigClasses();
+
+@Nullable
+//指定子容器的配置入口类(Controller)
+protected abstract Class<?>[] getServletConfigClasses();
+```
+
+
+
+## Web请求处理流程
+
+要处理请求，我们主要需要解决下面的问题：
+
+* 如何保存处理请求的`Handler`，如何匹配对应的`Handler`？
+
+我们使用一个组件`HandlerMapping`，解析`Controller`中的全部`Handler`，并按照一定规则去匹配Handler。
+
+**`Handler`：`Controller`里面的`@RequestMapping`标志的每一个方法都是一个`Handler`**
+
+* 如何处理参数和返回值
+
+因为`Handler`包含的只是`Controller`方法的一些信息，并不能直接对请求进行处理，因此我们将通过一个`Adapter`来根据`Handler`的信息和`Request`、`Response`请求信息进行参数的处理调用以及返回值的处理。
+
+
+
+下面是处理的流程，与SpringMVC基本相似：
+
+1. 前端的所有请求都被一个`Servlet`也就是`DispatcherServlet`拦截。
+2. 所有类型的`Request`都由`DispatcherServlet`的`doService`方法来进行处理。
+3. 通过`handlerMapping`组件来根据`Request`的`URL`来匹配对应的`Handler`(包括拦截器)。
+4. 根据获取的`Handler`和`Request`、`Response`构建`handlerAdapter`拿到`ModelAndView`，这里又包含了参数的处理和返回值的处理
+   * 参数处理：责任链模式匹配匹配能够处理这类参数的处理器`argumentResolvers`。
+   * 返回值处理：责任链模式匹配匹配能够处理这类参数的处理器`returnValueHandlers`，若是RestFul接口则直接转换为JSON数据返回
+5. `ViewResolver`根据`ModelAndView`渲染页面和传递数据到前端（暂未实现，目前仅支持返回`JSON`数据到前端）
+
+
 
 
 
@@ -300,6 +363,4 @@ public class AopConfig {
 ```
 
 可以看到，AOP生效成功记录了日志。
-
-## 过程分析
 

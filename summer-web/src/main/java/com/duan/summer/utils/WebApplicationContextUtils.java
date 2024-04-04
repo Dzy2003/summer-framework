@@ -15,8 +15,6 @@ import org.slf4j.LoggerFactory;
 public class WebApplicationContextUtils {
     static final Logger logger = LoggerFactory.getLogger(WebApplicationContextUtils.class);
 
-    static final String CONFIG_APP_YAML = "/application.yml";
-    static final String CONFIG_APP_PROP = "/application.properties";
 
     public static WebApplicationContext getWebApplicationContext(ServletContext servletContext) {
         return (WebApplicationContext) servletContext.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
