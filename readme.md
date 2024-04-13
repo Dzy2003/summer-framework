@@ -287,11 +287,11 @@ public class MyBatisConfig {
 
 tomcat正常启动后，我们使用PostMan测试该接口是否能够正常使用：
 
-![image-20240318105700662](C:/Users/soga/AppData/Roaming/Typora/typora-user-images/image-20240318105700662.png)
+![image-20240318105700662](https://gitee.com/dzy2003/cartographic-bed/raw/master/imgs/image-20240318105700662.png)
 
 可以看到PostMan正确以JSON格式返回了id为10的employees信息：
 
-![image-20240318110017107](C:/Users/soga/AppData/Roaming/Typora/typora-user-images/image-20240318110017107.png)
+![image-20240318110017107](https://gitee.com/dzy2003/cartographic-bed/raw/master/imgs/image-20240318110017107.png)
 
 再看后端日志输出：
 
